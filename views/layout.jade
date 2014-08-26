@@ -1,0 +1,41 @@
+doctype html
+
+html(ng-app)
+	include ./header.jade
+	body
+		.container-fluid#head
+			#serverinfocontainer.pull-right
+				.btn-group.pull-right
+					button.btn.btn-default.btn-sm <span class="glyphicon glyphicon-info-sign"></span>	
+					button.btn.btn-default.btn-sm <span class="glyphicon glyphicon-wrench"></span>
+					button.btn.btn-default.btn-sm <span class="glyphicon glyphicon-off"></span>
+				.pull-right
+					p#serverinfo connected to <strong>#{mpdhost}:#{mpdport}</strong> 
+			img(src="images/logo.png").pull-left
+		
+		.container-fluid#controls
+			.control#previous
+				<span class="glyphicon glyphicon-backward"></span>
+			.control#pause
+				<span class="glyphicon glyphicon-pause"></span>
+			.control#play
+				<span class="glyphicon glyphicon-play"></span>
+			.control#stop
+				<span class="glyphicon glyphicon-stop"></span>
+			.control#next
+				<span class="glyphicon glyphicon-forward"></span>
+			.control.space
+			.control#random
+				<span class="glyphicon glyphicon-random"></span>
+			.control#repeat
+				<span class="glyphicon glyphicon-repeat"></span>
+			.control#listen.pull-right
+				<span class	="glyphicon glyphicon-volume-off"></span>
+		
+		.container-fluid#currentsong
+			.row
+				.col-md-12
+					p.lead
+						span#artist
+						span#title
+		block content

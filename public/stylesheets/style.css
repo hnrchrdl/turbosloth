@@ -1,0 +1,50 @@
+body {  
+	
+}
+a {
+  color: #00B7FF;
+}
+#head {
+	height: 60px;
+	border-bottom: 1px solid #ddd; 
+}
+#serverinfocontainer
+{
+	margin-top:15px;
+}
+#serverinfo {
+	margin:10px;
+}
+#controls {
+	border-bottom: 1px solid #ddd;
+	height: 40px;
+}
+#controls-playlist {
+	height: 40px;
+}
+
+.control {
+	width:40px;
+	height: 40px;
+	float: left;
+	display: inline-block;
+	line-height: 40px;
+	text-align: center;
+	cursor: pointer;
+}
+.bigger{
+	font-size:130%;
+}
+#main,#currentsong {
+	padding-top: 20px;	
+}
+#playlist-content {
+	border: 1px solid #eee;
+}
+.highlight{
+	color: #a53945;
+}
+.playlist-row {
+	border-bottom: 1px solid #eee;
+	line-height: 25px;
+}

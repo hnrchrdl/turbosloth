@@ -1,0 +1,30 @@
+extends layout
+
+block content
+	.container-fluid
+		.row
+			.col-md-4.col-md-offset-4
+				.form-group
+					input#mpd-host.form-control(type="text", placeholder="e.g. example.com", value="leukosia.eu") 
+		.row
+			.col-md-4.col-md-offset-4
+				.form-group
+					input#mpd-port.form-control(type="text", placeholder="e.g. 6600", value="6603")
+		.row
+			.col-md-4.col-md-offset-4
+				.form-group
+					input#mpd-password.form-control(type="password", placeholder="", value="diggur!")
+		.row
+			.col-md-2.col-md-offset-6
+				button#enter.btn.btn-primary.pull-right.col-md-12 start
+
+	script(type="text/javascript").
+		
+		$("#enter").on("click", function(){
+			var mpd_host = $("#mpd-host").val();
+			var mpd_port = $("#mpd-port").val();
+			var mpd_password = $("#mpd-password").val();
+			post("/", {mpdhost:mpd_host,mpdport:mpd_port,mpdpassword:mpd_password});
+		});
+
+	

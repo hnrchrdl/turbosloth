@@ -1,0 +1,94 @@
+extends layout
+
+block content
+
+	.container-fluid#main
+
+
+	//javascript
+	script(type="text/javascript", src="https://cdn.socket.io/socket.io-1.0.6.js")
+
+	script(type="text/javascript").
+		var socket = io();
+		//socket.on('changedPlayer', function(data) {
+		//	var data = $.parseJSON(data);
+		//	renderCurrentSong(data);
+		//	alert(data);
+		//)};
+		socket.on('changedPlayer', function(data){
+			var currentsong = $.parseJSON(data);
+			renderCurrentSong(currentsong);
+
+		});
+
+		$(document).ready(function(){
+			socket.emit('documentReady');
+			//console.log('documentReady event');
+			mpdCommand('status');
+			updateCurrentSong();
+			updatePlaylist();
+			handlerList = ['pause','previous',
+						'next','play','stop',
+						'random','repeat'];
+			for (i in handlerList) {
+				registerMpdHandler(handlerList[i]);
+			}
+			registerStyles();
+
+		});
+
+		function mpdCommand (name) {
+			$.ajax({
+				url:'/mpdcommand/' + name
+			}).done(function(data) {
+				if (data) {
+					return data;
+				}
+			});
+		}
+
+		function registerMpdHandler (cmd) {
+			$('#' + cmd).on('click',function(){
+				mpdCommand(cmd);
+			});
+		}
+
+		function updatePlaylist() {
+			$.ajax({
+				url:'/mpdplaylist'
+			}).done(function(data) {
+				$('#main').append(data);
+				registerStyles();
+			});
+		}
+
+		function updateCurrentSong() {
+			$.ajax({
+				url:'/mpdCommand/currentsong'
+			}).done(function(data) {
+				currentsong = $.parseJSON(data);
+				renderCurrentSong(currentsong);			
+			});
+		}
+		//styling
+		function registerStyles(){
+			$('.control').on('mouseenter',function(){
+				$(this).addClass('bigger');
+			});
+			$('.control').on('mouseleave',function(){
+				$(this).removeClass('bigger');
+			});
+		}
+
+		function renderCurrentSong (currentsong) {
+			if (currentsong && currentsong != {}) {
+				$('#artist').text(currentsong.Artist + " - ");
+				$('#title').text(currentsong.Title);
+			}
+			else {
+				$('#artist').append("currently not playing");
+			}
+		}
+
+		
+		
