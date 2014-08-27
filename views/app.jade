@@ -9,22 +9,37 @@ block content
 	script(type="text/javascript", src="https://cdn.socket.io/socket.io-1.0.6.js")
 
 	script(type="text/javascript").
+		//var mpdStatus;
+		//var currentSong;
+
 		var socket = io();
 		//socket.on('changedPlayer', function(data) {
 		//	var data = $.parseJSON(data);
 		//	renderCurrentSong(data);
 		//	alert(data);
 		//)};
-		socket.on('changedPlayer', function(data){
+		socket.on('changedPlayer', function(data) {
 			var currentsong = $.parseJSON(data);
 			renderCurrentSong(currentsong);
-
+			resetSeekBar();		
 		});
+		//- socket.on('mpd', function(msg) {
+		//- 	if (msg.command === "status") {
+		//- 		mpdStatus = msg.data;
+		//- 		alert (data);
+		//- 		}
+		//- 	else if (msg.command === currentSong) {
+		//- 		currentSong = msg.data;
+		//- 		alert (data);
+		//- 		}
+		//- });
 
 		$(document).ready(function(){
+			//socket.emit('updateMpd');
 			socket.emit('documentReady');
 			//console.log('documentReady event');
-			mpdCommand('status');
+			//status = mpdCommand('status');
+			//alert (status);
 			updateCurrentSong();
 			updatePlaylist();
 			handlerList = ['pause','previous',
@@ -65,9 +80,13 @@ block content
 		function updateCurrentSong() {
 			$.ajax({
 				url:'/mpdCommand/currentsong'
-			}).done(function(data) {
-				currentsong = $.parseJSON(data);
-				renderCurrentSong(currentsong);			
+			}).done(function(msg) {
+				var currentsong = $.parseJSON(msg);
+				renderCurrentSong(currentsong);
+				//socket.emit('get_status', function(data){
+				//	alert(data);
+				//});
+				resetSeekBar()		
 			});
 		}
 		//styling
@@ -88,6 +107,50 @@ block content
 			else {
 				$('#artist').append("currently not playing");
 			}
+		}
+
+		function resetSeekBar () {
+			var intervalHandle = null;
+			var songTime;
+			var elapsed;
+			
+			var setProgressBar = function(songTime,elapsed) {
+
+				if (songTime !== 0) {
+					progress = (100 - (( songTime - elapsed ) / songTime * 100)); 
+					console.log("setting progress to "+ progress );
+				}
+				else progress = 0;
+				$('.progress-bar').css('width', progress+'%').attr('aria-valuenow', progress); 
+			
+			}
+			
+			var progressInterval = function(songTime,elapsed) {
+				
+				intervalHandle = setInterval(function() {
+					elapsed += 0.5;
+					console.log('elapsed'+elapsed)
+					setProgressBar(songTime,elapsed);
+				},500);
+				//intervalHandle();
+
+			};
+			
+			$.ajax({
+				url : "mpdCommand/status"
+			}).done(function (msg) {
+				var status = $.parseJSON(msg);
+				songTime = parseFloat(status.time.split(":")[1]);
+				elapsed = parseFloat(status.elapsed);
+				if (intervalHandle) {
+					clearInterval(intervalHandle);
+					intervalHandle = null;
+				}
+				setProgressBar(songTime,elapsed);
+				if (status.state === 'play') {
+					progressInterval(songTime,elapsed);
+				}
+			});
 		}
 
 		

@@ -2,6 +2,10 @@ var express = require('express');
 var app = require('../app');
 var router = express.Router();
 
+var komponist = require('komponist');
+var komponistClient;
+//var mpdClient;
+
 //var io = require('../lib/sockets');
 var socketio = require('socket.io');
 var io, socket_emit;
@@ -19,14 +23,13 @@ var listen = function(app) {
 		socket_emit = function(name,data) {
 			socket.emit(name,data);
 		};
+		socket.on('get_status', function(){
+
+		});
 	});
+	
 	return io;
 }
-
-var komponist = require('komponist');
-var komponistClient;
-var mpdClient;
-
 
 router.get('/', function(req, res) {
 
@@ -85,6 +88,7 @@ router.get('/mpdcommand/:name', function(req,res)  {
 	komponistClient[req.param("name")] (function(err,data) {
 		if (data && data != {}) {
 			//console.log(data);
+			console.log(data);
 			res.json(JSON.stringify(data));
 		}
 		else {

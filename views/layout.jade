@@ -34,6 +34,9 @@ html(ng-app)
 		
 		.container-fluid#currentsong
 			.row
+				.progress
+					.progress-bar(role="progressbar", aria-valuenow="10", aria-valuemin="0", aria-valuemax="100", style="width: 0%;")
+						span.sr-only | 0% Complete
 				.col-md-12
 					p.lead
 						span#artist
