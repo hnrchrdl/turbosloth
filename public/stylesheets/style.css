@@ -16,35 +16,64 @@ a {
 	margin:10px;
 }
 #controls {
-	border-bottom: 1px solid #ddd;
 	height: 40px;
 }
 #controls-playlist {
 	height: 40px;
 }
-
-.control {
-	width:40px;
+.control, #currentsong {
 	height: 40px;
 	float: left;
 	display: inline-block;
 	line-height: 40px;
+	position: relative;
+}
+.control-highlight {
+	display: none;
+	float: none;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	right: 0px;
+	bottom: 0px;
+	border-top: 2px solid red;
+}
+.control {
+	width:40px;
 	text-align: center;
 	cursor: pointer;
 }
 .bigger{
 	font-size:130%;
 }
-#main,#currentsong {
-	padding-top: 20px;	
-}
 #playlist-content {
 	border: 1px solid #eee;
 }
 .highlight{
-	color: #a53945;
+	color: red;
 }
 .playlist-row {
 	border-bottom: 1px solid #eee;
 	line-height: 25px;
+}
+.progress-bar {
+   transition-duration: 3s;
+}
+#progress-bar-container {
+	height: 15px;
+	width: 100%;
+	margin-bottom: 10px;
+	border-top: 1px solid #ddd;
+	transition: 'background-color 2s ease';
+	cursor: pointer;
+}
+#progress-bar-container:hover {
+	background-color: #eee;
+
+}
+#progress-bar {
+	float: left;
+	background-color: red;
+	height: 2px;
+	width:0px;
 }

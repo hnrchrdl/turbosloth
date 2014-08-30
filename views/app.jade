@@ -9,39 +9,26 @@ block content
 	script(type="text/javascript", src="https://cdn.socket.io/socket.io-1.0.6.js")
 
 	script(type="text/javascript").
-		//var mpdStatus;
-		//var currentSong;
 
 		var socket = io();
-		//socket.on('changedPlayer', function(data) {
-		//	var data = $.parseJSON(data);
-		//	renderCurrentSong(data);
-		//	alert(data);
-		//)};
-		socket.on('changedPlayer', function(data) {
-			var currentsong = $.parseJSON(data);
-			renderCurrentSong(currentsong);
-			resetSeekBar();		
+
+		socket.on('sendMpdAorta',function(msg) {
+			console.log('Mpd Aorta received');
+			console.log(msg.status);
+			console.log(msg.currentsong);
+
+			var status = $.parseJSON(msg.status);
+			var currentsong = $.parseJSON(msg.currentsong); 
+
+			renderCurrentSong(status,currentsong);
+			renderProgressBar(status);
+			updatePlaylist();
 		});
-		//- socket.on('mpd', function(msg) {
-		//- 	if (msg.command === "status") {
-		//- 		mpdStatus = msg.data;
-		//- 		alert (data);
-		//- 		}
-		//- 	else if (msg.command === currentSong) {
-		//- 		currentSong = msg.data;
-		//- 		alert (data);
-		//- 		}
-		//- });
 
 		$(document).ready(function(){
-			//socket.emit('updateMpd');
-			socket.emit('documentReady');
-			//console.log('documentReady event');
-			//status = mpdCommand('status');
-			//alert (status);
-			updateCurrentSong();
-			updatePlaylist();
+
+			socket.emit('requestMpdAorta');
+			
 			handlerList = ['pause','previous',
 						'next','play','stop',
 						'random','repeat'];
@@ -77,20 +64,9 @@ block content
 			});
 		}
 
-		function updateCurrentSong() {
-			$.ajax({
-				url:'/mpdCommand/currentsong'
-			}).done(function(msg) {
-				var currentsong = $.parseJSON(msg);
-				renderCurrentSong(currentsong);
-				//socket.emit('get_status', function(data){
-				//	alert(data);
-				//});
-				resetSeekBar()		
-			});
-		}
 		//styling
 		function registerStyles(){
+			//controlHover
 			$('.control').on('mouseenter',function(){
 				$(this).addClass('bigger');
 			});
@@ -98,59 +74,48 @@ block content
 				$(this).removeClass('bigger');
 			});
 		}
-
-		function renderCurrentSong (currentsong) {
-			if (currentsong && currentsong != {}) {
-				$('#artist').text(currentsong.Artist + " - ");
-				$('#title').text(currentsong.Title);
+		
+		function renderCurrentSong (status,currentsong) {
+			if (status.state === 'stop') {
+				$('#currentsong').text("");
 			}
 			else {
-				$('#artist').append("currently not playing");
+				$('#currentsong').text(currentsong.Artist + 
+					" - " + currentsong.Title)
 			}
 		}
 
-		function resetSeekBar () {
-			var intervalHandle = null;
-			var songTime;
-			var elapsed;
-			
-			var setProgressBar = function(songTime,elapsed) {
+		function renderProgressBar(status) {
 
-				if (songTime !== 0) {
-					progress = (100 - (( songTime - elapsed ) / songTime * 100)); 
-					console.log("setting progress to "+ progress );
-				}
-				else progress = 0;
-				$('.progress-bar').css('width', progress+'%').attr('aria-valuenow', progress); 
-			
+			var progressBar = $('#progress-bar');
+
+			console.log(status.state);
+			if  (status.state === 'play') {
+				var songTime = parseFloat(status.time.split(":")[1]);
+				var elapsed = parseFloat(status.elapsed);
+				startProgressbar(songTime,elapsed);
 			}
-			
-			var progressInterval = function(songTime,elapsed) {
-				
-				intervalHandle = setInterval(function() {
-					elapsed += 0.5;
-					console.log('elapsed'+elapsed)
-					setProgressBar(songTime,elapsed);
-				},500);
-				//intervalHandle();
+			else if (status.state === 'pause') {
+				stopProgressBar();
+			}
+			else {
+				stopProgressBar();
+				progressBar.css('width',0);
+			}
 
-			};
-			
-			$.ajax({
-				url : "mpdCommand/status"
-			}).done(function (msg) {
-				var status = $.parseJSON(msg);
-				songTime = parseFloat(status.time.split(":")[1]);
-				elapsed = parseFloat(status.elapsed);
-				if (intervalHandle) {
-					clearInterval(intervalHandle);
-					intervalHandle = null;
-				}
-				setProgressBar(songTime,elapsed);
-				if (status.state === 'play') {
-					progressInterval(songTime,elapsed);
-				}
-			});
+			function startProgressbar (songTime,elapsed) {
+				
+				var initial_width = elapsed / songTime * 100; 
+				var duration = songTime - elapsed;
+				progressBar
+					.stop()
+					.css('width',initial_width + '%')
+					.animate({'width': '100%'},duration * 1000, 'linear');
+			}
+
+			function stopProgressBar () {
+				progressBar.stop();
+			}
 		}
 
 		

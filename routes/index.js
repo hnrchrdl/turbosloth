@@ -8,27 +8,39 @@ var komponistClient;
 
 //var io = require('../lib/sockets');
 var socketio = require('socket.io');
-var io, socket_emit;
+var io, socket_emit, sendMpdAorta;
 //var io = socketio.listen(app);
 //module.exports.listen = function(app){
 var listen = function(app) {
 	io = socketio.listen(app);
 	io.sockets.on('connection', function (socket) {
-		console.log('A socket connected!');
-		//socket.on('documentReady', function() {
-			
-			//console.log('documentReady event');
-			//socket.emit('changedPlayer', {status:'playing', etc:'etc'});
-		//});
+		console.log('A socket connected');
+		
+		socket.on('requestMpdAorta', function() {
+			sendMpdAorta();
+		});
+
+		sendMpdAorta = function () {
+			console.log('mpd aorta has been requested');
+			komponistClient.status(function(err,msg) {
+				var status = JSON.stringify(msg);
+				komponistClient.currentsong(function(err,msg) {
+					currentsong = JSON.stringify(msg);
+					console.log(status);
+					socket.emit('sendMpdAorta', {
+						status:status,
+						currentsong:currentsong 
+					});
+				});
+			});
+		}
+
 		socket_emit = function(name,data) {
 			socket.emit(name,data);
 		};
-		socket.on('get_status', function(){
-
-		});
 	});
-	
 	return io;
+	
 }
 
 router.get('/', function(req, res) {
@@ -52,15 +64,16 @@ router.get('/', function(req, res) {
 		komponistClient.on('changed', function(system) {
 			console.log('Subsystem changed: ' + system);
 			if (system == 'player') {
-				komponistClient.currentsong(function(err,data) {
+				sendMpdAorta();
+				/*komponistClient.currentsong(function(err,data) {
 					if (data && data != {}) {
-						console.log(data);
+						//console.log(data);
 						socket_emit('changedPlayer', JSON.stringify(data));
 					}
 					else {
 						res.write("OK");
 					}
-				});
+				});*/
 			}
 		});
 		
@@ -88,7 +101,6 @@ router.get('/mpdcommand/:name', function(req,res)  {
 	komponistClient[req.param("name")] (function(err,data) {
 		if (data && data != {}) {
 			//console.log(data);
-			console.log(data);
 			res.json(JSON.stringify(data));
 		}
 		else {
