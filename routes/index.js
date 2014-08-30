@@ -35,29 +35,32 @@ var listen = function(app) {
 			cmd = JSON.parse(msg).cmd;
 			// args are the optional commands as Array
 			args = JSON.parse(msg).args;
+
+
 			
 			//console.log(args.length);
-
-			if (args.length === 0) {
-				console.log('here');
+			if (args.length === 0 ) {
 				// execute mpd command WITHOUT args
 				komponistClient[cmd](function(err,msg) {
-					console.log(err);
-					console.log(msg);
+				console.log(err);
+				console.log(msg);
+					
 				});
 			}
 			else if (args.length === 1 ) {
 				// execute mpd command WITH ONE arg
 				komponistClient[cmd](args[0],function(err,msg) {
-					console.log(err);
-					console.log(msg);
+				console.log(err);
+				console.log(msg);
+
 				});
 			}
 			else if (args.length === 2 ) {
 				// execute mpd command WITH TWO arg
 				komponistClient[cmd](args[0],args[1],function(err,msg) {
-					console.log(err);
-					console.log(msg);
+				console.log(err);
+				console.log(msg);
+
 				});
 			}
 		});
@@ -87,12 +90,6 @@ var listen = function(app) {
 				});
 			});
 		}
-
-		//socketEmit = function(name, data) {
-			// sends data emits to the client
-
-		//	socket.emit(name,data);
-		//};
 	});
 	
 	// make io availible to other modules
