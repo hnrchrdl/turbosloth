@@ -18,11 +18,20 @@ block content
 			console.log(msg.currentsong);
 
 			var status = $.parseJSON(msg.status);
-			var currentsong = $.parseJSON(msg.currentsong); 
+			var currentsong = $.parseJSON(msg.currentsong);
 
 			renderCurrentSong(status,currentsong);
 			renderProgressBar(status);
 			updatePlaylist();
+
+			// switch state for random and repeat
+			var random = 1 - status.random;
+			var repeat =  1 - status.repeat;
+			handlerList = [
+					'random-' + random,
+					'repeat-' + repeat
+			];
+			registerMpdHandler(handlerList);
 		});
 
 		$(document).ready(function(){
@@ -30,11 +39,8 @@ block content
 			socket.emit('requestMpdAorta');
 			
 			handlerList = ['pause','previous',
-						'next','play','stop',
-						'random','repeat'];
-			for (i in handlerList) {
-				registerMpdHandler(handlerList[i]);
-			}
+						'next','play','stop'];
+			registerMpdHandler(handlerList);
 			registerStyles();
 
 		});
@@ -48,11 +54,37 @@ block content
 				}
 			});
 		}
+		function requestMpdCommand (cmd,args) {
+			// cmd is a string, separated by '-'
+			// for optional arguments
+			// examples: 
+			// 'play' random-1' / 'seek-5-150' 
+			msg = JSON.stringify({cmd:cmd,args:args});
+			socket.emit('mpdCommand', msg);
+		}
 
-		function registerMpdHandler (cmd) {
-			$('#' + cmd).on('click',function(){
-				mpdCommand(cmd);
-			});
+		function registerMpdHandler (cmd,args) {
+			var register = function(cmd,args) {
+				// register the interface
+				// via JQuery bind method
+				$('#' + cmd).unbind('click');
+				$('#' + cmd).bind('click',function(){
+					console.log(cmd + ' clicked');
+					requestMpdCommand(cmd,args);
+				});
+			}
+			for (i in handlerList) {
+				handlerArray = handlerList[i].split('-'); 
+				var cmd = handlerArray.shift();
+				console.log(cmd);
+				console.log(handlerArray);
+				var args = [];
+				for (i in handlerArray) {
+					args.push(handlerArray[i]);
+				}
+				//console.log(args);
+				register(cmd,args);
+			} 
 		}
 
 		function updatePlaylist() {
@@ -76,12 +108,28 @@ block content
 		}
 		
 		function renderCurrentSong (status,currentsong) {
+			console.log('debug' + status.random);
+			console.log('debug' + status.repeat);
+			//indicate status.state
+			$('.control-highlight').hide();
+
+			$('#' + status.state + '-highlight').show();
+
+			if (status.random === '1') {
+				$('#random-highlight').show();
+			}
+			if (status.repeat === '1') {
+				$('#repeat-highlight').show();
+			}
+
+			//render current song
 			if (status.state === 'stop') {
 				$('#currentsong').text("");
 			}
 			else {
 				$('#currentsong').text(currentsong.Artist + 
-					" - " + currentsong.Title)
+					" - " + currentsong.Title +
+					' (' + secondsToTimeString(currentsong.Time) + ')');
 			}
 		}
 
@@ -117,6 +165,13 @@ block content
 				progressBar.stop();
 			}
 		}
+
+		function secondsToTimeString (seconds) {
+			var date = new Date(1970,0,1);
+			date.setSeconds(seconds);
+			return date.toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1");
+		}
+
 
 		
 		
