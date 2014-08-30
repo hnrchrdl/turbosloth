@@ -38,4 +38,4 @@
 				.col-md-2 
 					| #{song.Genre || '<unknown>'}
 				.col-md-1 
-					| #{song.Time || '<unknown>'}	
+					| #{secondsToTimeString(song.Time) || '<unknown>'}	
