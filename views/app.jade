@@ -30,9 +30,15 @@ block content
 				return currentsong;
 			}
 
+			if (msg.source === 'init') {
+				$('.loading').toggle();
+				renderPlaylist();
+			}
+			else highlightPlaylistRow();
+
 			renderCurrentSong(status,currentsong);
 			renderProgressBar(status);
-			updatePlaylist();
+			
 
 			// switch state for random and repeat
 			var random = 1 - status.random;
@@ -58,6 +64,9 @@ block content
 			registerMpdHandler(handlerList);
 			registerSeekFunc();
 			registerStyles();
+			$(window).on('resize', function() {
+				setHeightOfScrollable();
+			});
 
 		});
 
@@ -114,15 +123,6 @@ block content
 			});
 		}
 
-		function updatePlaylist() {
-			$.ajax({
-				url:'/mpdplaylist'
-			}).done(function(data) {
-				$('#main').append(data);
-				registerStyles();
-			});
-		}
-
 		//styling
 		function registerStyles(){
 			//controlHover
@@ -134,6 +134,19 @@ block content
 			});
 		}
 		
+
+		function renderPlaylist() {
+			$.ajax({
+				url:'/mpdplaylist'
+			}).done(function(data) {
+				$('#main').html(data);
+				registerStyles();
+				highlightPlaylistRow();
+				setHeightOfScrollable();
+				registerScrollSpy();
+			});
+		}
+
 		function renderCurrentSong (status,currentsong) {
 			console.log('debug' + status.random);
 			console.log('debug' + status.repeat);
@@ -191,6 +204,39 @@ block content
 			function stopProgressBar () {
 				progressBar.stop();
 			}
+		}
+
+		function highlightPlaylistRow () {
+			currentsong = getCurrentsong();
+			$('.playlistrow').removeClass('highlight');
+			$('#playlistrow-' + currentsong.Id).addClass('highlight');
+		}
+
+		function setHeightOfScrollable () {
+			var scrollable = $('.scrollable');
+			var offset_top = scrollable.offset().top;
+			var window_height = $(window).height();
+			console.log(window_height - offset_top);
+			scrollable.height(window_height - offset_top-70);
+			
+
+		}
+		function registerScrollSpy() {
+			$('#scrolltocurrentsong').unbind('click');
+			$('#scrolltocurrentsong').bind('click',function() {
+				var scrolltop = $('#playlistrow-' + getCurrentsong().Id).offset().top +
+						$('.scrollable').scrollTop() -
+						$('.scrollable').offset().top;			
+				$('.scrollable').animate({
+					scrollTop: scrolltop	
+					},1000);
+			});
+			$('#scrolltotop').unbind('click');
+			$('#scrolltotop').bind('click',function() {		
+				$('.scrollable').animate({
+					scrollTop: 0	
+					},1000);
+			});
 		}
 
 		function secondsToTimeString (seconds) {

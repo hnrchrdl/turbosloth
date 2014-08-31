@@ -5,19 +5,28 @@
 		#controls-playlist
 			.control#refreshplaylist
 				span.glyphicon.glyphicon-refresh
-			.control#refreshplaylist
-				span.glyphicon.glyphicon-hand-down
 			.control.empty
-			.control#saveplaylist
-				span.glyphicon.glyphicon-floppy-save
-			.control#saveplaylist
-				span.glyphicon.glyphicon-floppy-open
+			.control#scrolltocurrentsong
+				span.glyphicon.glyphicon-hand-down
+			.control#scrolltotop
+				span.glyphicon.glyphicon-hand-up
+			.control#saveplaylist.pull-right
+				span.glyphicon.glyphicon-trash
+			.control.empty.pull-right
+			.control#saveplaylist.pull-right
+				span.glyphicon.glyphicon-folder-open
+			.control#saveplaylist.pull-right
+				span.glyphicon.glyphicon-floppy-disk
 		<!-- Table -->
-		table.table 
-			tr
-				each column in columns
-					th #{column}
-			- each song in playlist
-				tr			
-					each column in columns
-						td #{song[column]}  
+		#loading_content.loading
+			.scrollable
+				table.table
+					tr
+						each column in columns
+							th #{column}
+					- each song in playlist
+						tr.playlistrow(id= 'playlistrow-' + song.Id)
+							each column in columns
+								td #{song[column]}
+		#loading.loading
+			| *** loading ***
