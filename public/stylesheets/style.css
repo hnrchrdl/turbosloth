@@ -8,12 +8,8 @@ a {
 	height: 60px;
 	border-bottom: 1px solid #ddd; 
 }
-#serverinfocontainer
-{
-	margin-top:15px;
-}
 #serverinfo {
-	margin:10px;
+	margin:15px;
 }
 #controls {
 	height: 40px;

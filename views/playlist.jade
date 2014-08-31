@@ -1,41 +1,23 @@
-.row
-	.col-md-1
-		p.lead.highlight Playlist
-	.col-md-1
-		p.lead Browse
-	.col-md-1
-		p.lead Search
-.row
-	.col-md-12
+.panel.panel-default
+	<!-- Default panel contents -->
+
+	.panel-body
 		#controls-playlist
 			.control#refreshplaylist
 				span.glyphicon.glyphicon-refresh
+			.control#refreshplaylist
+				span.glyphicon.glyphicon-hand-down
+			.control.empty
 			.control#saveplaylist
 				span.glyphicon.glyphicon-floppy-save
 			.control#saveplaylist
 				span.glyphicon.glyphicon-floppy-open
-.row
-	.col-md-12
-		.row.playlist-row.head
-			.col-md-3 
-				strong Artist
-			.col-md-3 
-				strong Title
-			.col-md-3 
-				strong Album
-			.col-md-2 
-				strong Genre
-			.col-md-1 
-				strong Time
-		- each song in playlist 
-			.row.playlist-row
-				.col-md-3 
-					| #{song.Artist || '<unknown>'}
-				.col-md-3 
-					| #{song.Title || '<unknown>'}
-				.col-md-3 
-					| #{song.Album || '<unknown>'}
-				.col-md-2 
-					| #{song.Genre || '<unknown>'}
-				.col-md-1 
-					| #{secondsToTimeString(song.Time) || '<unknown>'}	
+		<!-- Table -->
+		table.table 
+			tr
+				each column in columns
+					th #{column}
+			- each song in playlist
+				tr			
+					each column in columns
+						td #{song[column]}  

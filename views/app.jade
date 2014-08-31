@@ -37,9 +37,14 @@ block content
 			// switch state for random and repeat
 			var random = 1 - status.random;
 			var repeat =  1 - status.repeat;
+			var pause = 1;
+			if (status.state === 'pause') {
+				pause = 0;
+			}
 			var handlerList_ = [
 					'random-' + random,
-					'repeat-' + repeat
+					'repeat-' + repeat,
+					'pause-' + pause
 			];
 			registerMpdHandler(handlerList_);
 		});
@@ -48,7 +53,7 @@ block content
 
 			socket.emit('requestMpdAorta');
 			
-			var handlerList = ['pause','previous',
+			var handlerList = ['previous',
 						'next','play','stop'];
 			registerMpdHandler(handlerList);
 			registerSeekFunc();
@@ -102,7 +107,7 @@ block content
 		function registerSeekFunc(currentsong) { 
 			$('#progress-bar-container').bind('click', function(e){
 				currentsong = getCurrentsong();
-				var seek_ratio = 1 -(($(window).width() - e.clientX) / $(window).width()); 
+				var seek_ratio = 1 -(($(document).width() - e.clientX) / $(window).width()); 
 				var seek_sec = String(Math.round( seek_ratio * currentsong.Time ));
 				var songId = currentsong.Id;
 				requestMpdCommand('seek', [songId,seek_sec]);

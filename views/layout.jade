@@ -3,16 +3,18 @@ doctype html
 html(ng-app)
 	include ./header.jade
 	body
-		.container-fluid#head
+		#head.container-fluid
 			#serverinfocontainer.pull-right
-				.btn-group.pull-right
-					button.btn.btn-default.btn-sm <span class="glyphicon glyphicon-info-sign"></span>	
-					button.btn.btn-default.btn-sm <span class="glyphicon glyphicon-wrench"></span>
-					button.btn.btn-default.btn-sm <span class="glyphicon glyphicon-off"></span>
-				.pull-right
-					p#serverinfo connected to <strong>#{mpdhost}:#{mpdport}</strong> 
+				.control#info
+					<span class="glyphicon glyphicon-info-sign"></span>	
+				.control#settings
+					<span class="glyphicon glyphicon-wrench"></span>
+				.control#logout
+					<span class="glyphicon glyphicon-off"></span>
+			.pull-right
+				p#serverinfo.small connected to <strong>#{mpdhost}:#{mpdport}</strong> 
 			img(src="images/logo.png").pull-left
-		
+
 		.container-fluid#controls
 			.control#previous
 				<span class="glyphicon glyphicon-backward"></span>
@@ -43,5 +45,14 @@ html(ng-app)
 			.row.clearfix
 				#progress-bar-container
 					#progress-bar
+		nav.container-fluid
+			ul.list-inline
+				li.highlight
+					| Playlist
+				li 
+					| Browse
+				li 
+					| Search
 
+		
 		block content
