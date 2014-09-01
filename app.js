@@ -58,6 +58,7 @@ app.use(session({
 
 //make routes accessible
 app.use('/', routes);
+app.use('/logout', routes)
 
 
 /// catch 404 and forward to error handler

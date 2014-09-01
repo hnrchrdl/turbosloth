@@ -68,26 +68,11 @@ block content
 				setHeightOfScrollable();
 			});
 
-		});
-
-		function mpdCommand (name) {
-			$.ajax({
-				url:'/mpdcommand/' + name
-			}).done(function(data) {
-				if (data) {
-					return data;
-				}
+			$(document).on('click','#logout',function(){
+				window.location = '/logout';
 			});
-		}
-		function requestMpdCommand (cmd,args) {
-			// cmd is a string, separated by '-'
-			// for optional arguments
-			// examples: 
-			// 'play' random-1' / 'seek-5-150' 
-			msg = JSON.stringify({cmd:cmd,args:args});
-			console.log(msg);
-			socket.emit('mpdCommand', msg);
-		}
+
+		});
 
 		function registerMpdHandler (handlerList) {
 			var register = function(cmd,args) {
@@ -95,32 +80,36 @@ block content
 				// via JQuery bind method
 				$('#' + cmd).unbind('click');
 				$('#' + cmd).bind('click',function(){
-					console.log(cmd + ' clicked');
-					requestMpdCommand(cmd,args);
+					msg = JSON.stringify({cmd:cmd, args:args});
+					socket.emit('mpdCommand', msg, function(msg) {
+						console.log(msg);
+					});
 				});
 			}
 			for (i in handlerList) {
 				handlerArray = handlerList[i].split('-'); 
 				var cmd = handlerArray.shift();
-				console.log(cmd);
-				console.log(handlerArray);
 				var args = [];
 				for (i in handlerArray) {
 					args.push(handlerArray[i]);
 				}
-				//console.log(args);
+
 				register(cmd,args);
 			} 
 		}
 
 		function registerSeekFunc(currentsong) { 
 			$('#progress-bar-container').bind('click', function(e){
+
 				currentsong = getCurrentsong();
+
 				var seek_ratio = 1 -(($(document).width() - e.clientX) / $(window).width()); 
 				var seek_sec = String(Math.round( seek_ratio * currentsong.Time ));
 				var songId = currentsong.Id;
-				//requestMpdCommand('seek', [songId,seek_sec]);
-				requestMpdCommand('seekcur', [seek_sec]);
+				args = JSON.stringify({cmd:'seekcur',args:[seek_sec]});
+				socket.emit('mpdCommand', args, function(data) {
+					console.log(data);
+				});
 			});
 		}
 
@@ -213,6 +202,14 @@ block content
 			}
 		}
 
+		function renderLoadPlaylist() {
+			args = JSON.stringify({cmd:'listplaylists', args:[]});
+			socket.emit('mpdCommand',args,function(msg) {
+				
+				console.log(msg);
+			});
+		}
+
 		function indicateCurrentSong () {
 			currentsong = getCurrentsong();
 			// playindicator
@@ -247,11 +244,17 @@ block content
 				}
 			});
 			$('.playlistrow').on('click','.playbutton',function() {
-				songid = $(this).parent().attr('id').split('-')[1];;
-				requestMpdCommand('playid',songid);
+				songid = $(this).parent().attr('id').split('-')[1];
+				args = JSON.stringify({cmd:'playid',args:[songid]});
+				socket.emit('mpdCommand',args,function(data){
+					console.log(data);
+				});
 			});
 			$(document).on('click','#refreshplaylist',function() {
 				renderPlaylist();
+			});
+			$(document).on('click','#loadplaylist',function() {
+				renderLoadPlaylist();
 			});
 		}
 
@@ -260,7 +263,6 @@ block content
 			var scrollable = $('.scrollable');
 			var offset_top = scrollable.offset().top;
 			var window_height = $(window).height();
-			console.log(window_height - offset_top);
 			scrollable.height(window_height - offset_top-70);
 			
 

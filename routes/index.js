@@ -81,6 +81,10 @@ router.get('/mpdplaylist', function(req,res) {
 	});	
 });
 
+router.get('/logout', function(req,res) {
+	req.session.destroy();
+	res.redirect('/');
+});
 
 
 
@@ -103,8 +107,9 @@ var listen = function(app) {
 		});
 
 		
-		socket.on('mpdCommand', function(msg) {
+		socket.on('mpdCommand', function(msg,callback) {
 			// listens for Mpd Commands
+			console.log(msg);
 
 			console.log('cmd: ' + JSON.parse(msg).cmd);
 			console.log('args: ' + JSON.parse(msg).args);
@@ -115,8 +120,10 @@ var listen = function(app) {
 			args = JSON.parse(msg).args;
 
 			komponistClient.command(cmd,args,function(err,msg) {
-				console.log(err);
-				console.log(msg);		
+				console.log('err: ' + err);
+				console.log('msg' + msg);
+				callback(msg);
+
 			});
 		});
 
