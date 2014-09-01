@@ -27,6 +27,6 @@
 					- each song in playlist
 						tr.playlistrow(id= 'playlistrow-' + song.Id)
 							each column in columns
-								td #{song[column]}
+								td(class= column) #{song[column]}
 		#loading.loading
 			| *** loading ***

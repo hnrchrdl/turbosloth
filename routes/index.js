@@ -74,7 +74,7 @@ router.post('/', function(req, res) {
 
 
 router.get('/mpdplaylist', function(req,res) {
-	columns = ['Pos', 'Artist', 'Title', 'Album', 'Genre', 'Time']
+	columns = ['Pos', 'Title', 'Artist', 'Album', 'Genre', 'Time']
 	komponistClient.playlistinfo(function(err,data) {
 
 		res.render('playlist',{playlist:data,columns:columns});

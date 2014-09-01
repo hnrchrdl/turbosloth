@@ -82,3 +82,6 @@ a {
 .panel, .panel-body {
 	padding-top: 0px !important;
 }
+.playbutton {
+	cursor: pointer;
+}
