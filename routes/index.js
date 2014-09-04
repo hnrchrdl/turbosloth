@@ -106,7 +106,12 @@ var listen = function(app) {
 			sendMpdAorta('init');
 		});
 
-		
+		socket.on('mpd', function(cmd,args,callback) {
+			komponistClient.command(cmd,args,function(err,msg) {
+				callback(err,msg);
+			});
+		});
+
 		socket.on('mpdCommand', function(msg,callback) {
 			// listens for Mpd Commands
 			console.log(msg);

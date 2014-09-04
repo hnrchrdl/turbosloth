@@ -7,10 +7,16 @@ block content
 
 	//javascript
 	script(type="text/javascript", src="https://cdn.socket.io/socket.io-1.0.6.js")
+	script(type="text/javascript", src="javascripts/mpd.js")
 
 	script(type="text/javascript").
 
+		jQuery.fx.interval = 100;
+
 		var socket = io();
+
+		var aorta;
+
 		var getStatus;
 		var getCurrentsong;
 
@@ -18,6 +24,8 @@ block content
 			console.log('Mpd Aorta received');
 			console.log(msg.status);
 			console.log(msg.currentsong);
+
+
 
 			var status = $.parseJSON(msg.status);
 			var currentsong = $.parseJSON(msg.currentsong);
@@ -43,10 +51,8 @@ block content
 			// switch state for random and repeat
 			var random = 1 - status.random;
 			var repeat =  1 - status.repeat;
-			var pause = 1;
-			if (status.state === 'pause') {
-				pause = 0;
-			}
+			var pause = status.state === 'pause' ? 0 : 1; 
+
 			var handlerList_ = [
 					'random-' + random,
 					'repeat-' + repeat,
@@ -57,6 +63,11 @@ block content
 
 		$(document).ready(function(){
 
+			aorta = new MpdAorta(function(err, aorta) {
+				console.log('currentsong: ' + JSON.stringify(aorta.song));
+				console.log('err: ' + err)
+			});
+			
 			socket.emit('requestMpdAorta');
 			
 			var handlerList = ['previous',
@@ -144,8 +155,6 @@ block content
 		}
 
 		function renderCurrentSong (status,currentsong) {
-			console.log('debug' + status.random);
-			console.log('debug' + status.repeat);
 			//indicate status.state
 			$('.control-highlight').hide();
 
@@ -172,8 +181,6 @@ block content
 		function renderProgressBar(status) {
 
 			var progressBar = $('#progress-bar');
-
-			console.log(status.state);
 			if  (status.state === 'play') {
 				var songTime = parseFloat(status.time.split(":")[1]);
 				var elapsed = parseFloat(status.elapsed);
