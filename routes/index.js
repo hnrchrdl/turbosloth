@@ -3,10 +3,10 @@ var app = require('../app');
 var router = express.Router();
 
 var komponist = require('komponist');
-var komponistClient;
+var komponistClient = false;
 
 var socketio = require('socket.io');
-var io, socketEmit, sendMpdAorta, getKomponistClient;
+var io, emitChange;
 
 //  ******************
 //  *** the routes ***
@@ -15,42 +15,35 @@ router.get('/', function(req, res) {
 
 	if (req.session.mpdhost && req.session.mpdport) {
 		
-		console.log(req.session.komponistClient);
 		// create komponist from session
-		
 		// new session object is undefinded by default
-			if (!komponistClient) {
-				komponistClient = komponist.createConnection(
-					req.session.mpdport,
-					req.session.mpdhost
-				);
-				//komponistClient.pause(1);
-			
-				// register mpd listener for -ready- event
-				console.log('komponist listener for -changed- registered');
-				// unbind client first to avoid double registration
-				komponistClient.on('ready', function(err,msg) {
-					console.log('unbind komponist listener for -changed- event');
-				});
-				komponistClient.on('ready', function(err,msg) {
-					if (req.session.mpdpassword) {
-						komponistClient.password(req.session.mpdpassword, function(err,msg){
-							if (err) console.log(err); 
-							else console.log('mpd authenticated');
-						});
-					}
-				});
+		if (!komponistClient) {
+			komponistClient = komponist.createConnection(
+				req.session.mpdport,
+				req.session.mpdhost
+			);
+		}
+		// register mpd listener for -ready- event
 
-				// register mpd listener for -changed- event
-				console.log('komponist listener for -changed- registered');
-				komponistClient.on('changed', function(system) {
-					console.log('Subsystem changed: ' + system);
-					if (system == 'player' || system == 'options') {
-						sendMpdAorta('changed');
-					}
+		//komponistClient.removeAllListeners('ready');
+		komponistClient.on('ready', function(err, msg) {
+			if (req.session.mpdpassword) {
+				komponistClient.password(req.session.mpdpassword, function(err,msg){
+					if (err) console.log(err); 
+					else console.log('mpd authenticated');
 				});
 			}
-		
+		});
+
+		// register mpd listener for -changed- event
+		komponistClient.removeAllListeners('changed');
+		komponistClient.on('changed', function(system) {
+			console.log('Subsystem changed: ' + system);
+			if (system == 'player' || system == 'options') {
+				emitChange(system);
+			}
+		});
+	
 		//render skeleton
 		res.render('app', { 
 			title: 'leukosia node', 
@@ -75,8 +68,7 @@ router.post('/', function(req, res) {
 
 router.get('/mpdplaylist', function(req,res) {
 	columns = ['Pos', 'Title', 'Artist', 'Album', 'Genre', 'Time']
-	komponistClient.playlistinfo(function(err,data) {
-
+	komponistClient.playlistinfo(function(err, data) {
 		res.render('playlist',{playlist:data,columns:columns});
 	});	
 });
@@ -100,63 +92,21 @@ var listen = function(app) {
 	
 	io.sockets.on('connection', function (socket) {
 		console.log('A socket connected');
-		
-		socket.on('requestMpdAorta', function() {
-			// sends the App Aorta
-			sendMpdAorta('init');
-		});
 
+		
 		socket.on('mpd', function(cmd,args,callback) {
 			komponistClient.command(cmd,args,function(err,msg) {
-				callback(err,msg);
+				if (err) console.log('mpd-error: ' + err)
+				if (callback) callback(err, msg);
 			});
 		});
 
-		socket.on('mpdCommand', function(msg,callback) {
-			// listens for Mpd Commands
-			console.log(msg);
+		emitChange = function (system) {
 
-			console.log('cmd: ' + JSON.parse(msg).cmd);
-			console.log('args: ' + JSON.parse(msg).args);
-
-			// cmd is the mpd command as a String 
-			cmd = JSON.parse(msg).cmd;
-			// args are the optional commands as Array
-			args = JSON.parse(msg).args;
-
-			komponistClient.command(cmd,args,function(err,msg) {
-				console.log('err: ' + err);
-				console.log('msg' + msg);
-				callback(msg);
-
-			});
-		});
-
-
-		sendMpdAorta = function (source) {
-			// sends the App Aorta
+			// sends the mpd system change to the browser
 			// this is done when side is lodaed
 			// or something on Mpd has happend
-
-			console.log('mpd aorta has been requested');
-			komponistClient.status(function(err,msg) {
-				
-				// extract status
-				var status = JSON.stringify(msg);
-				komponistClient.currentsong(function(err,msg) {
-										
-					// extract current song
-					currentsong = JSON.stringify(msg);
-					console.log(status);
-					console.log(currentsong);
-					// emit data to client 
-					socket.emit('sendMpdAorta', {
-						source:source,
-						status:status,
-						currentsong:currentsong 
-					});
-				});
-			});
+ 			socket.emit('change',system);
 		}
 	});
 	

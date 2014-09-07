@@ -55,7 +55,7 @@ a {
 .progress-bar {
    transition-duration: 3s;
 }
-#progress-bar-container {
+#seekcur {
 	height: 5px;
 	width: 100%;
 	margin-bottom: 30px;
@@ -63,7 +63,7 @@ a {
 	cursor: pointer;
 
 }
-#progress-bar-container:hover {
+#seekcur:hover {
 	background-color: #eee;
 }
 #progress-bar {

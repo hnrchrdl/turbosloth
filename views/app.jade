@@ -11,70 +11,19 @@ block content
 
 	script(type="text/javascript").
 
+		var socket = io();
+		var __aorta, __playlist;
+		
 		jQuery.fx.interval = 100;
 
-		var socket = io();
+		$(document).ready(function() {
 
-		var aorta;
+			var init = true;
+			renderAorta(init);
 
-		var getStatus;
-		var getCurrentsong;
+			// misc initialization
+			registerButtonStyles();
 
-		socket.on('sendMpdAorta',function(msg) {
-			console.log('Mpd Aorta received');
-			console.log(msg.status);
-			console.log(msg.currentsong);
-
-
-
-			var status = $.parseJSON(msg.status);
-			var currentsong = $.parseJSON(msg.currentsong);
-
-			getStatus = function() {
-				return status;
-			};
-
-			getCurrentsong = function() {
-				return currentsong;
-			}
-
-			if (msg.source === 'init') {
-				$('.loading').toggle();
-				renderPlaylist();
-			}
-			else indicateCurrentSong();
-
-			renderCurrentSong(status,currentsong);
-			renderProgressBar(status);
-			
-
-			// switch state for random and repeat
-			var random = 1 - status.random;
-			var repeat =  1 - status.repeat;
-			var pause = status.state === 'pause' ? 0 : 1; 
-
-			var handlerList_ = [
-					'random-' + random,
-					'repeat-' + repeat,
-					'pause-' + pause
-			];
-			registerMpdHandler(handlerList_);
-		});
-
-		$(document).ready(function(){
-
-			aorta = new MpdAorta(function(err, aorta) {
-				console.log('currentsong: ' + JSON.stringify(aorta.song));
-				console.log('err: ' + err)
-			});
-			
-			socket.emit('requestMpdAorta');
-			
-			var handlerList = ['previous',
-						'next','play','stop'];
-			registerMpdHandler(handlerList);
-			registerSeekFunc();
-			registerStyles();
 			$(window).on('resize', function() {
 				setHeightOfScrollable();
 			});
@@ -82,186 +31,50 @@ block content
 			$(document).on('click','#logout',function(){
 				window.location = '/logout';
 			});
-
 		});
 
-		function registerMpdHandler (handlerList) {
-			var register = function(cmd,args) {
-				// register the interface
-				// via JQuery bind method
-				$('#' + cmd).unbind('click');
-				$('#' + cmd).bind('click',function(){
-					msg = JSON.stringify({cmd:cmd, args:args});
-					socket.emit('mpdCommand', msg, function(msg) {
-						console.log(msg);
-					});
-				});
-			}
-			for (i in handlerList) {
-				handlerArray = handlerList[i].split('-'); 
-				var cmd = handlerArray.shift();
-				var args = [];
-				for (i in handlerArray) {
-					args.push(handlerArray[i]);
-				}
+		socket.on('change', function(system) {
+			
+			console.log('subsystem changed: ' + system);
+			
+			var init = false;
+			renderAorta(init);
+			
+		});
 
-				register(cmd,args);
-			} 
-		}
+		function renderAorta(init) {
 
-		function registerSeekFunc(currentsong) { 
-			$('#progress-bar-container').bind('click', function(e){
+			__aorta = new MpdAorta(function(err, aorta) {
+				console.log('rendering aorta');
+				aorta.render();
+				aorta.registerHandler();
+				aorta.renderProgressBar();
+				init ? renderPlaylist() : aorta.indicate();
 
-				currentsong = getCurrentsong();
-
-				var seek_ratio = 1 -(($(document).width() - e.clientX) / $(window).width()); 
-				var seek_sec = String(Math.round( seek_ratio * currentsong.Time ));
-				var songId = currentsong.Id;
-				args = JSON.stringify({cmd:'seekcur',args:[seek_sec]});
-				socket.emit('mpdCommand', args, function(data) {
-					console.log(data);
-				});
+				
 			});
 		}
 
+		function renderPlaylist() {
+
+			__playlist = new MpdPlaylist(function(err, playlist) {
+				playlist.render();
+				playlist.indicate();
+				playlist.registerFunctionality();
+				registerButtonStyles();
+				setHeightOfScrollable();
+			});
+		}
+
+
 		//styling
-		function registerStyles(){
-			//controlHover
+		function registerButtonStyles(){
+			// make buttons bigger on hover
 			$('.control').on('mouseenter',function(){
 				$(this).addClass('bigger');
 			});
 			$('.control').on('mouseleave',function(){
 				$(this).removeClass('bigger');
-			});
-		}
-		
-
-		function renderPlaylist() {
-			$.ajax({
-				url:'/mpdplaylist'
-			}).done(function(data) {
-				$('#main').html(data);
-				registerStyles();
-				indicateCurrentSong();
-				playlistFunctions();
-				setHeightOfScrollable();
-				registerScrollSpy();
-				$('.playlistrow').find('.Time').each(function() {
-					var songtime = $(this).text();
-					$(this).text(secondsToTimeString(songtime));
-
-				});
-			});
-		}
-
-		function renderCurrentSong (status,currentsong) {
-			//indicate status.state
-			$('.control-highlight').hide();
-
-			$('#' + status.state + '-highlight').show();
-
-			if (status.random === '1') {
-				$('#random-highlight').show();
-			}
-			if (status.repeat === '1') {
-				$('#repeat-highlight').show();
-			}
-
-			//render current song
-			if (status.state === 'stop') {
-				$('#currentsong').text("");
-			}
-			else {
-				$('#currentsong').text(currentsong.Artist + 
-					" - " + currentsong.Title +
-					' (' + secondsToTimeString(currentsong.Time) + ')');
-			}
-		}
-
-		function renderProgressBar(status) {
-
-			var progressBar = $('#progress-bar');
-			if  (status.state === 'play') {
-				var songTime = parseFloat(status.time.split(":")[1]);
-				var elapsed = parseFloat(status.elapsed);
-				startProgressbar(songTime,elapsed);
-			}
-			else if (status.state === 'pause') {
-				stopProgressBar();
-			}
-			else {
-				stopProgressBar();
-				progressBar.css('width',0);
-			}
-
-			function startProgressbar (songTime,elapsed) {
-				
-				var initial_width = elapsed / songTime * 100; 
-				var duration = songTime - elapsed;
-				progressBar
-					.stop()
-					.css('width',initial_width + '%')
-					.animate({'width': '100%'},duration * 1000, 'linear');
-			}
-
-			function stopProgressBar () {
-				progressBar.stop();
-			}
-		}
-
-		function renderLoadPlaylist() {
-			args = JSON.stringify({cmd:'listplaylists', args:[]});
-			socket.emit('mpdCommand',args,function(msg) {
-				
-				console.log(msg);
-			});
-		}
-
-		function indicateCurrentSong () {
-			currentsong = getCurrentsong();
-			// playindicator
-			var playIndicator = $('<td class="playindicator"><span class="glyphicon glyphicon-play-circle"></span></td>')
-			//$('.playindicator').remove();
-			//$('.playlistrow').find('.Pos').show();
-			//$('#playlistrow-' + currentsong.Id).find('.Pos')
-			//	.after(playIndicator)
-			//	.hide();
-			$('.playlistrow').removeClass('highlight');
-			$('#playlistrow-' + currentsong.Id).addClass(
-					'highlight');
-		} 
-
-		function playlistFunctions () {
-			currentsong = getCurrentsong();
-			var playButton = ('<td class="playbutton"><span class="glyphicon glyphicon-play"></span></td>');
-			// playbutton
-			$('.playlistrow').unbind('mouseenter');
-			$('.playlistrow').bind('mouseenter', function() {
-				if ($(this).find('.playindicator').length === 0) {
-					$(this).find('.Pos')
-						.after(playButton)
-						.hide();
-				}
-			});
-			$('.playlistrow').unbind('mouseleave');
-			$('.playlistrow').bind('mouseleave', function(){
-				if ($(this).find('.playindicator').length === 0) {
-					$(this).find('.playbutton').remove();
-					$(this).find('.Pos').show();
-				}
-			});
-			$('.playlistrow').on('click','.playbutton',function() {
-				songid = $(this).parent().attr('id').split('-')[1];
-				args = JSON.stringify({cmd:'playid',args:[songid]});
-				socket.emit('mpdCommand',args,function(data){
-					console.log(data);
-				});
-			});
-			$(document).on('click','#refreshplaylist',function() {
-				renderPlaylist();
-			});
-			$(document).on('click','#loadplaylist',function() {
-				renderLoadPlaylist();
 			});
 		}
 
@@ -271,25 +84,7 @@ block content
 			var offset_top = scrollable.offset().top;
 			var window_height = $(window).height();
 			scrollable.height(window_height - offset_top-70);
-			
 
-		}
-		function registerScrollSpy() {
-			$('#scrolltocurrentsong').unbind('click');
-			$('#scrolltocurrentsong').bind('click',function() {
-				var scrolltop = $('#playlistrow-' + getCurrentsong().Id).offset().top +
-						$('.scrollable').scrollTop() -
-						$('.scrollable').offset().top;			
-				$('.scrollable').animate({
-					scrollTop: scrolltop	
-					},1000);
-			});
-			$('#scrolltotop').unbind('click');
-			$('#scrolltotop').bind('click',function() {		
-				$('.scrollable').animate({
-					scrollTop: 0	
-					},1000);
-			});
 		}
 
 		function secondsToTimeString (seconds) {
