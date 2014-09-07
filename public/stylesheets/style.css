@@ -55,7 +55,7 @@ a {
 .progress-bar {
    transition-duration: 3s;
 }
-#seekcur {
+#playlist-container {
 	height: 5px;
 	width: 100%;
 	margin-bottom: 30px;
@@ -63,7 +63,7 @@ a {
 	cursor: pointer;
 
 }
-#seekcur:hover {
+#playlist-container:hover {
 	background-color: #eee;
 }
 #progress-bar {
@@ -71,9 +71,6 @@ a {
 	background-color: red;
 	height: 5px;
 	width:0px;
-}
-#loading {
-	display: none
 }
 .scrollable {
 	overflow-y: scroll;

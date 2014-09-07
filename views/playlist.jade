@@ -15,18 +15,34 @@
 			.control.empty.pull-right
 			.control#loadplaylist.pull-right
 				span.glyphicon.glyphicon-folder-open
-			.control#saveplaylist.pull-right
+			.control#spl.pull-right(data-toggle='popover')
 				span.glyphicon.glyphicon-floppy-disk
 		<!-- Table -->
-		#loading_content.loading
-			.scrollable
-				table.table
-					tr
+		.scrollable
+			table.table
+				tr
+					each column in columns
+						th #{column}
+				- each song in playlist
+					tr.playlistrow(id= 'playlistrow-' + song.Id)
 						each column in columns
-							th #{column}
-					- each song in playlist
-						tr.playlistrow(id= 'playlistrow-' + song.Id)
-							each column in columns
-								td(class= column) #{song[column]}
-		#loading.loading
-			| *** loading ***
+							td(class= column) #{song[column]}
+		
+		#playlistloadmodal.modal.fade
+			.modal-dialog.modal-lg
+				.modal-content
+					.modal-header
+						button(type="button", class="close", data-dismiss="modal")
+							span(aria-hidden="true") &times;
+								span(class="sr-only") Close
+						h4.modal-title Load Playlist
+					#playlistloadcontent.modal-body
+						.radio
+							label
+								input(type='radio', name='radio1', value='append' checked) 
+								| append to current playlist
+						.radio
+							label
+								input(type='radio', name='radio1', value='replace')
+								| replace current playlist
+						ul.list-inline

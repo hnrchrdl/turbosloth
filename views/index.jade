@@ -24,7 +24,6 @@ block content
 			var mpd_host = $("#mpd-host").val();
 			var mpd_port = $("#mpd-port").val();
 			var mpd_password = $("#mpd-password").val();
+			console.log(mpd_host);
 			post("/", {mpdhost:mpd_host,mpdport:mpd_port,mpdpassword:mpd_password});
-		});
-
-	
+		});	

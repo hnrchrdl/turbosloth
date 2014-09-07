@@ -3,7 +3,7 @@ var app = require('../app');
 var router = express.Router();
 
 var komponist = require('komponist');
-var komponistClient = false;
+var komponistClient;
 
 var socketio = require('socket.io');
 var io, emitChange;
@@ -11,21 +11,22 @@ var io, emitChange;
 //  ******************
 //  *** the routes ***
 
+// route for getting of /
 router.get('/', function(req, res) {
 
 	if (req.session.mpdhost && req.session.mpdport) {
 		
 		// create komponist from session
 		// new session object is undefinded by default
-		if (!komponistClient) {
+		//if (!komponistClient) {
+			console.log('check');
 			komponistClient = komponist.createConnection(
 				req.session.mpdport,
 				req.session.mpdhost
 			);
-		}
-		// register mpd listener for -ready- event
+		//}
 
-		//komponistClient.removeAllListeners('ready');
+		// register mpd listener for -ready- event
 		komponistClient.on('ready', function(err, msg) {
 			if (req.session.mpdpassword) {
 				komponistClient.password(req.session.mpdpassword, function(err,msg){
@@ -45,19 +46,20 @@ router.get('/', function(req, res) {
 		});
 	
 		//render skeleton
-		res.render('app', { 
+		res.render('skeleton', { 
 			title: 'leukosia node', 
 			mpdhost: req.session.mpdhost,
 			mpdport: req.session.mpdport
 		});
 	}
+
+	// if no session is found
 	else {
-		console.log('no session found');
 		res.render('index', { title: 'leukosia node' });
 	}
-
 });
 
+// route for posting to /
 router.post('/', function(req, res) {
 	req.session.mpdhost = req.body.mpdhost;
 	req.session.mpdport = req.body.mpdport;
@@ -65,7 +67,7 @@ router.post('/', function(req, res) {
 	res.redirect('/');
 });
 
-
+// route for getting of /mpdplaylist
 router.get('/mpdplaylist', function(req,res) {
 	columns = ['Pos', 'Title', 'Artist', 'Album', 'Genre', 'Time']
 	komponistClient.playlistinfo(function(err, data) {
@@ -73,27 +75,22 @@ router.get('/mpdplaylist', function(req,res) {
 	});	
 });
 
+// route for getting of /logout
 router.get('/logout', function(req,res) {
 	req.session.destroy();
 	res.redirect('/');
 });
-
-
 
 // *************************
 // *** set up the socket ***
 
 var listen = function(app) {
 
-	//var komponistClient = get_or_set_komponistClient();
-
 	io = socketio.listen(app);
-	//var komponistClient = getKomponistClient();
 	
 	io.sockets.on('connection', function (socket) {
 		console.log('A socket connected');
 
-		
 		socket.on('mpd', function(cmd,args,callback) {
 			komponistClient.command(cmd,args,function(err,msg) {
 				if (err) console.log('mpd-error: ' + err)
@@ -109,11 +106,9 @@ var listen = function(app) {
  			socket.emit('change',system);
 		}
 	});
-	
 	// make io availible to other modules
 	return io;	
 }
-
 
 module.exports = {
     listen: listen,
