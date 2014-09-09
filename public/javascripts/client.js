@@ -7,15 +7,17 @@ $(document).ready(function() {
 
 	var init = true;
 	renderAorta(init);
-
-	// misc initialization
-	registerButtonStyles();
-
-	$(window).on('resize', function() {
-		setHeightOfScrollable();
-	});
-
-	$(document).on('click','#logout',function(){
+	// make sure the komponist client is created on server
+	// on first call only
+	setTimeout(function() {
+		renderAorta(init);
+		$(window).on('resize', function() {
+			setHeightOfScrollable();
+			registerButtonStyles();
+		});
+	}, 2000);
+	
+	$('#logout').on('click',function(){
 		window.location = '/logout';
 	});
 });
