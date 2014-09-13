@@ -1,0 +1,44 @@
+#control-bar {
+	position: relative;
+	.Container;
+	top: 	@headerHeight;
+	height: @controlBarHeight;
+
+	.control-menu {
+		position: 	absolute;
+		top: 		@controlBarHeight / 2  - @buttonHeight / 2;
+		&.left {
+			left:		@medium;	
+		}
+		&.right {
+			right:		@medium;
+		}
+	}
+
+	.currentsong-wrapper {
+		position:		absolute;
+		top: 			@medium;
+		left: 			@medium * 2 + @buttonHeight *5;
+		padding-left: 	@long;
+		padding-top:	@medium;
+		height: 		@controlBarHeight - @medium * 3;
+		border-left: 	@extraLightBorder;
+	}
+}
+#seek-bar-container {
+	.Container;
+	top: 					@headerHeight + @controlBarHeight + @medium;
+	//height: 		@seekBarContainerHeight;
+	cursor: 			pointer;
+	border:				@extraLightBorder;
+	&:hover {
+		border: 1px solid @transparentWhite;
+	}
+	-webkit-transition: border 0.5s, -webkit-transform 0.5s;
+    transition: border 0.5s, transform 0.5s;
+	#seek-bar {
+		height: @seekBarContainerHeight - 2;
+		width: 30%;
+		background-color: @transparentWhite2;
+	}
+}

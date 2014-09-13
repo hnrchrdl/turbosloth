@@ -1,0 +1,85 @@
+html,body,#background-wrapper {
+	height: 		100%;
+	width: 			100%;
+	padding: 		0;
+	margin: 		0;
+	color:			@almostWhite;
+	font-family: 	'Open Sans', sans-serif;
+	font-weight:	300;
+	font-size: 12px;
+	background-color: @almostBlack;
+}
+#background-wrapper {
+	// background patterns are taken from subtlepatterns.com. thank you!
+	//background: 	url("@{images}/congruent_outline.png");
+	//background: 	url("@{images}/classy_fabric.png");
+	//background: 	url("@{images}/grey_wash_wall.png");
+	//background: 	url("@{images}/assault.png");
+	//background: 	url("@{images}/binding_dark.png");
+	//background: 	url("@{images}/black_lozenge.png");
+	//background: 	url("@{images}/noisy_net.png");
+	//background: 	url("@{images}/stardust.png");
+	background: 	url("@{images}/stressed_linen.png");
+	//background: 	url("@{images}/subtle_carbon.png");
+	//background: 	url("@{images}/twinkle_twinkle.png");
+	//background: 	url("@{images}/zwartevilt.png");
+	position: 		relative;
+}
+h1 {
+	margin: 0;
+	padding: 0;
+}
+
+a {
+	color: @primary;
+	text-decoration: 	none;
+	&:hover {
+		color: 				@primaryDark;
+	}
+}
+.button-wrapper {
+	height: 		@buttonHeight;
+	line-height: 	@buttonHeight;
+	text-align:		center;
+	&.left {
+		float: 			left;
+	}
+	&.right {
+		float: 			right;
+	}
+}
+.button {
+	height: 		buttonHeight;
+	min-width:  	@buttonHeight;
+	cursor: 		pointer;
+	display: 		inline-block;
+	&:hover {
+		background-color: @hoverBackground;
+	}
+	&.active {
+		color:	@primary;
+	}
+	-webkit-transition: background-color 0.5s, -webkit-transform 0.5s;
+    transition: background-color 0.5s, transform 0.5s;
+    &.text {
+    	padding-left: @medium;
+    	padding-right: @medium; 
+    }
+}
+
+
+::selection { 
+	background: @primary; 
+	color: 		#fff; 
+	}
+::-moz-selection { 
+	background: @primary; 
+	color: 		#fff; 
+}
+::-webkit-scrollbar {
+	width:	@short;
+	background-color: @transparentWhite2;
+}
+::-webkit-scrollbar-thumb {
+	background-color: @primary;
+}

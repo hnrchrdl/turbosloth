@@ -1,0 +1,33 @@
+#playlist {
+	.button-wrapper {
+		//margin: @short;
+	}
+	.song {
+	height: @buttonHeight;
+	line-height: @buttonHeight;
+	border-bottom: @extraLightBorder;
+		.attr {
+			display: inline-block;
+			margin-left: @medium;
+			&.space {
+				height: @medium;
+				margin-top: @buttonHeight / 2 - @medium / 2;
+				border-right: @extraLightBorder;
+			}
+		}
+		&.active {
+			background-color: @transparentWhite2;
+			border:none;
+		}
+	}
+	&.scrollable {
+		overflow-y: scroll;		
+	}
+}
+::-webkit-scrollbar {
+	width:	@short;
+	background-color: @transparentWhite2;
+}
+::-webkit-scrollbar-thumb {
+	background-color: @transparentWhite;
+}

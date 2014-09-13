@@ -1,0 +1,56 @@
+//// Variables
+
+/// paths
+@images: 		"img";
+
+/// fonts
+@lightGray:	 	  hsl(0,0%,55%);
+@darkGray: 		  hsl(0,0%,40%);
+@almostWhite: 	hsl(0,0%,80%);
+@almostBlack: 	hsl(0,0%,15%);
+
+/// backgrounds
+@transparentWhite: 	hsla(0,0%,100%,0.5);
+@transparentWhite2: hsla(0,0%,100%,0.2);
+@transparentGray: 	hsla(0,0%,10%,0.6);
+@hoverBackground: 	hsla(0,0%,95%,0.1);
+
+/// border
+@lightBorder: 		  1px solid @transparentWhite; 
+@extraLightBorder: 	1px solid @transparentWhite2; 
+
+
+/// colors
+//@primary:        	hsl(160, 100%, 50%);
+//@primary:        	hsl(160, 90%, 45%);
+@primary:        	  hsl(200, 90%, 45%);
+
+ 
+// Primary Variants -
+@primaryLight:   	hsl(hue(@primary), 100%, 70%);
+@primaryDark:    	hsl(hue(@primary), 60%, 40%);
+@primaryFaded:   	hsl(hue(@primary), 60%, 65%);
+ 
+// 180degree Variants
+@variant:         	spin((@primary), 180);
+@variantLight:    	hsl(hue(@variant), 100%, 70%);
+@variantDark:     	hsl(hue(@variant), 60%, 40%);
+@variantFaded:    	hsl(hue(@variant), 60%, 65%);
+ 
+// 90degree Variants
+@corner:         	spin((@primary), 70);
+@cornerLight:    	hsl(hue(@corner), 100%, 70%);
+@cornerDark:     	hsl(hue(@corner), 60%, 40%);
+@cornerFaded:    	hsl(hue(@corner), 60%, 65%);
+
+// heights, margins and paddings
+@headerHeight: 				90px;
+@controlBarHeight: 			100px;
+@seekBarContainerHeight: 	10px;
+@buttonHeight: 				40px;
+@seekBarHContainerHeight:	@medium;
+@navHeight:					@buttonHeight;
+@songHeight:					50px;
+@long: 						30px;
+@short: 					@long / 6;
+@medium:					@long / 2;

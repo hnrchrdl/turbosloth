@@ -1,12 +1,127 @@
-extends layout
+doctype html
+html(lang='en')
+head
+  meta(charset='utf-8')
+  meta(http-equiv='X-UA-Compatible', content='IE=edge')
+  meta(name='viewport', content='width=device-width, initial-scale=1')
+  title= title
 
-block content
-	.container-fluid#main
-	
-	p.text-center.small
-		| leukosia node v.0.1
+  link(rel='stylesheet/less', type='text/css', href='/src/less/styles.less')
+  link(href='//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css', rel='stylesheet')
+  link(href='http://fonts.googleapis.com/css?family=Quicksand:300|Open+Sans:400,300,600|Montserrat', rel='stylesheet', type='text/css')
 
-	//javascript
-	script(type="text/javascript", src="https://cdn.socket.io/socket.io-1.0.6.js")
-	script(type="text/javascript", src="javascripts/mpd.js")
-	script(type="text/javascript", src="javascripts/client.js")
+  //link(rel='stylesheet', href='/stylesheets/style.css')
+  //link(rel='stylesheet', href="/bootstrap-3.2.0-dist/css/bootstrap.css")
+  //link(rel='stylesheet', href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,700', type='text/css')
+  //link(rel="stylesheet", href="http://fonts.googleapis.com/css?family=Montserrat")
+
+  
+
+body
+  #background-wrapper
+    
+
+    header
+      h1 turbosloth
+      #submenu
+        .button-wrapper
+          #info.button.text
+            i.fa.fa-info
+            |  Server Info
+          #settings.button.text
+            i.fa.fa-cog
+            |  Settings
+          #logout.button.text
+            i.fa.fa-sign-out
+            |  Logout
+      #connection-info connected to #{mpdhost}:#{mpdport}
+    
+    
+    #control-bar
+      .control-menu.left
+        .button-wrapper.left
+          #previous.left.button
+            i.fa.fa-backward
+          #pause.left.button
+            i.fa.fa-pause
+          #play.left.button.active
+            i.fa.fa-play
+          #stop.left.button
+            i.fa.fa-stop
+          #next.left.button
+            i.fa.fa-forward
+
+      .currentsong-wrapper
+        .currentsong
+          a(href="") Artist 
+          br
+          | Song Title | 00:05:21
+      
+      .control-menu.right
+        .button-wrapper.left
+          #stream.left.button.active
+            i.fa.fa-volume-up
+    
+
+    #seek-bar-container
+      #seek-bar
+    
+
+    nav
+      .button-wrapper.left
+        .button.text.backward.active Playlist
+        .button.text.pause Browse
+        .button.text.play Search
+    
+
+    main
+      block content
+
+
+
+  script(src='/js/jquery-2.1.1.js')
+  script(src='/js/less.js', type='text/javascript') // use in development only!
+  script(type="text/javascript", src="https://cdn.socket.io/socket.io-1.0.6.js")
+  if title != 'login'
+    script(src='/js/client.js', type='text/javascript')
+    script(src='/js/mpd.js', type='text/javascript')
+
+  //script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js')
+  //script(src='/javascripts/angular.js')
+  //script(src='/bootstrap-3.2.0-dist/js/bootstrap.js')
+
+  script(type="text/javascript").
+    
+    $("#enter").on("click", function(){
+      var mpd_host = $("#mpd-host").val();
+      var mpd_port = $("#mpd-port").val();
+      var mpd_password = $("#mpd-password").val();
+      console.log(mpd_host);
+      post("/", {mpdhost:mpd_host,mpdport:mpd_port,mpdpassword:mpd_password});
+    });
+
+  // script for custom form posting
+  script(type="text/javascript").
+    function post(path, params, method) {
+      method = method || "post"; // Set method to post by default if not specified.
+
+      // The rest of this code assumes you are not using a library.
+      // It can be made less wordy if you use one.
+      var form = document.createElement("form");
+      form.setAttribute("method", method);
+      form.setAttribute("action", path);
+
+      for(var key in params) {
+        if(params.hasOwnProperty(key)) {
+          var hiddenField = document.createElement("input");
+          hiddenField.setAttribute("type", "hidden");
+          hiddenField.setAttribute("value", params[key]);
+          hiddenField.setAttribute("name", key);
+
+          form.appendChild(hiddenField);
+        }
+      }
+
+      document.body.appendChild(form);
+      form.submit();
+    }

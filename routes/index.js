@@ -19,9 +19,11 @@ var express = require('express'),
 router.get('/', function(req, res) {
 
   if (req.session.mpdhost && req.session.mpdport) {
+    
     var port = req.session.mpdport,
       host = req.session.mpdhost,
       sessionID = req.sessionID;
+
 
     // get or create komponist client from session
     if (komponistClients) {
@@ -55,7 +57,7 @@ router.get('/', function(req, res) {
 
     //render skeleton
     res.render('skeleton', { 
-      title: 'leukosia node', 
+      title: 'T U R B O S L O T H', 
       mpdhost: req.session.mpdhost,
       mpdport: req.session.mpdport
     });
@@ -63,7 +65,7 @@ router.get('/', function(req, res) {
 
   // if no session is found
   else {
-    res.render('index', { title: 'leukosia node' });
+    res.render('login', { title: 'login' });
   }
 });
 
@@ -77,10 +79,15 @@ router.post('/', function(req, res) {
 
 // route for getting of /mpdplaylist
 router.get('/mpdplaylist', function(req,res) {
-  columns = ['Pos', 'Title', 'Artist', 'Album', 'Genre', 'Time']
+  var secondsToTimeString = function (seconds) {
+    var date = new Date(1970,0,1);
+    date.setSeconds(seconds);
+    return date.toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1");
+  }
+  var columns = ['Pos', 'Title', 'Artist', 'Album', 'Genre', 'Time']
   var komponistClient = req.sessionID ? komponistClients[req.sessionID] : false; 
   komponistClient.playlistinfo(function(err, data) {
-    res.render('playlist',{playlist:data,columns:columns});
+    res.render('playlist',{playlist:data,columns:columns,secondsToTimeString:secondsToTimeString});
   }); 
 });
 

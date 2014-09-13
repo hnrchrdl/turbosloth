@@ -1,48 +1,36 @@
-.panel.panel-default
-	<!-- Default panel contents -->
-
-	.panel-body
-		#controls-playlist
-			.control#refreshplaylist
-				span.glyphicon.glyphicon-refresh
-			.control.empty
-			.control#scrolltocurrentsong
-				span.glyphicon.glyphicon-hand-down
-			.control#scrolltotop
-				span.glyphicon.glyphicon-hand-up
-			.control#clearplaylist.pull-right
-				span.glyphicon.glyphicon-trash
-			.control.empty.pull-right
-			.control#loadplaylist.pull-right
-				span.glyphicon.glyphicon-folder-open
-			.control#saveplaylist.pull-right(data-toggle='popover')
-				span.glyphicon.glyphicon-floppy-disk
-		<!-- Table -->
-		.scrollable
-			table.table
-				tr
-					each column in columns
-						th #{column}
-				- each song in playlist
-					tr.playlistrow(id= 'playlistrow-' + song.Id)
-						each column in columns
-							td(class= column) #{song[column]}
-		
-		#playlistloadmodal.modal.fade
-			.modal-dialog.modal-lg
-				.modal-content
-					.modal-header
-						button(type="button", class="close", data-dismiss="modal")
-							span(aria-hidden="true") &times;
-								span(class="sr-only") Close
-						h4.modal-title Load Playlist
-					#playlistloadcontent.modal-body
-						.radio
-							label
-								input(type='radio', name='radio1', value='append' checked) 
-								| append to current playlist
-						.radio
-							label
-								input(type='radio', name='radio1', value='replace')
-								| replace current playlist
-						ul.list-inline
+#playlist-container
+  .nav-main
+    .button-wrapper
+      .button.text.refresh
+        i.fa.fa-refresh
+      .button.text.save
+        i.fa.fa-save
+      .button.text.load
+        i.fa.fa-file-o
+      .button.text.scroll
+        i.fa.fa-angle-down
+      .button.text.top
+        i.fa.fa-angle-up
+  #playlist.scrollable
+    - each song in playlist
+      .song(class= song.Id)
+        .attr.songpos #{song.Pos}
+        .attr.artist <a href="">#{song.Artist || 'unknown'}</a>
+        .attr.title #{song.Title || 'unknown'}
+        .attr.space
+        if song.Album
+          .attr.album #{song.Album}
+          if song.Date
+            |  (#{song.Date})
+          .attr.space
+        if song.Genre
+          .attr.genre #{song.Genre}
+          .attr.space
+        - var time = secondsToTimeString(song.Time)
+        .attr.time #{time}
+        .button-wrapper.right
+          .button.misc
+            i.fa.fa-ellipsis-v
+        .button-wrapper.right
+          .button.play
+            i.fa.fa-play

@@ -1,58 +1,21 @@
 doctype html
 
 html(ng-app)
-	include ./header.jade
-	body
-		#head.container-fluid
-			#serverinfocontainer.pull-right
-				.control#info
-					<span class="glyphicon glyphicon-info-sign"></span>	
-				.control#settings
-					<span class="glyphicon glyphicon-wrench"></span>
-				.control#logout
-					<span class="glyphicon glyphicon-off"></span>
-			.pull-right
-				p#serverinfo.small connected to <strong>#{mpdhost}:#{mpdport}</strong> 
-			img(src="images/logo.png").pull-left
+  include ./header.jade
+  body
+    
+    .gray
+      .container-fluid
+        .row.clearfix
+          #playlist-container
+            #progress-bar
+      nav.container-fluid
+        ul.list-inline
+          li.highlight
+            | Playlist
+          li 
+            | Browse
+          li 
+            | Search
 
-		.container-fluid#controls
-			.control#previous
-				<span class="glyphicon glyphicon-backward"></span>
-			.control#pause
-				.control-highlight#pause-highlight
-				<span class="glyphicon glyphicon-pause"></span>
-			.control#play
-				.control-highlight#play-highlight
-				<span class="glyphicon glyphicon-play"></span>
-			.control#stop
-				.control-highlight#stop-highlight
-				<span class="glyphicon glyphicon-stop"></span>
-			.control#next
-				<span class="glyphicon glyphicon-forward"></span>
-			.control.space
-			.control#random
-				.control-highlight#random-highlight
-				<span class="glyphicon glyphicon-random"></span>
-			.control#repeat
-				.control-highlight#repeat-highlight
-				<span class="glyphicon glyphicon-repeat"></span>
-			.control.space
-			#currentsong
-			.control#listen.pull-right
-				<span class	="glyphicon glyphicon-volume-off"></span>
-		
-		.gray
-			.container-fluid
-				.row.clearfix
-					#playlist-container
-						#progress-bar
-			nav.container-fluid
-				ul.list-inline
-					li.highlight
-						| Playlist
-					li 
-						| Browse
-					li 
-						| Search
-
-			block content
+      block content
