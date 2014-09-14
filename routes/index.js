@@ -54,12 +54,17 @@ router.get('/', function(req, res) {
         }
       });
     }
+    var stream = (req.session.streamport === "") ?  
+        req.session.streamurl : 
+        req.session.streamurl + ':' + req.session.streamport;
+    console.log('stream: ' + stream);
 
     //render skeleton
     res.render('skeleton', { 
       title: 'T U R B O S L O T H', 
       mpdhost: req.session.mpdhost,
-      mpdport: req.session.mpdport
+      mpdport: req.session.mpdport,
+      stream: stream
     });
   }
 
@@ -74,6 +79,8 @@ router.post('/', function(req, res) {
   req.session.mpdhost = req.body.mpdhost;
   req.session.mpdport = req.body.mpdport;
   req.session.mpdpassword = req.body.mpdpassword,
+  req.session.streamurl = req.body.streamurl,
+  req.session.streamport = req.body.streamport,
   res.redirect('/');
 });
 
@@ -126,13 +133,31 @@ var listen = function(app) {
           var komponistClient = komponistClients[socket.sessionID];
           if (komponistClient) {
             console.log(cmd + " - " + args);
-            redisClient.get('sessions:' + socket.sessionID, function(err, session) {
-            });
+            //redisClient.get('sessions:' + socket.sessionID, function(err, session) {
+            //});
             komponistClient.command(cmd,args,function(err,msg) {
               if (err) console.log('mpd-error: ' + err)
                 if (callback) callback(err, msg);
             });
           }
+        });
+
+        socket.on('get_streaming_status', function(callback) {
+            redisClient.get('sessions:' + socket.sessionID, function(err,msg) {
+              console.log(msg);
+              var msg = JSON.parse(msg);
+              if (msg.streaming === undefined || msg.streaming === false) {
+                msg.streaming = true;
+                redisClient.set('sessions:' + socket.sessionID, JSON.stringify(msg));
+                callback(false);
+              } 
+              else {
+                console.log(msg);
+                msg.streaming = false;
+                redisClient.set('sessions:' + socket.sessionID, JSON.stringify(msg));   
+                callback(true);
+              }
+            });
         });
 
 

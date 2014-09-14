@@ -1,6 +1,75 @@
-extends skeleton
-block content
-  input#mpd-host.form-control(type="text", placeholder="e.g. example.com", value="leukosia.eu") 
-  input#mpd-port.form-control(type="text", placeholder="e.g. 6600", value="6603")
-  input#mpd-password.form-control(type="password", placeholder="", value="diggur!")
-  button#enter.btn.btn-primary.pull-right.col-md-12 start
+doctype html
+html(lang='en')
+head
+  meta(charset='utf-8')
+  meta(http-equiv='X-UA-Compatible', content='IE=edge')
+  meta(name='viewport', content='width=device-width, initial-scale=1')
+  title= title
+  link(rel='stylesheet/less', type='text/css', href='/src/less/styles.less')
+  link(href='http://fonts.googleapis.com/css?family=Quicksand:300', rel='stylesheet', type='text/css')
+
+body
+  #background-wrapper.login
+    h1 turbosloth
+    <br>
+    .form-wrapper
+      h4 MPD
+      input#mpd-host.long(type="text", placeholder="url", value="leukosia.eu") 
+      input#mpd-port.short(type="text", placeholder="port", value="6603")
+      <br>
+      input#mpd-password.extraLong(type="password", placeholder="password", value="diggur!")
+      <br>
+      h4 STREAM
+      input#stream-url.long(type="text", placeholder="url", value="")
+      input#stream-port.short(type="text", placeholder="port", value="")
+      
+      <br>
+      <br>
+      .button-wrapper
+        #enter.button.text.active S T A R T
+
+  script(src='/js/jquery-2.1.1.js')
+  script(src='/js/less.js', type='text/javascript') // use in development only!
+  // script for custom form posting
+  script(type="text/javascript").
+    
+    $("#enter").on("click", function(){
+      var mpd_host = $("#mpd-host").val(),
+        mpd_port = $("#mpd-port").val(),
+        mpd_password = $("#mpd-password").val(),
+        stream_url = $("#stream-url").val(),
+        stream_port = $("#stream-port").val();
+      console.log(stream_port);
+      post("/", {mpdhost:mpd_host,
+        mpdport:mpd_port,
+        mpdpassword:mpd_password,
+        streamurl:stream_url,
+        streamport:stream_port
+      });
+    });
+  
+
+    function post(path, params, method) {
+      method = method || "post"; // Set method to post by default if not specified.
+
+      // The rest of this code assumes you are not using a library.
+      // It can be made less wordy if you use one.
+      var form = document.createElement("form");
+      form.setAttribute("method", method);
+      form.setAttribute("action", path);
+
+      for(var key in params) {
+        if(params.hasOwnProperty(key)) {
+          var hiddenField = document.createElement("input");
+          hiddenField.setAttribute("type", "hidden");
+          hiddenField.setAttribute("value", params[key]);
+          hiddenField.setAttribute("name", key);
+
+          form.appendChild(hiddenField);
+        }
+      }
+
+      document.body.appendChild(form);
+      form.submit();
+    }
+

@@ -8,14 +8,15 @@ head
 
   link(rel='stylesheet/less', type='text/css', href='/src/less/styles.less')
   link(href='//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css', rel='stylesheet')
-  link(href='http://fonts.googleapis.com/css?family=Quicksand:300|Open+Sans:400,300,600|Montserrat', rel='stylesheet', type='text/css')
+  link(href='http://fonts.googleapis.com/css?family=Quicksand:300', rel='stylesheet', type='text/css')
 
   //link(rel='stylesheet', href='/stylesheets/style.css')
   //link(rel='stylesheet', href="/bootstrap-3.2.0-dist/css/bootstrap.css")
   //link(rel='stylesheet', href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,700', type='text/css')
   //link(rel="stylesheet", href="http://fonts.googleapis.com/css?family=Montserrat")
 
-  
+  script(type="text/javascript").
+    var stream = '#{stream}';
 
 body
   #background-wrapper
@@ -77,51 +78,17 @@ body
     main
       block content
 
+  audio(src= stream preload='none')
+
+
 
 
   script(src='/js/jquery-2.1.1.js')
   script(src='/js/less.js', type='text/javascript') // use in development only!
-  script(type="text/javascript", src="https://cdn.socket.io/socket.io-1.0.6.js")
-  if title != 'login'
-    script(src='/js/client.js', type='text/javascript')
-    script(src='/js/mpd.js', type='text/javascript')
+  script(src='https://cdn.socket.io/socket.io-1.0.6.js', type='text/javascript')
+  script(src='/js/client.js', type='text/javascript')
+  script(src='/js/mpd.js', type='text/javascript')
 
   //script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js')
   //script(src='/javascripts/angular.js')
   //script(src='/bootstrap-3.2.0-dist/js/bootstrap.js')
-
-  script(type="text/javascript").
-    
-    $("#enter").on("click", function(){
-      var mpd_host = $("#mpd-host").val();
-      var mpd_port = $("#mpd-port").val();
-      var mpd_password = $("#mpd-password").val();
-      console.log(mpd_host);
-      post("/", {mpdhost:mpd_host,mpdport:mpd_port,mpdpassword:mpd_password});
-    });
-
-  // script for custom form posting
-  script(type="text/javascript").
-    function post(path, params, method) {
-      method = method || "post"; // Set method to post by default if not specified.
-
-      // The rest of this code assumes you are not using a library.
-      // It can be made less wordy if you use one.
-      var form = document.createElement("form");
-      form.setAttribute("method", method);
-      form.setAttribute("action", path);
-
-      for(var key in params) {
-        if(params.hasOwnProperty(key)) {
-          var hiddenField = document.createElement("input");
-          hiddenField.setAttribute("type", "hidden");
-          hiddenField.setAttribute("value", params[key]);
-          hiddenField.setAttribute("name", key);
-
-          form.appendChild(hiddenField);
-        }
-      }
-
-      document.body.appendChild(form);
-      form.submit();
-    }

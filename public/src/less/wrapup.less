@@ -37,6 +37,7 @@ a {
 		color: 				@primaryDark;
 	}
 }
+
 .button-wrapper {
 	height: 		@buttonHeight;
 	line-height: 	@buttonHeight;
@@ -48,9 +49,10 @@ a {
 		float: 			right;
 	}
 }
+
 .button {
 	height: 		buttonHeight;
-	min-width:  	@buttonHeight;
+	min-width:  @buttonHeight;
 	cursor: 		pointer;
 	display: 		inline-block;
 	&:hover {
@@ -60,26 +62,31 @@ a {
 		color:	@primary;
 	}
 	-webkit-transition: background-color 0.5s, -webkit-transform 0.5s;
-    transition: background-color 0.5s, transform 0.5s;
-    &.text {
-    	padding-left: @medium;
-    	padding-right: @medium; 
-    }
+  transition: background-color 0.5s, transform 0.5s;
+  &.text {
+  	padding-left: @medium;
+   	padding-right: @medium; 
+  }
 }
 
+input {
+	display: 					inline-block;
+	background-color: @hoverBackground;
+	color: 						@almostWhite;
+	border: 					1px solid @hoverBackground;
+	height: 					@buttonHeight - 2;
+	padding: 					0 @short;
+	margin-bottom: 		@short;
+	&:focus {
+		border: 					1px solid @primary;
+	}
+}
 
 ::selection { 
 	background: @primary; 
 	color: 		#fff; 
-	}
+}
 ::-moz-selection { 
 	background: @primary; 
 	color: 		#fff; 
-}
-::-webkit-scrollbar {
-	width:	@short;
-	background-color: @transparentWhite2;
-}
-::-webkit-scrollbar-thumb {
-	background-color: @primary;
 }

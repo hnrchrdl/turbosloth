@@ -1,5 +1,5 @@
 var socket = io();
-var __aorta, __playlist;
+var __aorta, __playlist, audio;
 
 jQuery.fx.interval = 100;
 
@@ -17,13 +17,22 @@ $(document).ready(function() {
     //});
   }, 2000);
   
-  $('#logout').on('click',function(){
+
+  $(window).resize(function() {
+    fixScrollHeight();
+  });
+  // play the audio element on start
+  audio = document.getElementsByTagName("audio")[0];
+  //toggleStream();
+  
+  $('#logout').on('click', function(){
     window.location = '/logout';
   });
 
-  $(window).resize(function() {
-    fixScrollHeight()
+  $('#stream').on('click', function() {
+    toggleStream();
   });
+
 });
 
 socket.on('error', function (reason){
@@ -56,6 +65,23 @@ function renderPlaylist() {
     playlist.indicate();
     playlist.registerFunctionality();
     fixScrollHeight();
+  });
+}
+
+function toggleStream() {
+  socket.emit('get_streaming_status', function(streaming) {
+    console.log(streaming);
+    if (streaming) {
+      console.log('stop stream');
+      audio.pause();
+      //audio.src='';
+    }
+    else {
+      console.log('start stream');
+      console.log(stream);
+      //audio.src=stream;
+      audio.play();
+    }
   });
 }
 
