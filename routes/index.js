@@ -61,7 +61,7 @@ router.get('/', function(req, res) {
 
     //render skeleton
     res.render('skeleton', { 
-      title: 'T U R B O S L O T H', 
+      title: 'turbosloth', 
       mpdhost: req.session.mpdhost,
       mpdport: req.session.mpdport,
       stream: stream
@@ -70,7 +70,7 @@ router.get('/', function(req, res) {
 
   // if no session is found
   else {
-    res.render('login', { title: 'login' });
+    res.render('login', { title: 'login'});
   }
 });
 
@@ -78,9 +78,9 @@ router.get('/', function(req, res) {
 router.post('/', function(req, res) {
   req.session.mpdhost = req.body.mpdhost;
   req.session.mpdport = req.body.mpdport;
-  req.session.mpdpassword = req.body.mpdpassword,
-  req.session.streamurl = req.body.streamurl,
-  req.session.streamport = req.body.streamport,
+  req.session.mpdpassword = req.body.mpdpassword;
+  req.session.streamurl = req.body.streamurl;
+  req.session.streamport = req.body.streamport;
   res.redirect('/');
 });
 
@@ -144,20 +144,18 @@ var listen = function(app) {
 
         socket.on('get_streaming_status', function(callback) {
             redisClient.get('sessions:' + socket.sessionID, function(err,msg) {
-              console.log(msg);
               var msg = JSON.parse(msg);
-              if (msg.streaming === undefined || msg.streaming === false) {
-                msg.streaming = true;
-                redisClient.set('sessions:' + socket.sessionID, JSON.stringify(msg));
-                callback(false);
-              } 
-              else {
-                console.log(msg);
-                msg.streaming = false;
-                redisClient.set('sessions:' + socket.sessionID, JSON.stringify(msg));   
-                callback(true);
-              }
+              console.log('get: ' + msg.streaming);
+              callback(msg.streaming);
             });
+        });
+        socket.on('set_streaming_status', function(status) {
+          console.log('set: ' + status);
+          redisClient.get('sessions:' + socket.sessionID, function(err,msg) {
+            var msg = JSON.parse(msg);
+            msg.streaming = status;
+            redisClient.set('sessions:' + socket.sessionID, JSON.stringify(msg));
+          });
         });
 
 

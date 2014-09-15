@@ -21,16 +21,44 @@ $(document).ready(function() {
   $(window).resize(function() {
     fixScrollHeight();
   });
+  
   // play the audio element on start
   audio = document.getElementsByTagName("audio")[0];
-  //toggleStream();
+  socket.emit('get_streaming_status', function(status) {
+    console.log(status);
+    if (status === true && stream !== undefined) {
+      // start streaming
+      audio.play();
+      $('#stream').addClass('active');
+    }
+  });
+
   
   $('#logout').on('click', function(){
     window.location = '/logout';
   });
 
   $('#stream').on('click', function() {
-    toggleStream();
+    if (stream !== undefined) {
+      socket.emit('get_streaming_status', function(status) {
+        console.log(status);
+        if (status === true) {
+          // stop streaming
+          audio.pause();
+          $('#stream').removeClass('active');
+          audio.src = "";
+          socket.emit('set_streaming_status', false);
+        }
+        else {
+          // start streaming
+          audio.src = stream;
+          audio.load();
+          audio.play();
+          $('#stream').addClass('active');
+          socket.emit('set_streaming_status', true);
+        }
+      });
+    }
   });
 
 });
@@ -68,21 +96,13 @@ function renderPlaylist() {
   });
 }
 
-function toggleStream() {
+function getStreamingStatus() {
   socket.emit('get_streaming_status', function(streaming) {
-    console.log(streaming);
-    if (streaming) {
-      console.log('stop stream');
-      audio.pause();
-      //audio.src='';
-    }
-    else {
-      console.log('start stream');
-      console.log(stream);
-      //audio.src=stream;
-      audio.play();
-    }
+    return streaming;
   });
+}
+function setStreamingStatus(status) {
+  socket.emit('set_streaming_status', status);
 }
 
 function fixScrollHeight() {
