@@ -129,8 +129,8 @@ MpdAorta.prototype = {
   },
   indicate : function() {
     $('.song').removeClass('active');
-    $('#playlistrow-' + this.song.Id).addClass('active');  
-  },
+    $('.song.' + this.song.Id).addClass('active');  
+  }
 };
 
 var MpdPlaylist = function(callback) {

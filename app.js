@@ -16,9 +16,8 @@ server.listen(8080, function() {
   console.log('listening on *:8080');
 });
 
-var io = require('./routes/index').listen(server),
+var io = require('./lib/sockets').listen(server),
   routes = require('./routes/index').router;
-//var users = require('./routes/users');
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -78,5 +77,6 @@ app.use(function(err, req, res, next) {
 
 module.exports = {
   app:app,
-  redisClient:redisClient
+  redisClient:redisClient,
+  io: io
 };
