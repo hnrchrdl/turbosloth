@@ -161,45 +161,45 @@ MpdPlaylist.prototype = {
     //$('.playbutton').off('click');
     $('.song').on('click','.play', function() {
       //console.log($(this));
-      songid = $(this).parents('song').attr();
+      songid = $(this).parents('.song').attr('data-id');
       console.log(songid);
       socket.emit('mpd', 'playid', [songid]);
     });
 
     // refresh playlist click
-    //$('#refreshplaylist').off('click');
-    $('#refreshplaylist').on('click',function() {
-      //console.log(aorta);
+    $('#playlist-container').find('.refresh').off('click');
+    $('#playlist-container').find('.refresh').on('click',function() {
       renderPlaylist();
     });
 
     // save playlist click
     var options = {
       html : true,
-      content : '<div class="input-group">' +
-          '<input type="text" class="form-control" id="plsavetext">' +
-          '<span class="input-group-btn">' +
-          '<button class="btn btn-default" type="button" id="plsavebtn">save</button>' +
-          '</span>' +
-        '</div><!-- /input-group -->',
+      
       placement : 'bottom'
     };
-    //$('#saveplaylist').popover(options);
-    $('#saveplaylist').off('click');
-    $('#saveplaylist').on('click', function() {
-      
-      $('#saveplaylist').popover('toggle');
+
+    // manage playlist click
+    $('#playlist-container').find('.manage').off('click');
+    $('#playlist-container').find('.manage').on('click', function() {
+      $.ajax({
+        url: '/manageplaylist'
+      }).done(function(html){
+        $('#playlist').html(html);  
+      });
+      //var html = '<div class="container"><input type="text" id="plsavetext"></div>';
+      //$('#playlist').html(html);
 
       $('#plsavebtn').off('click');
-      $('#plsavebtn').on('click', function() {  
+      $('#plsavebtn').on('click', function() {
         socket.emit('mpd', 'save',[$('#plsavetext').val()]);
       });
     });
     
 
     // load playlist click
-    $('#loadplaylist').off('click');
-    $('#loadplaylist').on('click', function() {
+    $('#playlist-container').find('.load').off('click');
+    $('#playlist-container').find('.load').on('click', function() {
       $('#playlistloadmodal').modal();
       socket.emit('mpd', 'listplaylists', [], function(err, data){
         for (i in data) {
@@ -210,8 +210,9 @@ MpdPlaylist.prototype = {
              '</a>' +
             '</li>'
           );
-        } 
-        $('.loadplaylist').on('click', function(e) {
+        }
+        $('#playlist-container').find('.clear').off('click'); 
+        $('#playlist-container').find('.clear').on('click', function(e) {
           if ($('input[name=radio1]:checked').val() === 'replace') {
             socket.emit('mpd', 'clear', []);
           }
@@ -227,30 +228,25 @@ MpdPlaylist.prototype = {
       $('#playlistloadmodal').modal('show');
     });
 
-    $('#clearplaylist').off('click');
-    $('#clearplaylist').on('click', function() {
-      socket.emit('mpd', 'clear', [], function() {
+    $('#playlist-container').find('.clear').off('click');
+    $('#playlist-container').find('.clear').on('click', function(){
+
+      socket.emit('mpd', 'clear', [], function(){
         renderAorta(true);
       });
     });
 
     // scroll to current song
-    //$('#scrolltocurrentsong').off('click');
-    $('#scrolltocurrentsong').on('click',function() {
-      socket.emit('mpd', 'currentsong', [], function(err, song) {
-        var scrolltop = $('#playlistrow-' + song.Id).offset().top +
+    $('#playlist-container').find('.scroll').off('click');
+    $('#playlist-container').find('.scroll').on('click', function(){
+      socket.emit('mpd', 'currentsong', [], function(err, song){
+        var scrolltop = $('.song.' + song.Id).offset().top +
           $('.scrollable').scrollTop() -
-          $('.scrollable').offset().top;      
+          $('.scrollable').offset().top;
         $('.scrollable').animate({
-        scrollTop: scrolltop  
-        },1000);
+          scrollTop: scrolltop
+        }, 500);
       });
-    });
-    //$('#scrolltotop').off('click');
-    $('#scrolltotop').on('click',function() {   
-      $('.scrollable').animate({
-        scrollTop: 0  
-        },1000);
     });
   }
 };

@@ -16,8 +16,9 @@ server.listen(8080, function() {
   console.log('listening on *:8080');
 });
 
-var io = require('./lib/sockets').listen(server),
-  routes = require('./routes/index').router;
+
+var io = require('./lib/sockets').listen(server);
+var routes = require('./routes/index').router;
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -42,6 +43,7 @@ app.use(session({
   resave: true,
   saveUninitialized: true
 }));
+
 app.use('/', routes);
 
 /// catch 404 and forward to error handler
@@ -76,7 +78,5 @@ app.use(function(err, req, res, next) {
 });
 
 module.exports = {
-  app:app,
-  redisClient:redisClient,
-  io: io
+  app: app
 };

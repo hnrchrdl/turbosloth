@@ -11,7 +11,7 @@ html,body,#background-wrapper {
 }
 #background-wrapper {
 	// background patterns are taken from subtlepatterns.com. thank you!
-	//background: 	url("@{images}/congruent_outline.png");
+	background: 	url("@{images}/congruent_outline.png");
 	//background: 	url("@{images}/classy_fabric.png");
 	//background: 	url("@{images}/grey_wash_wall.png");
 	//background: 	url("@{images}/assault.png");
@@ -19,7 +19,7 @@ html,body,#background-wrapper {
 	//background: 	url("@{images}/black_lozenge.png");
 	//background: 	url("@{images}/noisy_net.png");
 	//background: 	url("@{images}/stardust.png");
-	background: 	url("@{images}/stressed_linen.png");
+	//background: 	url("@{images}/stressed_linen.png");
 	//background: 	url("@{images}/subtle_carbon.png");
 	//background: 	url("@{images}/twinkle_twinkle.png");
 	//background: 	url("@{images}/zwartevilt.png");
@@ -36,6 +36,20 @@ a {
 	&:hover {
 		color: 				@primaryDark;
 	}
+}
+hr {
+	border:none;
+	background-color: @transparentWhite;
+	height: 1px;
+	margin-top: @medium 0;
+}
+
+.clear {
+	clear:both;
+}
+
+.muted {
+	color: @darkGray;
 }
 
 .button-wrapper {

@@ -15,7 +15,7 @@ $(document).ready(function() {
     //  setHeightOfScrollable();
     //  registerButtonStyles();
     //});
-  }, 2000);
+  }, 1000);
   
 
   $(window).resize(function() {
@@ -107,11 +107,15 @@ function setStreamingStatus(status) {
 
 function fixScrollHeight() {
   console.log('fix');
-  $('main').find('.scrollable').height($('main').height() - 40);
+  $('main').find('.scrollable').height($('main').height() - 65);
 }
 
 function secondsToTimeString (seconds) {
   var date = new Date(1970,0,1);
   date.setSeconds(seconds);
   return date.toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1");
+}
+
+function info(infotext) {
+  $('body').prepend('<div class="infotext">' + infotext + '</div>');
 }

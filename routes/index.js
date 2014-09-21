@@ -24,6 +24,7 @@ router.get('/', function(req, res) {
     }
     komponist.registerChange(sessionID);
 
+
       // register mpd listener for -changed- event
       
     var stream = (req.session.streamport === "") ?  
@@ -33,7 +34,7 @@ router.get('/', function(req, res) {
 
     //render skeleton
     res.render('skeleton', { 
-      
+
       title: 'turbosloth', 
       mpdhost: req.session.mpdhost,
       mpdport: req.session.mpdport,
@@ -73,6 +74,15 @@ router.get('/mpdplaylist', function(req,res) {
 
     res.render('playlist',{playlist:data,secondsToTimeString:secondsToTimeString});
   }); 
+});
+
+router.get('/manageplaylist', function(req,res) {
+
+  var komponistClient = komponist.getClient(req.sessionID);
+  komponistClient.listplaylists(function(err,data) {
+    console.log(data);
+    res.render('managePlaylist', {playlists:data});
+  });
 });
 
 // route for getting of /logout

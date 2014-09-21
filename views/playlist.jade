@@ -1,20 +1,19 @@
 #playlist-container
   .nav-main
-    .button-wrapper
+    .button-wrapper.left
       .button.text.refresh
         i.fa.fa-refresh
-      .button.text.save
-        i.fa.fa-save
-      .button.text.load
-        i.fa.fa-file-o
       .button.text.scroll
         i.fa.fa-angle-down
-      .button.text.top
-        i.fa.fa-angle-up
+    .button-wrapper.right
+      .button.text.manage
+        i.fa.fa-folder-open-o
+      .button.text.clear
+        i.fa.fa-trash-o
   #playlist.scrollable
     - each song in playlist
-      .song(class= song.Id)
-        .attr.songpos #{song.Pos}
+      .song(class= song.Id, data-id= song.Id)
+        .attr.songpos= song.Pos
         .attr.artist <a href="">#{song.Artist || 'unknown'}</a>
         .attr.title #{song.Title || 'unknown'}
         .attr.space
