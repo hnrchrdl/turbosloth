@@ -90,17 +90,24 @@ router.get('/manageplaylist', function(req,res) {
 });
 
 // route for getting of /browse
-router.get('/browse/:folder', function(req,res) {
-
-  var folder = decodeURIComponent(req.params.folder);
-  folder = (folder === "#") ? "" : folder; 
+router.get('/browse/:url', function(req,res) {
+  var url = decodeURIComponent(req.params.url);
+  if (!req.session.url) {
+    // restart browse component
+    req.session.url = [""];
+    url = "";
+  } else if (url === "#") {
+    url = req.session.url.join('/');
+  }
+  else {
+    req.session.url = url.split('/');
+  }
+  console.log(url);
   var komponistClient = komponist.getClient(req.sessionID);
-  komponistClient.lsinfo([folder], function(err,data) {
+  komponistClient.lsinfo([url], function(err,contents) {
     console.log(err);
-    console.log(data);
-    console.log([req.params.folder]);
-    folder = "/" + folder;
-    res.render('browse', {items:data, folder:folder});
+    //console.log(data);
+    res.render('browse', {contents:contents, url_array:req.session.url, url:url});
   });
 });
 

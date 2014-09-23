@@ -3,19 +3,28 @@
   //.button-wrapper.right
   //  .save.button
   //    i.fa.fa-save
-  .folderinfo= folder
+  .dir-info
+    if url_array
+      - each url in url_array
+        .attr /
+        .attr= url
+    else
+      attr.
+        /
   .clear
   hr
   .scrollable
-    - each item in items
+    - each item in contents
       if item.directory
         .dir
           .attr 
-            i.fa.fa-folder  
+            i.fa.fa-folder-o  
           .attr 
             a(href="")= item.directory
       else if item.file 
-        .dir 
-          i.fa.fa-file  
-          a(href="")= item.file
+        .dir
+          .attr
+            i.fa.fa-file-o  
+          .attr
+            a(href="")= item.file  
         
