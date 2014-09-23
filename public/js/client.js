@@ -19,7 +19,7 @@ $(document).ready(function() {
   
 
   $(window).resize(function() {
-    fixScrollHeight();
+    fixScrollHeight(65);
   });
   
   // play the audio element on start
@@ -36,6 +36,28 @@ $(document).ready(function() {
   
   $('#logout').on('click', function(){
     window.location = '/logout';
+  });
+
+  $('.button.queue').on('click', function(){
+    $('nav').find('.button').removeClass('active');
+    $('nav').find('.button.queue').addClass('active');
+    var init = true;
+    renderAorta(init);
+  });
+  $('.button.playlists').on('click', function(){
+    $('nav').find('.button').removeClass('active');
+    $('nav').find('.button.playlists').addClass('active');
+    renderPlaylists();
+  });
+  $('.button.browse').on('click', function(){
+    $('nav').find('.button').removeClass('active');
+    $('nav').find('.button.browse').addClass('active');
+    console.log(renderBrowse);
+    renderBrowse("#");
+  });
+  $('.button.search').on('click', function(){
+    $('nav').find('.button').removeClass('active');
+    $('nav').find('.button.search').addClass('active');
   });
 
   $('#stream').on('click', function() {
@@ -83,16 +105,98 @@ function renderAorta(init) {
     aorta.render();
     aorta.registerHandler();
     aorta.renderProgressBar();
-    init ? renderPlaylist() : aorta.indicate();
+    init ? renderQueue() : aorta.indicate();
   });
 }
 
-function renderPlaylist() {
+function renderQueue() {
   __playlist = new MpdPlaylist(function(err, playlist) {
     playlist.render();
     playlist.indicate();
     playlist.registerFunctionality();
-    fixScrollHeight();
+    fixScrollHeight(65);
+  });
+}
+
+function renderPlaylists() {
+  // manage playlist click
+  $.ajax({
+    url: '/manageplaylist'
+  }).done(function(html){
+    // inject html
+    $('main').html(html);
+    fixScrollHeight(82);
+    
+    // register buttons
+    $('#manageplaylist').find('.save.button').off('click');
+    $('#manageplaylist').find('.save.button').on('click', function(){
+      socket.emit('mpd', 'save', [$('#save-playlist').val()], function(err, msg){
+        if (err) {
+          console.log(err);
+        }
+        else {
+          renderQueue();
+        }
+      });
+    });
+
+    $('#manageplaylist').find('.append.button').off('click');
+    $('#manageplaylist').find('.append.button').on('click', function(){
+      var playlist = $(this).parents('.playlist').attr('data-playlist');
+      socket.emit('mpd', 'load', [playlist], function(err,msg){
+        if (err) {
+          console.log(err);
+        }
+        else {
+          renderQueue();  
+        }
+      });
+    });
+
+    $('#manageplaylist').find('.load.button').off('click');
+    $('#manageplaylist').find('.load.button').on('click', function(){
+      var playlist = $(this).parents('.playlist').attr('data-playlist');
+      socket.emit('mpd', 'clear', [], function(err,msg) {
+        socket.emit('mpd', 'load', [playlist], function(err,msg){
+          if (err) {
+            console.log(err);
+          }
+          else {
+            $('nav').find('.button').removeClass('active');
+            $('nav').find('.button.queue').addClass('active');
+            renderQueue(); 
+          }
+        });
+      });
+    });
+
+    $('#manageplaylist').find('.delete.button').off('click');
+    $('#manageplaylist').find('.delete.button').on('click', function(){
+      var playlist = $(this).parents('.playlist').attr('data-playlist');
+      socket.emit('mpd', 'rm', [playlist], function(err,msg){
+        if (err) {
+          console.log(err);
+        }
+        else {
+          renderQueue();  
+        }
+      });
+    });
+  });
+}
+
+
+function renderBrowse(folder){
+  $.ajax({
+    url: 'browse/' + encodeURIComponent(folder)
+  }).done(function(html){
+    $('main').html(html);
+    fixScrollHeight(82);
+    $('#browse').find('.dir').find('a').off('click');
+    $('#browse').find('.dir').find('a').on('click', function(e){
+      e.preventDefault();
+      renderBrowse($(this).text());
+    });
   });
 }
 
@@ -105,9 +209,9 @@ function setStreamingStatus(status) {
   socket.emit('set_streaming_status', status);
 }
 
-function fixScrollHeight() {
+function fixScrollHeight(minus) {
   console.log('fix');
-  $('main').find('.scrollable').height($('main').height() - 65);
+  $('.scrollable').height($('main').height() - minus);
 }
 
 function secondsToTimeString (seconds) {
@@ -119,3 +223,4 @@ function secondsToTimeString (seconds) {
 function info(infotext) {
   $('body').prepend('<div class="infotext">' + infotext + '</div>');
 }
+

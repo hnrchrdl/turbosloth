@@ -1,20 +1,26 @@
 #manageplaylist
-  input#save-playlist.long(type='text',placeholder="new playlist")
+  input#save-playlist.long(type='text',placeholder="save as new playlist")
   .button-wrapper.right
-    #save.button 
+    .save.button
       i.fa.fa-save
   .clear
   hr
-  - each playlist in playlists
-    .song(data-name= playlist.playlist )
-      = playlist.playlist
-      span.muted
-        |  (songs: 47, last modified: 10.10.2013)
-      .button-wrapper.right
-        #save.button 
-          i.fa.fa-play-circle
-        #save.button 
-          i.fa.fa-plus-square-o
-        //.space
-        #save.button 
-          i.fa.fa-remove
+  .scrollable
+    - each playlist in playlists
+      .playlist(data-playlist= playlist.playlist )
+        .attr= playlist.playlist
+        .attr.space
+        span.muted
+          .attr
+            | songs: 47
+          .attr.space
+          .attr
+            | last modified: 10.10.2013
+        .button-wrapper.right
+          .append.button
+            i.fa.fa-plus-square-o
+          .load.button
+            i.fa.fa-play-circle
+          //.space
+          .delete.button
+            i.fa.fa-remove

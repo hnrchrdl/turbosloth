@@ -161,7 +161,7 @@ MpdPlaylist.prototype = {
     //$('.playbutton').off('click');
     $('.song').on('click','.play', function() {
       //console.log($(this));
-      songid = $(this).parents('.song').attr('data-id');
+      var songid = $(this).parents('.song').attr('data-id');
       console.log(songid);
       socket.emit('mpd', 'playid', [songid]);
     });
@@ -169,7 +169,7 @@ MpdPlaylist.prototype = {
     // refresh playlist click
     $('#playlist-container').find('.refresh').off('click');
     $('#playlist-container').find('.refresh').on('click',function() {
-      renderPlaylist();
+      renderQueue();
     });
 
     // save playlist click
@@ -178,63 +178,6 @@ MpdPlaylist.prototype = {
       
       placement : 'bottom'
     };
-
-    // manage playlist click
-    $('#playlist-container').find('.manage').off('click');
-    $('#playlist-container').find('.manage').on('click', function() {
-      $.ajax({
-        url: '/manageplaylist'
-      }).done(function(html){
-        $('#playlist').html(html);  
-      });
-      //var html = '<div class="container"><input type="text" id="plsavetext"></div>';
-      //$('#playlist').html(html);
-
-      $('#plsavebtn').off('click');
-      $('#plsavebtn').on('click', function() {
-        socket.emit('mpd', 'save',[$('#plsavetext').val()]);
-      });
-    });
-    
-
-    // load playlist click
-    $('#playlist-container').find('.load').off('click');
-    $('#playlist-container').find('.load').on('click', function() {
-      $('#playlistloadmodal').modal();
-      socket.emit('mpd', 'listplaylists', [], function(err, data){
-        for (i in data) {
-          $('#playlistloadcontent').find('ul').append(
-            '<li>' + 
-            '<a href="" class="loadplaylist">' +
-             data[i].playlist +
-             '</a>' +
-            '</li>'
-          );
-        }
-        $('#playlist-container').find('.clear').off('click'); 
-        $('#playlist-container').find('.clear').on('click', function(e) {
-          if ($('input[name=radio1]:checked').val() === 'replace') {
-            socket.emit('mpd', 'clear', []);
-          }
-          socket.emit('mpd', 'load', [$(this).text()], function(err, msg) {
-            renderAorta(true);
-            
-          });
-          $('#playlistloadmodal').modal('hide');
-          return false;
-        });
-        
-      });
-      $('#playlistloadmodal').modal('show');
-    });
-
-    $('#playlist-container').find('.clear').off('click');
-    $('#playlist-container').find('.clear').on('click', function(){
-
-      socket.emit('mpd', 'clear', [], function(){
-        renderAorta(true);
-      });
-    });
 
     // scroll to current song
     $('#playlist-container').find('.scroll').off('click');
@@ -247,6 +190,14 @@ MpdPlaylist.prototype = {
           scrollTop: scrolltop
         }, 500);
       });
+    });
+
+    // clear playlist
+    $('#playlist-container').find('.clear').off('click');
+    $('#playlist-container').find('.clear').on('click', function(){
+      socket.emit('mpd', 'clear', [], function(){
+        renderAorta(true);
+      }); 
     });
   }
 };

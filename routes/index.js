@@ -71,17 +71,36 @@ router.get('/mpdplaylist', function(req,res) {
   //var columns = ['Pos', 'Title', 'Artist', 'Album', 'Genre', 'Time']
   var komponistClient = komponist.getClient(req.sessionID);
   komponistClient.playlistinfo(function(err, data) {
+    //for (i in data) {
+      //console.log(data[i]);
+    //} 
 
     res.render('playlist',{playlist:data,secondsToTimeString:secondsToTimeString});
   }); 
 });
 
+// route for getting of /manageplaylist
 router.get('/manageplaylist', function(req,res) {
 
   var komponistClient = komponist.getClient(req.sessionID);
   komponistClient.listplaylists(function(err,data) {
-    console.log(data);
+    //console.log(data);
     res.render('managePlaylist', {playlists:data});
+  });
+});
+
+// route for getting of /browse
+router.get('/browse/:folder', function(req,res) {
+
+  var folder = decodeURIComponent(req.params.folder);
+  folder = (folder === "#") ? "" : folder; 
+  var komponistClient = komponist.getClient(req.sessionID);
+  komponistClient.lsinfo([folder], function(err,data) {
+    console.log(err);
+    console.log(data);
+    console.log([req.params.folder]);
+    folder = "/" + folder;
+    res.render('browse', {items:data, folder:folder});
   });
 });
 

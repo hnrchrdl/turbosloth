@@ -1,15 +1,13 @@
 #playlist-container
   .nav-main
     .button-wrapper.left
-      .button.text.refresh
+      .button.text.refresh(title="Refresh Playlist")
         i.fa.fa-refresh
-      .button.text.scroll
-        i.fa.fa-angle-down
+      .button.text.scroll(title="Scroll to current song")
+        i.fa.fa-angle-double-down
     .button-wrapper.right
-      .button.text.manage
-        i.fa.fa-folder-open-o
-      .button.text.clear
-        i.fa.fa-trash-o
+      .button.text.clear(title="clear playlist")
+        i.fa.fa-eraser
   #playlist.scrollable
     - each song in playlist
       .song(class= song.Id, data-id= song.Id)
@@ -17,16 +15,17 @@
         .attr.artist <a href="">#{song.Artist || 'unknown'}</a>
         .attr.title #{song.Title || 'unknown'}
         .attr.space
-        if song.Album
-          .attr.album #{song.Album}
-          if song.Date
-            |  (#{song.Date})
-          .attr.space
-        if song.Genre
-          .attr.genre #{song.Genre}
-          .attr.space
-        - var time = secondsToTimeString(song.Time)
-        .attr.time #{time}
+        span.muted
+          if song.Album
+            .attr.album #{song.Album}
+            if song.Date
+              |  (#{song.Date})
+            .attr.space
+          if song.Genre
+            .attr.genre #{song.Genre}
+            .attr.space
+          - var time = secondsToTimeString(song.Time)
+          .attr.time #{time}
         .button-wrapper.right
           .button.misc
             i.fa.fa-ellipsis-v

@@ -1,0 +1,21 @@
+#browse
+  input#save-playlist.long(type='filter',placeholder="filter")
+  //.button-wrapper.right
+  //  .save.button
+  //    i.fa.fa-save
+  .folderinfo= folder
+  .clear
+  hr
+  .scrollable
+    - each item in items
+      if item.directory
+        .dir
+          .attr 
+            i.fa.fa-folder  
+          .attr 
+            a(href="")= item.directory
+      else if item.file 
+        .dir 
+          i.fa.fa-file  
+          a(href="")= item.file
+        

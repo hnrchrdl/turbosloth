@@ -27,11 +27,11 @@ body
       #submenu
         .button-wrapper
           #info.button.text
-            i.fa.fa-info
+            i.fa.fa-info  Info
           #settings.button.text
-            i.fa.fa-cog
+            i.fa.fa-cog  Settings
           #logout.button.text
-            i.fa.fa-sign-out
+            i.fa.fa-sign-out  Logout
       #connection-info connected to #{mpdhost}:#{mpdport}
     
     
@@ -66,10 +66,14 @@ body
 
     nav
       .button-wrapper.left
-        .button.text.backward.active Playlist
-        .button.text.pause Browse
-        .button.text.play Search
-    
+        .button.text.queue.active
+          i.fa.fa-list  Queue
+        .button.text.playlists 
+           i.fa.fa-file-audio-o  Playlists 
+        .button.text.browse
+          i.fa.fa-folder-o  Browse
+        .button.text.search
+          i.fa.fa-search  Search
 
     main
       block content
@@ -77,13 +81,13 @@ body
   audio(src= stream preload='none')
 
 
-
-
   script(src='/js/jquery-2.1.1.js')
   script(src='/js/less.js', type='text/javascript') // use in development only!
+  script(src='/js/tooltip.js', type='text/javascript')
   script(src='https://cdn.socket.io/socket.io-1.0.6.js', type='text/javascript')
   script(src='/js/client.js', type='text/javascript')
   script(src='/js/mpd.js', type='text/javascript')
+
 
   //script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js')
   //script(src='/javascripts/angular.js')

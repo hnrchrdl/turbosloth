@@ -4,14 +4,16 @@ html,body,#background-wrapper {
 	padding: 		0;
 	margin: 		0;
 	color:			@almostWhite;
+	//color:			@almostBlack;
 	font-family: 	'Open Sans', sans-serif;
 	font-weight:	300;
 	font-size: 12px;
-	background-color: @almostBlack;
+	background-color: hsl(240,20%,5%);
+	//background-color: @almostWhite;
 }
 #background-wrapper {
 	// background patterns are taken from subtlepatterns.com. thank you!
-	background: 	url("@{images}/congruent_outline.png");
+	//background: 	url("@{images}/congruent_outline.png");
 	//background: 	url("@{images}/classy_fabric.png");
 	//background: 	url("@{images}/grey_wash_wall.png");
 	//background: 	url("@{images}/assault.png");
@@ -41,7 +43,7 @@ hr {
 	border:none;
 	background-color: @transparentWhite;
 	height: 1px;
-	margin-top: @medium 0;
+	margin: 0;
 }
 
 .clear {
@@ -96,6 +98,20 @@ input {
 	}
 }
 
+::-webkit-input-placeholder {
+   color: @darkGray;
+}
+:-moz-placeholder { /* Firefox 18- */
+   color: @darkGray;  
+}
+::-moz-placeholder {  /* Firefox 19+ */
+   color: @darkGray;  
+}
+:-ms-input-placeholder {  
+   color: @darkGray;  
+}
+
+
 ::selection { 
 	background: @primary; 
 	color: 		#fff; 
@@ -104,3 +120,4 @@ input {
 	background: @primary; 
 	color: 		#fff; 
 }
+
