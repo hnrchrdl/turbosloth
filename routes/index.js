@@ -92,6 +92,10 @@ router.get('/manageplaylist', function(req,res) {
 // route for getting of /browse
 router.get('/browse/:url', function(req,res) {
   var url = decodeURIComponent(req.params.url);
+  
+  console.log(url);
+  console.log(req.session.url);
+  console.log(url.substr(0,2));
   if (!req.session.url) {
     // restart browse component
     req.session.url = [""];
@@ -99,15 +103,41 @@ router.get('/browse/:url', function(req,res) {
   } else if (url === "#") {
     url = req.session.url.join('/');
   }
-  else {
+  else if (url.substr(0,2) === "--") {
+    console.log('now this is it');
+    var entry = url.substr(2,3);
+    console.log(entry);
+    req.session.url = req.session.url.slice(0,entry+1);
+    url = req.session.url.join('/');
+  } else {
     req.session.url = url.split('/');
   }
+  
   console.log(url);
+  console.log(req.session.url);
+  
   var komponistClient = komponist.getClient(req.sessionID);
   komponistClient.lsinfo([url], function(err,contents) {
     console.log(err);
+    if (contents) {
+      var dirs = []
+        , files = [];
+      for (i in contents) {
+        var obj = contents[i];
+        //console.log(obj);
+        if ('directory' in obj) {
+          var name_dir = obj.directory.split('/');
+          obj.name = name_dir[name_dir.length-1];
+          dirs.push(obj);
+        } else if ('file' in obj) {
+          var name_dir = obj.file.split('/');
+          obj.name = name_dir[name_dir.length-1];
+          files.push(obj);
+        }
+      }
+    }
     //console.log(data);
-    res.render('browse', {contents:contents, url_array:req.session.url, url:url});
+    res.render('browse', {dirs:dirs, files:files, contents:contents, url_array:req.session.url});
   });
 });
 

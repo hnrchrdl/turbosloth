@@ -52,7 +52,6 @@ $(document).ready(function() {
   $('.button.browse').on('click', function(){
     $('nav').find('.button').removeClass('active');
     $('nav').find('.button.browse').addClass('active');
-    console.log(renderBrowse);
     renderBrowse("#");
   });
   $('.button.search').on('click', function(){
@@ -63,7 +62,7 @@ $(document).ready(function() {
   $('#stream').on('click', function() {
     if (stream !== undefined) {
       socket.emit('get_streaming_status', function(status) {
-        console.log(status);
+        //console.log(status);
         if (status === true) {
           // stop streaming
           audio.pause();
@@ -195,7 +194,12 @@ function renderBrowse(folder){
     $('#browse').find('.dir').find('a').off('click');
     $('#browse').find('.dir').find('a').on('click', function(e){
       e.preventDefault();
-      renderBrowse($(this).text());
+      renderBrowse($(this).attr('data-dir'));
+    });
+    $('#browse').find('.dir-info').find('a').off('click');
+    $('#browse').find('.dir-info').find('a').on('click', function(e){
+      e.preventDefault();
+      renderBrowse("--" + $(this).attr('data-dir'));
     });
   });
 }

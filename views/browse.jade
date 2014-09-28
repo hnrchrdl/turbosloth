@@ -5,26 +5,30 @@
   //    i.fa.fa-save
   .dir-info
     if url_array
-      - each url in url_array
+      .attr /
+      .attr
+        a(href="#", data-dir="#") root
+      - each url, i in url_array
         .attr /
-        .attr= url
+        .attr
+          a(href="#", data-dir= i)= url
     else
-      attr.
-        /
+      .attr /
+
   .clear
   hr
   .scrollable
-    - each item in contents
-      if item.directory
+    if dirs != []
+      - each item in dirs
         .dir
           .attr 
             i.fa.fa-folder-o  
-          .attr 
-            a(href="")= item.directory
-      else if item.file 
+          .attr
+            a(href="#", data-dir= item.directory)= item.name
+    if files != []
+      - each item in files
         .dir
           .attr
             i.fa.fa-file-o  
           .attr
-            a(href="")= item.file  
-        
+            a(href="#", data-dir= item.file)= item.name
