@@ -1,11 +1,10 @@
 #browse
-  input#save-playlist.long(type='filter',placeholder="filter")
+  //input#save-playlist.long(type='filter',placeholder="filter")
   //.button-wrapper.right
   //  .save.button
   //    i.fa.fa-save
   .dir-info
     if url_array
-      .attr /
       .attr
         a(href="#", data-dir="#") root
       - each url, i in url_array
@@ -20,15 +19,25 @@
   .scrollable
     if dirs != []
       - each item in dirs
-        .dir
+        .dir(data-directory= item.directory)
           .attr 
             i.fa.fa-folder-o  
           .attr
             a(href="#", data-dir= item.directory)= item.name
+          .button-wrapper.right
+            .append.button
+              i.fa.fa-plus-square-o(title="add to current playlist")
+            .load.button
+              i.fa.fa-asterisk(title="replace current playlist")
     if files != []
       - each item in files
-        .dir
+        .dir(data-directory= item.directory)
           .attr
             i.fa.fa-file-o  
           .attr
-            a(href="#", data-dir= item.file)= item.name
+            span= item.name
+          .button-wrapper.right
+            .append.button
+              i.fa.fa-plus-square-o(title="add to current playlist")
+            .load.button
+              i.fa.fa-asterisk(title="replace current playlist")

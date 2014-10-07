@@ -6,14 +6,16 @@ html,body,#background-wrapper {
 	color:			@almostWhite;
 	//color:			@almostBlack;
 	font-family: 	'Open Sans', sans-serif;
+	//font-family: 	'Quicksand', sans-serif;
 	font-weight:	300;
 	font-size: 12px;
 	background-color: hsl(240,20%,5%);
 	//background-color: @almostWhite;
 }
-#background-wrapper {
+
+body {
 	// background patterns are taken from subtlepatterns.com. thank you!
-	//background: 	url("@{images}/congruent_outline.png");
+	background: 	url("@{images}/congruent_outline.png");
 	//background: 	url("@{images}/classy_fabric.png");
 	//background: 	url("@{images}/grey_wash_wall.png");
 	//background: 	url("@{images}/assault.png");
@@ -24,8 +26,12 @@ html,body,#background-wrapper {
 	//background: 	url("@{images}/stressed_linen.png");
 	//background: 	url("@{images}/subtle_carbon.png");
 	//background: 	url("@{images}/twinkle_twinkle.png");
-	background: 	url("@{images}/zwartevilt.png");
+	//background: 	url("@{images}/zwartevilt.png");
+	
+}
+#background-wrapper {
 	position: 		relative;
+	background-color: hsla(0,0%,0%,40%);
 }
 h1 {
 	margin: 0;
@@ -87,7 +93,7 @@ hr {
 
 input {
 	display: 					inline-block;
-	background-color: @hoverBackground;
+	background-color: @transparentGray;
 	color: 						@almostWhite;
 	border: 					1px solid @hoverBackground;
 	height: 					@buttonHeight - 2;

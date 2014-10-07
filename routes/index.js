@@ -93,28 +93,24 @@ router.get('/manageplaylist', function(req,res) {
 router.get('/browse/:url', function(req,res) {
   var url = decodeURIComponent(req.params.url);
   
-  console.log(url);
-  console.log(req.session.url);
-  console.log(url.substr(0,2));
   if (!req.session.url) {
-    // restart browse component
+    // no session, restart browse component
     req.session.url = [""];
     url = "";
   } else if (url === "#") {
+    // restart browse compoent, get url from session
     url = req.session.url.join('/');
   }
   else if (url.substr(0,2) === "--") {
-    console.log('now this is it');
+    // breadcrumb hit
     var entry = url.substr(2,3);
     console.log(entry);
     req.session.url = req.session.url.slice(0,entry+1);
     url = req.session.url.join('/');
   } else {
+    // get url from uri
     req.session.url = url.split('/');
   }
-  
-  console.log(url);
-  console.log(req.session.url);
   
   var komponistClient = komponist.getClient(req.sessionID);
   komponistClient.lsinfo([url], function(err,contents) {
@@ -122,10 +118,15 @@ router.get('/browse/:url', function(req,res) {
     if (contents) {
       var dirs = []
         , files = [];
+
+      // if contents contains only 1 item, mpd returns Object instead of Array
+      contents = (contents instanceof Array) ? contents : [contents];
+      
       for (i in contents) {
         var obj = contents[i];
         //console.log(obj);
         if ('directory' in obj) {
+          console.log(obj);
           var name_dir = obj.directory.split('/');
           obj.name = name_dir[name_dir.length-1];
           dirs.push(obj);
@@ -137,7 +138,7 @@ router.get('/browse/:url', function(req,res) {
       }
     }
     //console.log(data);
-    res.render('browse', {dirs:dirs, files:files, contents:contents, url_array:req.session.url});
+    res.render('browse', {dirs:dirs, files:files, url_array:req.session.url});
   });
 });
 

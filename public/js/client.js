@@ -60,6 +60,7 @@ $(document).ready(function() {
   });
 
   $('#stream').on('click', function() {
+
     if (stream !== undefined) {
       socket.emit('get_streaming_status', function(status) {
         //console.log(status);
@@ -201,6 +202,59 @@ function renderBrowse(folder){
       e.preventDefault();
       renderBrowse("--" + $(this).attr('data-dir'));
     });
+
+    // register Buttons
+    $('#browse').find('.append.button').off('click');
+    $('#browse').find('.append.button').on('click', function(){
+      var dir = $(this).parents('.dir').attr('data-directory');
+      console.log(dir);
+      socket.emit('mpd', 'add', [dir], function(err,msg){
+        if (err) {
+          console.log(err);
+        }
+        else {
+          $('nav').find('.button').removeClass('active');
+          $('nav').find('.button.queue').addClass('active');
+          renderQueue();
+        }
+      });
+    });
+
+    $('#browse').find('.load.button').off('click');
+    $('#browse').find('.load.button').on('click', function(){
+      var dir = $(this).parents('.dir').attr('data-directory');
+      console.log(dir);
+      socket.emit('mpd', 'clear', [], function(err,msg) {
+        socket.emit('mpd', 'add', [dir], function(err,msg){
+          if (err) {
+            console.log(err);
+          }
+          else {
+            $('nav').find('.button').removeClass('active');
+            $('nav').find('.button.queue').addClass('active');
+            renderQueue();
+          }
+        });
+      });
+    });
+
+    $('#browse').find('.load.button').off('click');
+    $('#browse').find('.load.button').on('click', function(){
+      var playlist = $(this).parents('.playlist').attr('data-playlist');
+      socket.emit('mpd', 'clear', [], function(err,msg) {
+        socket.emit('mpd', 'load', [playlist], function(err,msg){
+          if (err) {
+            console.log(err);
+          }
+          else {
+            $('nav').find('.button').removeClass('active');
+            $('nav').find('.button.queue').addClass('active');
+            renderQueue(); 
+          }
+        });
+      });
+    });
+
   });
 }
 
