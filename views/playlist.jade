@@ -12,23 +12,27 @@
     - each song in playlist
       .song(class= song.Id, data-id= song.Id)
         .attr.songpos= song.Pos
-        .attr.artist <a href="">#{song.Artist || 'unknown'}</a>
-        .attr.title #{song.Title || 'unknown'}
-        .attr.space
+        .attr.artist=song.Artist
         span.muted
+          if song.Track
+            .attr.space
+            .attr=song.Track
           if song.Album
-            .attr.album #{song.Album}
+            .attr.album=song.Album
             if song.Date
               |  (#{song.Date})
             .attr.space
+        .attr.title #{song.Title || 'unknown'}
+        span.muted
           if song.Genre
-            .attr.genre #{song.Genre}
             .attr.space
-          - var time = secondsToTimeString(song.Time)
-          .attr.time #{time}
-        .button-wrapper.right
-          .button.misc
-            i.fa.fa-ellipsis-v
+            .attr.genre #{song.Genre}
+          if song.Time
+            .attr.space
+            - var time = secondsToTimeString(song.Time)
+            .attr.time #{time}
         .button-wrapper.right
           .button.play
             i.fa.fa-play
+          .button.misc
+            i.fa.fa-ellipsis-v(title="more")

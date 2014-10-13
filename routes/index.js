@@ -142,6 +142,40 @@ router.get('/browse/:url', function(req,res) {
   });
 });
 
+router.get('/search/:searchString/:type', function(req,res) {
+  var searchString = decodeURIComponent(req.params.searchString);
+  var type = req.params.type;
+  
+  if (!req.session.search && searchString === "#") {
+    res.render('search', {contents: [], searchString:"", type: "Any"});
+  }
+  else if (req.session.search && searchString === "#") {
+    searchString = req.session.search;
+    type = req.session.type; 
+  }
+  if (searchString !== "#") {
+    var secondsToTimeString = function (seconds) {
+      var date = new Date(1970,0,1);
+      date.setSeconds(seconds);
+      return date.toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1");
+    }
+    var komponistClient = komponist.getClient(req.sessionID);
+    komponistClient.search(type, searchString, function(err,contents) {
+      if (Object.keys(contents[0]).length === 0) {
+        contents = null;
+      }
+      req.session.type = type;
+      req.session.search = searchString;
+      console.log(req.session.type);
+      console.log(req.session.search);
+      res.render('search', {contents: contents, 
+          searchString:searchString, 
+          type: type, 
+          secondsToTimeString:secondsToTimeString});
+    });
+  }
+});
+
 // route for getting of /logout
 router.get('/logout', function(req,res) {
 

@@ -91,13 +91,14 @@ hr {
   }
 }
 
-input {
+input, select {
 	display: 					inline-block;
+	background: 			transparent;
 	background-color: @transparentGray;
 	color: 						@almostWhite;
 	border: 					1px solid @hoverBackground;
 	height: 					@buttonHeight - 2;
-	padding: 					0 @short;
+	padding: 					0 @medium;
 	margin-bottom: 		@short;
 	&:focus {
 		border: 					1px solid @primary;

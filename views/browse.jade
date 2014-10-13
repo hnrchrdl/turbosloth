@@ -1,8 +1,4 @@
 #browse
-  //input#save-playlist.long(type='filter',placeholder="filter")
-  //.button-wrapper.right
-  //  .save.button
-  //    i.fa.fa-save
   .dir-info
     if url_array
       .attr
@@ -21,9 +17,9 @@
       - each item in dirs
         .dir(data-directory= item.directory)
           .attr 
-            i.fa.fa-folder-o  
-          .attr
-            a(href="#", data-dir= item.directory)= item.name
+            a(href="#", data-dir= item.directory)
+              i.fa.fa-folder-o  
+          .attr= item.name
           .button-wrapper.right
             .append.button
               i.fa.fa-plus-square-o(title="add to current playlist")

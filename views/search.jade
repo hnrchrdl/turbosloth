@@ -1,0 +1,65 @@
+#search
+  input.search.long(type='text',placeholder="search", value=searchString)
+
+  select.search
+    if type == 'Any'
+      option(selected) Any
+    else
+      option Any
+    if type == 'Artist'
+      option(selected) Artist
+    else
+      option Artist
+    if type == 'Album'
+      option(selected) Album
+    else
+      option Album
+    if type == 'Title'
+      option(selected) Title
+    else
+      option Title
+    if type == 'Genre'
+      option(selected) Genre
+    else
+      option Genre
+    if type == 'Filename'
+      option(selected) Filename
+    else
+      option Filename
+  .button-wrapper.right
+    .search.button
+      i.fa.fa-search
+  .clear
+  hr
+  .scrollable
+    if contents
+      -each item in contents
+        .dir(data-directory= item.file)  
+          .attr=item.Artist
+          span.muted
+            .attr.space
+            .attr=item.Track
+            .attr.space
+            .attr=item.Album
+            .attr.space
+          .attr=item.Title
+          if item.Time
+            span.muted
+              .attr.space
+              - var time = secondsToTimeString(item.Time)
+              .attr=time
+          .button-wrapper.right
+            .append.button
+              i.fa.fa-plus-square-o(title="add to current playlist")
+            .load.button
+              i.fa.fa-ellipsis-v(title="more")
+          .clear
+          .button-wrapper
+            .append.button.text
+              i.fa.fa-plus-square-o(title="add to current playlist")  add album
+            .load.button
+              i.fa.fa-ellipsis-v(title="more")
+
+    else
+      span.muted 
+        .dir no results    
