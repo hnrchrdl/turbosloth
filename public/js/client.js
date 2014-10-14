@@ -8,14 +8,6 @@ $(document).ready(function() {
   var init = true;
   renderAorta(init);
   // make sure the komponist client is created on server
-  // on first call only
-  setTimeout(function() {
-    renderAorta(init);
-    //$(window).on('resize', function() {
-    //  setHeightOfScrollable();
-    //  registerButtonStyles();
-    //});
-  }, 1000);
   
   // play the audio element on start
   audio = document.getElementsByTagName("audio")[0];
@@ -106,6 +98,7 @@ function renderAorta(init) {
 }
 
 function renderQueue() {
+  $('main').html('<i class="fa fa-spinner fa-spin"></i>');
   __playlist = new MpdPlaylist(function(err, playlist) {
     playlist.render();
     playlist.indicate();
@@ -115,6 +108,7 @@ function renderQueue() {
 }
 
 function renderPlaylists() {
+  $('main').html('<i class="fa fa-spinner fa-spin"></i>');
   // manage playlist click
   $.ajax({
     url: '/manageplaylist'
@@ -183,6 +177,9 @@ function renderPlaylists() {
 
 
 function renderBrowse(folder) {
+  $('nav').find('.button').removeClass('active');
+  $('nav').find('.button.browse').addClass('active');
+  $('main').html('<i class="fa fa-spinner fa-spin"></i>');
   $.ajax({
     url: 'browse/' + encodeURIComponent(folder)
   }).done(function(html){
@@ -200,10 +197,8 @@ function renderBrowse(folder) {
     });
 
     // register Buttons
-    $('#browse').find('.append.button').off('click');
-    $('#browse').find('.append.button').on('click', function(){
+    $('#browse').on('click', '.append.button', function(){
       var dir = $(this).parents('.dir').attr('data-directory');
-      console.log(dir);
       socket.emit('mpd', 'add', [dir], function(err,msg){
         if (err) {
           console.log(err);
@@ -219,7 +214,6 @@ function renderBrowse(folder) {
     $('#browse').find('.load.button').off('click');
     $('#browse').find('.load.button').on('click', function(){
       var dir = $(this).parents('.dir').attr('data-directory');
-      console.log(dir);
       socket.emit('mpd', 'clear', [], function(err,msg) {
         socket.emit('mpd', 'add', [dir], function(err,msg){
           if (err) {
@@ -237,6 +231,9 @@ function renderBrowse(folder) {
 }
 
 function renderSearch(searchString, searchType) {
+  $('nav').find('.button').removeClass('active');
+  $('nav').find('.button.search').addClass('active');
+  $('main').html('<i class="fa fa-spinner fa-spin"></i>');
   if (searchString === "") {
     searchString = "#";
   }
@@ -251,7 +248,6 @@ function renderSearch(searchString, searchType) {
     $('#search').find('.search.button').on('click', function(){
       var searchString = $('#search').find('input.search').val();
       var searchType = $('#search').find('select.search').val();
-      console.log(searchString);
       renderSearch(searchString, searchType);
     });
 
@@ -259,7 +255,6 @@ function renderSearch(searchString, searchType) {
     $('#search').find('select.search').on('change', function(){
       var searchString = $('#search').find('input.search').val();
       var searchType = $('#search').find('select.search').val();
-      console.log(searchString);
       renderSearch(searchString, searchType);
     });
     $('#search').find('input.search').off('keyup');
@@ -267,7 +262,6 @@ function renderSearch(searchString, searchType) {
       if ( e.which === 13 ) {
         var searchString = $('#search').find('input.search').val();
         var searchType = $('#search').find('select.search').val();
-        console.log(searchString);
         renderSearch(searchString, searchType);
       }
     });

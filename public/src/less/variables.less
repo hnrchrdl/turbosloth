@@ -14,16 +14,16 @@
 @transparentWhite2: hsla(0,0%,100%,0.2);
 @transparentGray: 	hsla(0,0%,10%,0.6);
 @hoverBackground: 	hsla(0,0%,95%,0.1);
+@background:        hsl(240,20%,7%);
 
 /// border
 @lightBorder: 		  1px solid @transparentWhite; 
 @extraLightBorder: 	1px solid @transparentWhite2; 
 
-
 /// colors
 //@primary:        	hsl(160, 100%, 50%);
-//@primary:         hsl(160, 80%, 40%);
-@primary:         hsl(190, 100%, 50%);
+@primary:         hsl(155, 80%, 40%);
+//@primary:         hsl(190, 100%, 50%);
 //@primary:        	hsl(160, 90%, 45%);
 //@primary:        	  hsl(200, 90%, 45%);
 
@@ -41,6 +41,7 @@
  
 // 90degree Variants
 @corner:         	spin((@primary), 70);
+@corner2:         spin((@primary), 240);
 @cornerLight:    	hsl(hue(@corner), 100%, 70%);
 @cornerDark:     	hsl(hue(@corner), 60%, 40%);
 @cornerFaded:    	hsl(hue(@corner), 60%, 65%);

@@ -9,6 +9,9 @@
           a(href="#", data-dir= i)= url
     else
       .attr /
+  .button-wrapper.right
+    .button.lookup.text(title="update database")
+      i.fa.fa-refresh
 
   .clear
   hr
@@ -21,10 +24,10 @@
               i.fa.fa-folder-o  
           .attr= item.name
           .button-wrapper.right
-            .append.button
-              i.fa.fa-plus-square-o(title="add to current playlist")
-            .load.button
-              i.fa.fa-asterisk(title="replace current playlist")
+            .append.button(title="add to current playlist")
+              i.fa.fa-plus-square-o
+            .load.button(title="replace current playlist")
+              i.fa.fa-asterisk
     if files != []
       - each item in files
         .dir(data-directory= item.directory)
@@ -33,7 +36,7 @@
           .attr
             span= item.name
           .button-wrapper.right
-            .append.button
-              i.fa.fa-plus-square-o(title="add to current playlist")
-            .load.button
-              i.fa.fa-asterisk(title="replace current playlist")
+            .append.button(title="add to current playlist")
+              i.fa.fa-plus-square-o
+            .load.button(title="replace current playlist")
+              i.fa.fa-asterisk

@@ -9,13 +9,13 @@ html,body,#background-wrapper {
 	//font-family: 	'Quicksand', sans-serif;
 	font-weight:	300;
 	font-size: 12px;
-	background-color: hsl(240,20%,5%);
+	//background-color: hsl(240,20%,5%);
 	//background-color: @almostWhite;
 }
 
 body {
 	// background patterns are taken from subtlepatterns.com. thank you!
-	background: 	url("@{images}/congruent_outline.png");
+	//background: 	url("@{images}/congruent_outline.png");
 	//background: 	url("@{images}/classy_fabric.png");
 	//background: 	url("@{images}/grey_wash_wall.png");
 	//background: 	url("@{images}/assault.png");
@@ -31,7 +31,8 @@ body {
 }
 #background-wrapper {
 	position: 		relative;
-	background-color: hsla(0,0%,0%,40%);
+	//background-color: hsla(0,0%,0%,40%);
+	background-color: @background;
 }
 h1 {
 	margin: 0;
@@ -47,7 +48,8 @@ a {
 }
 hr {
 	border:none;
-	background-color: @transparentWhite;
+	//background-color: @transparentWhite;
+	background-color: @primary;
 	height: 1px;
 	margin: 0;
 }
@@ -93,8 +95,8 @@ hr {
 
 input, select {
 	display: 					inline-block;
-	background: 			transparent;
-	background-color: @transparentGray;
+	//background-color: @transparentGray;
+	background-color: @background;
 	color: 						@almostWhite;
 	border: 					1px solid @hoverBackground;
 	height: 					@buttonHeight - 2;

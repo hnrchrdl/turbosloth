@@ -39,10 +39,8 @@ MpdAorta.prototype = {
       currentsong.text("");
     }
     else {
-      currentsong.html('<a id="current-artist" href="">' + song.Artist+ '</a><br>' + 
-        song.Title +
-        ' | ' +
-        secondsToTimeString(song.Time));
+      currentsong.html(song.Artist+ '<br>' + 
+        song.Title + '<br>' + '<span class="muted">' + song.Album + '</span>')
     }
     //var currentTime = parseFloat(status.elapsed);
     //clearInterval(updateSongTime);
@@ -158,24 +156,60 @@ MpdPlaylist.prototype = {
     });
   },
   registerFunctionality : function() {
-    //$('.playbutton').off('click');
-    $('.song').on('click','.play', function() {
-      //console.log($(this));
-      var songid = $(this).parents('.song').attr('data-id');
-      console.log(songid);
-      socket.emit('mpd', 'playid', [songid]);
-    });
-
     // refresh playlist click
     $('#playlist-container').find('.refresh').off('click');
     $('#playlist-container').find('.refresh').on('click',function() {
       renderQueue();
     });
 
-    // save playlist click
+    // click play
+    $('#playlist').on('click','.play', function() {
+      //console.log($(this));
+      var songid = $(this).parents('.song').attr('data-id');
+      console.log(songid);
+      socket.emit('mpd', 'playid', [songid]);
+    });
+
+    // click advanced
+    $('#playlist').on('click','.advanced', function() {
+      if ($(this).find('i').hasClass('fa-angle-down')) {
+        $(this).find('i').removeClass('fa-angle-down');
+        $(this).find('i').addClass('fa-angle-up');
+        $(this).parents('.song').height($(this).parents('.song').height()*2);
+      } else {
+        $(this).find('i').removeClass('fa-angle-up');
+        $(this).find('i').addClass('fa-angle-down');
+        $(this).parents('.song').height($(this).parents('.song').height()/2);
+      }
+    });
+
+    // click search artist
+    $('#playlist').on('click', '.search', function() {
+      var artist = $(this).parents('.song').find('.attr.artist').text();
+      renderSearch(artist, 'Artist');
+    });
+
+    // click lookup
+    $('#playlist').on('click', '.lookup', function() {
+      try {
+        var directory = ($(this).parents('.song').attr('data-file').split('/'));
+        directory.pop();
+        directory = directory.join('/');
+        console.log(directory);
+        renderBrowse(directory);
+      } catch (e) {}
+    });
+
+    // click remove
+    $('#playlist').on('click', '.remove', function() {
+      var song = $(this).parents('.song');
+      var songid = song.attr('data-id');
+      socket.emit('mpd', 'deleteid', [songid]);
+      song.remove();
+    });  
+
     var options = {
       html : true,
-      
       placement : 'bottom'
     };
 

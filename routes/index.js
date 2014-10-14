@@ -18,12 +18,13 @@ router.get('/', function(req, res) {
       password = req.session.mpdpassword;
       //console.log(password);
 
-    komponist.init(sessionID,port,host,password);
+    var komponistClientExists = komponist.init(sessionID,port,host,password);
     if (password !== "") {
       komponist.authenticate(sessionID, password);
     }
-    komponist.registerChange(sessionID);
-
+    if (!komponistClientExists) {
+      komponist.registerChange(sessionID);
+    }
 
       // register mpd listener for -changed- event
       
@@ -68,7 +69,6 @@ router.get('/mpdplaylist', function(req,res) {
     date.setSeconds(seconds);
     return date.toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1");
   }
-  //var columns = ['Pos', 'Title', 'Artist', 'Album', 'Genre', 'Time']
   var komponistClient = komponist.getClient(req.sessionID);
   komponistClient.playlistinfo(function(err, data) {
     //for (i in data) {

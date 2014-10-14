@@ -6,11 +6,14 @@
       .button.text.scroll(title="Scroll to current song")
         i.fa.fa-angle-double-down
     .button-wrapper.right
-      .button.text.clear(title="clear playlist")
+      .button.text.clear(title="shuffle playlist")
+        i.fa.fa-random
+      .button.text.shuffle(title="clear playlist")
         i.fa.fa-eraser
+  hr
   #playlist.scrollable
     - each song in playlist
-      .song(class= song.Id, data-id= song.Id)
+      .song(class= song.Id, data-id= song.Id, data-file= song.file)
         .attr.songpos= song.Pos
         .attr.artist=song.Artist
         span.muted
@@ -32,7 +35,16 @@
             - var time = secondsToTimeString(song.Time)
             .attr.time #{time}
         .button-wrapper.right
-          .button.play
+          .button.play(title="play song")
             i.fa.fa-play
-          .button.misc
-            i.fa.fa-ellipsis-v(title="more")
+          .button.advanced(title="more options")
+            i.fa.fa-angle-down
+        .clear
+        .button-wrapper.right
+          .button.lookup.text
+            i.fa.fa-folder-o  look up in database
+          .button.search.text
+            i.fa.fa-search   search for artist
+          .button.remove.text
+            i.fa.fa-remove  remove from queue
+        
