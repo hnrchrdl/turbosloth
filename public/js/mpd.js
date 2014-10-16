@@ -34,7 +34,7 @@ MpdAorta.prototype = {
     }
 
     //render current song
-    var currentsong = $('#control-bar').find('.currentsong');
+    var currentsong = $('#left').find('.currentsong');
     if (status.state === 'stop') {
       currentsong.text("");
     }
@@ -85,7 +85,7 @@ MpdAorta.prototype = {
     // register the seek function on the playlist-container
     $('#seek-bar-container').off('click');
     $('#seek-bar-container').on('click', function(e){
-      var seek_ratio = (e.clientX / $(window).width()); 
+      var seek_ratio = ( (e.clientX - 30 )/ 200);
       console.log(seek_ratio);
       var seek_sec = String(Math.round(seek_ratio * song.Time));
       console.log(song.Time);
@@ -127,7 +127,10 @@ MpdAorta.prototype = {
   },
   indicate : function() {
     $('.song').removeClass('active');
-    $('.song.' + this.song.Id).addClass('active');  
+    $('.song').find('.attr.songpos').removeClass('active');
+    $('.song.' + this.song.Id).addClass('active');
+    $('.song.' + this.song.Id).find('.attr.songpos').addClass('active');
+    console.log($('.song.' + this.song.Id).find('.attr.songpos'));  
   }
 };
 
@@ -147,18 +150,22 @@ var MpdPlaylist = function(callback) {
 
 MpdPlaylist.prototype = {
   render : function() {
+    $('nav').find('.button').removeClass('active');
+    $('nav').find('.button.queue').addClass('active');
     $('main').html(this.html);
+    $('nav').find('.loading.queue').hide();
   },
   indicate : function() {
     $('.song').removeClass('active');
+    $('.song').find('.attr.songpos').removeClass('active');
     socket.emit('mpd', 'currentsong', [], function(err,song) {
-      $('.song.' + song.Id).addClass('active'); 
+      $('.song.' + song.Id).addClass('active');
+      $('.song.' + song.Id).find('.attr.songpos').addClass('active');
     });
   },
   registerFunctionality : function() {
     // refresh playlist click
-    $('#playlist-container').find('.refresh').off('click');
-    $('#playlist-container').find('.refresh').on('click',function() {
+    $('#playlist-container').on('click', '.refresh' ,function() {
       renderQueue();
     });
 

@@ -115,9 +115,10 @@ router.get('/browse/:url', function(req,res) {
   var komponistClient = komponist.getClient(req.sessionID);
   komponistClient.lsinfo([url], function(err,contents) {
     console.log(err);
-    if (contents) {
-      var dirs = []
+    var dirs = []
         , files = [];
+    if (contents) {
+      
 
       // if contents contains only 1 item, mpd returns Object instead of Array
       contents = (contents instanceof Array) ? contents : [contents];

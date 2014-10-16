@@ -12,10 +12,14 @@
 				margin-top: @buttonHeight / 2 - @medium / 2;
 				border-right: @extraLightBorder;
 			}
+			&.songpos.active {
+				color: @primary;
+			}
 		}
 		&.active {
-			background-color: @hoverBackground;
-
+			//border-bottom: 1px solid @primary;
+			border-bottom: 1px solid @primary;
+			//background-color: @hoverBackground;
 		}
 	}
 	&.scrollable {

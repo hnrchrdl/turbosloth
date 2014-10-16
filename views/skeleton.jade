@@ -33,9 +33,44 @@ body
           #logout.button.text
             i.fa.fa-sign-out  Logout
       #connection-info connected to #{mpdhost}:#{mpdport}
-    
-    
-    #control-bar
+      
+
+    #left
+      nav
+        .button-wrapper.left
+          .button.text.queue.active
+            i.fa.fa-list  Queue
+        .loading.queue.right
+            i.fa.fa-spinner.fa-spin
+        .clear
+        .button-wrapper.left
+          .button.text.playlists 
+             i.fa.fa-file-audio-o  Playlists
+        .loading.playlists.right
+            i.fa.fa-spinner.fa-spin 
+        .clear
+        .button-wrapper.left
+          .button.text.browse
+            i.fa.fa-folder-o  Browse
+        .loading.browse.right
+            i.fa.fa-spinner.fa-spin
+        .clear
+        .button-wrapper.left
+          .button.text.search
+            i.fa.fa-search  Search
+        .loading.search.right
+            i.fa.fa-spinner.fa-spin
+      .clear
+      hr
+
+      .albumart
+
+      .currentsong-wrapper
+        .currentsong
+          a(href="")
+          br
+
+        
       .control-menu.left
         .button-wrapper.left
           #previous.left.button(title="previous")
@@ -48,35 +83,28 @@ body
             i.fa.fa-stop
           #next.left.button(title="next")
             i.fa.fa-forward
-
-      .currentsong-wrapper
-        .currentsong
-          a(href="")
-          br
       
-      .control-menu.right
-        .button-wrapper.left
-          #stream.left.button(title="streaming on / off")
-            i.fa.fa-volume-up
-    
-
-    #seek-bar-container
-      #seek-bar
-    
-
-    nav
+      
+      
       .button-wrapper.left
-        .button.text.queue.active
-          i.fa.fa-list  Queue
-        .button.text.playlists 
-           i.fa.fa-file-audio-o  Playlists 
-        .button.text.browse
-          i.fa.fa-folder-o  Browse
-        .button.text.search
-          i.fa.fa-search  Search
+        #stream.left.button.text(title="streaming on / off")
+          i.fa.fa-volume-up
+        #random.left.button.text(title="streaming on / off")
+          i.fa.fa-random
+        #repeat.left.button.text(title="streaming on / off")
+          i.fa.fa-repeat
+    
+
+      #seek-bar-container
+        #seek-bar
 
     main
       block content
+
+    
+
+    
+    
 
   audio(src= stream preload='none')
 

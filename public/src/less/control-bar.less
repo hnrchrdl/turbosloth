@@ -1,51 +1,46 @@
-#control-bar {
-	// background patterns are taken from subtlepatterns.com. thank you!
-	//background: 	url("@{images}/congruent_outline.png");
-	//background: 	url("@{images}/classy_fabric.png");
-	//background: 	url("@{images}/grey_wash_wall.png");
-	//background: 	url("@{images}/assault.png");
-	//background: 	url("@{images}/binding_dark.png");
-	//background: 	url("@{images}/black_lozenge.png");
-	//background: 	url("@{images}/noisy_net.png");
-	//background: 	url("@{images}/stardust.png");
-	//background: 	url("@{images}/stressed_linen.png");
-	//background: 	url("@{images}/subtle_carbon.png");
-	//background: 	url("@{images}/twinkle_twinkle.png");
-	//background: 	url("@{images}/zwartevilt.png");
-	//background-color: hsla(0,0%,0%,20%);
-	position: relative;
-	.Container;
-	top: 	@headerHeight;
-	height: @controlBarHeight;
-
-	.control-menu {
-		position: 	absolute;
-		top: 		@controlBarHeight / 2  - @buttonHeight / 2;
-		&.left {
-			left:		@medium;	
-		}
-		&.right {
-			right:		@medium;
-		}
-	}
-
-	.currentsong-wrapper {
-		position:		absolute;
-		top: 			@medium;
-		left: 			@medium * 2 + @buttonHeight *5;
-		padding-left: 	@long;
-		padding-top:	@medium;
-		height: 		@controlBarHeight - @medium * 3;
-		border-left: 	@extraLightBorder;
-	}
+#left {
+	position: absolute;
+	top: @headerHeight;
+	bottom: @long;
+	left: @long;
+	width: @leftWidth;
 }
+
+.control-menu {
+	position: 	absolute;
+	bottom: 		@seekBarContainerHeight;
+	left: 			(@leftWidth - @buttonHeight * 5) / 2;
+}
+
+.currentsong-wrapper {
+	position:		absolute;
+	bottom: 		@seekBarContainerHeight + @buttonHeight + @leftWidth + @medium;
+	left: 		0;
+	padding-left: 	@medium;
+	padding-top:	@medium;
+	height: 		@controlBarHeight - @medium * 3;
+	border-left: 	@extraLightBorder;
+	overflow-y:	hidden;
+}
+
+.albumart {
+	position: absolute;
+	bottom: @seekBarContainerHeight + @buttonHeight;
+	height: @leftWidth;
+	width: @leftWidth;
+	background-color: @primary;
+}
+
 #seek-bar-container {
-	.Container;
-	top: 					@headerHeight + @controlBarHeight + @medium;
+	position: absolute;
+	bottom: 			0;
+	width:				198px;
 	//height: 		@seekBarContainerHeight;
 	cursor: 			pointer;
 	border:				@extraLightBorder;
+	//border-bottom:		@extraLightBorder;
 	&:hover {
+		//border-top: 1px solid @transparentWhite;
 		border: 1px solid @transparentWhite;
 	}
 	-webkit-transition: border 0.5s, -webkit-transform 0.5s;

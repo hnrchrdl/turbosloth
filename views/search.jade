@@ -1,7 +1,9 @@
 #search
-  input.search-input.long(type='text',placeholder="search", value=searchString)
 
-  select.search
+  
+  input.search-input.long(type='text',placeholder="search", value=searchString)
+  i.fa.fa-search.input-fa
+  select.search-select
     if type == 'Any'
       option(selected) Any
     else
@@ -26,9 +28,6 @@
       option(selected) Filename
     else
       option Filename
-  .button-wrapper.right
-    .search.button
-      i.fa.fa-search
   .clear
   hr
   .scrollable

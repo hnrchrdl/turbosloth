@@ -14,10 +14,13 @@ main {
   //background:   url("@{images}/zwartevilt.png");
   //background-color: hsla(0,0%,0%,20%);
 	.Container;
-	top: 				@headerHeight + @controlBarHeight + @seekBarContainerHeight + @navHeight + @long;
-	bottom: 			@long;
+	//top: 				@headerHeight + @controlBarHeight + @seekBarContainerHeight + @navHeight + @long;
+	top:          @headerHeight;
+  bottom: 		  @long;
 	//background-color: @transparentGray;
-  padding: @medium;
+  //padding:      @medium;
+  padding-top:  0;
+  margin-left:  @leftWidth + 20px;
 }
 .nav-main {
 	height: @buttonHeight;

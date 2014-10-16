@@ -15,23 +15,26 @@
     - each song in playlist
       .song(class= song.Id, data-id= song.Id, data-file= song.file)
         .attr.songpos= song.Pos
-        .attr.artist=song.Artist
+        .attr.space
+        if song.Artist
+          .attr.artist=song.Artist
+          .attr.space
         span.muted
           if song.Track
-            .attr.space
             .attr=song.Track
+            .attr.space
           if song.Album
             .attr.album=song.Album
             if song.Date
               |  (#{song.Date})
-            .attr.space
+          .attr.space
         .attr.title #{song.Title || 'unknown'}
+        .attr.space
         span.muted
           if song.Genre
-            .attr.space
             .attr.genre #{song.Genre}
-          if song.Time
             .attr.space
+          if song.Time
             - var time = secondsToTimeString(song.Time)
             .attr.time #{time}
         .button-wrapper.right
