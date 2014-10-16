@@ -77,6 +77,8 @@ app.use(function(err, req, res, next) {
   });
 });
 
+require('longjohn');
+
 module.exports = {
   app: app
 };

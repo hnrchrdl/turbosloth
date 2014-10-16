@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<!-- saved from url=(0022)http://localhost:8080/ -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><style type="text/css"></style></head><body><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><title>turbosloth</title><link rel="stylesheet/less" type="text/css" href="./turbosloth_files/styles.less"><style type="text/css" id="less:src-less-styles">.Container {
+  position: absolute;
+  left: 30px;
+  right: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+.Header {
+  top: 0px;
+  height: 90px;
+  padding: 0;
+  border: none;
+}
+.Header h1 {
+  color: #cccccc;
+}
+html,
+body,
+#background-wrapper {
+  height: 100%;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  color: #cccccc;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 300;
+  font-size: 12px;
+}
+#background-wrapper {
+  position: relative;
+  background-color: #0e0e15;
+}
+h1 {
+  margin: 0;
+  padding: 0;
+}
+a {
+  color: #14b874;
+  text-decoration: none;
+}
+a:hover {
+  color: #29a370;
+}
+hr {
+  border: none;
+  background-color: #14b874;
+  height: 1px;
+  margin: 0;
+}
+.clear {
+  clear: both;
+}
+.muted {
+  color: #666666;
+}
+.button-wrapper {
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+}
+.button-wrapper.left {
+  float: left;
+}
+.button-wrapper.right {
+  float: right;
+}
+.button {
+  height: buttonHeight;
+  min-width: 40px;
+  cursor: pointer;
+  display: inline-block;
+  -webkit-transition: background-color 0.5s, -webkit-transform 0.5s;
+  transition: background-color 0.5s, transform 0.5s;
+}
+.button:hover {
+  background-color: rgba(242, 242, 242, 0.1);
+}
+.button.active {
+  color: #14b874;
+}
+.button.text {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+input,
+select {
+  display: inline-block;
+  background-color: #0e0e15;
+  color: #cccccc;
+  border: 1px solid rgba(242, 242, 242, 0.1);
+  height: 38px;
+  padding: 0 15px;
+  margin-bottom: 5px;
+}
+input:focus,
+select:focus {
+  border: 1px solid #14b874;
+}
+::-webkit-input-placeholder {
+  color: #666666;
+}
+:-moz-placeholder {
+  /* Firefox 18- */
+  color: #666666;
+}
+::-moz-placeholder {
+  /* Firefox 19+ */
+  color: #666666;
+}
+:-ms-input-placeholder {
+  color: #666666;
+}
+::selection {
+  background: #14b874;
+  color: #fff;
+}
+::-moz-selection {
+  background: #14b874;
+  color: #fff;
+}
+.login {
+  text-align: center;
+}
+.login h1 {
+  font-family: 'Quicksand', Helvetica, Sans-Serif;
+  font-weight: 300;
+  font-size: 56px;
+  text-align: center;
+  padding: 75px 0;
+  color: #b81458;
+}
+.login .form-wrapper {
+  display: block;
+  bottom: 5px;
+}
+.login .form-wrapper input {
+  margin-left: 5px;
+}
+.login .button-wrapper {
+  display: inline-block;
+}
+.login .long {
+  width: 300px;
+}
+.login .extraLong {
+  width: 365px;
+}
+.login .short {
+  width: 50px;
+}
+header {
+  position: absolute;
+  left: 30px;
+  right: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  top: 0px;
+  height: 90px;
+  padding: 0;
+  border: none;
+}
+header h1 {
+  color: #cccccc;
+}
+header h1 {
+  float: left;
+  line-height: 90px;
+  font-family: 'Quicksand', Helvetica, sans-serif;
+  font-weight: 300;
+  font-size: 56px;
+}
+#submenu {
+  float: right;
+  margin-top: 5px;
+}
+#connection-info {
+  position: absolute;
+  bottom: 15px;
+  right: 0;
+  color: #666666;
+}
+#control-bar {
+  position: relative;
+  position: absolute;
+  left: 30px;
+  right: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  top: 90px;
+  height: 100px;
+}
+#control-bar .control-menu {
+  position: absolute;
+  top: 30px;
+}
+#control-bar .control-menu.left {
+  left: 15px;
+}
+#control-bar .control-menu.right {
+  right: 15px;
+}
+#control-bar .currentsong-wrapper {
+  position: absolute;
+  top: 15px;
+  left: 230px;
+  padding-left: 30px;
+  padding-top: 15px;
+  height: 55px;
+  border-left: 1px solid rgba(255, 255, 255, 0.2);
+}
+#seek-bar-container {
+  position: absolute;
+  left: 30px;
+  right: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  top: 205px;
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  -webkit-transition: border 0.5s, -webkit-transform 0.5s;
+  transition: border 0.5s, transform 0.5s;
+}
+#seek-bar-container:hover {
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+#seek-bar-container #seek-bar {
+  height: 8px;
+  width: 0%;
+  background-color: rgba(255, 255, 255, 0.2);
+}
+nav {
+  position: absolute;
+  left: 30px;
+  right: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  top: 230px;
+  height: 40px;
+  border: none;
+}
+main {
+  position: absolute;
+  left: 30px;
+  right: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  top: 270px;
+  bottom: 30px;
+  padding: 15px;
+}
+.nav-main {
+  height: 40px;
+}
+#playlist .song {
+  height: 40px;
+  overflow: hidden;
+  line-height: 40px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+#playlist .song .attr {
+  display: inline-block;
+  margin-left: 15px;
+}
+#playlist .song .attr.space {
+  height: 15px;
+  margin-top: 12.5px;
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+}
+#playlist .song.active {
+  background-color: rgba(242, 242, 242, 0.1);
+}
+#playlist.scrollable {
+  overflow-y: scroll;
+}
+::-webkit-scrollbar {
+  width: 5px;
+  background-color: rgba(255, 255, 255, 0.2);
+}
+::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.5);
+}
+#manageplaylist input {
+  width: 30%;
+  float: left;
+  margin-right: 5px;
+  margin-bottom: 15px;
+}
+#manageplaylist .playlist {
+  height: 40px;
+  line-height: 40px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+#manageplaylist .playlist .attr {
+  display: inline-block;
+  margin-left: 15px;
+}
+#manageplaylist .playlist .attr.space {
+  height: 15px;
+  margin-top: 12.5px;
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+}
+#manageplaylist .scrollable {
+  overflow-y: scroll;
+}
+#browse .dir-info {
+  float: left;
+  line-height: 40px;
+}
+#browse .dir-info .attr {
+  display: inline-block;
+  margin-left: 15px;
+}
+#browse .dir-info .attr.space {
+  height: 15px;
+  margin-top: 12.5px;
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+}
+#browse .dir {
+  height: 40px;
+  line-height: 40px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+#browse .dir .attr {
+  display: inline-block;
+  margin-left: 15px;
+}
+#browse .dir .attr.space {
+  height: 15px;
+  margin-top: 12.5px;
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+}
+#browse .scrollable {
+  overflow-y: scroll;
+}
+#search .dir {
+  height: 40px;
+  overflow: hidden;
+  line-height: 40px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+#search .dir .attr {
+  display: inline-block;
+  margin-left: 15px;
+}
+#search .dir .attr.space {
+  height: 15px;
+  margin-top: 12.5px;
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+}
+#search input {
+  width: 30%;
+  float: left;
+  margin-right: 30px;
+  margin-bottom: 15px;
+}
+#search .scrollable {
+  overflow-y: scroll;
+}
+</style><link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet"><link href="./turbosloth_files/css" rel="stylesheet" type="text/css"><!--link(rel='stylesheet', href='/stylesheets/style.css')--><!--link(rel='stylesheet', href="/bootstrap-3.2.0-dist/css/bootstrap.css")--><!--link(rel='stylesheet', href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,700', type='text/css')--><!--link(rel="stylesheet", href="http://fonts.googleapis.com/css?family=Montserrat")--><script type="text/javascript">var stream = 'http://ice.leukosia.eu/obamah';
+</script><div id="background-wrapper"><header><h1>turbosloth</h1><div id="submenu"><div class="button-wrapper"><div id="info" class="button text"><i class="fa fa-info"> Info</i></div><div id="settings" class="button text"><i class="fa fa-cog"> Settings</i></div><div id="logout" class="button text"><i class="fa fa-sign-out"> Logout</i></div></div></div><div id="connection-info">connected to leukosia.eu:6603</div></header><div id="control-bar"><div class="control-menu left"><div class="button-wrapper left"><div id="previous" title="previous" class="left button"><i class="fa fa-backward"></i></div><div id="pause" title="pause" class="left button"><i class="fa fa-pause"></i></div><div id="play" title="play" class="left button"><i class="fa fa-play"></i></div><div id="stop" title="stop" class="left button active"><i class="fa fa-stop"></i></div><div id="next" title="next" class="left button"><i class="fa fa-forward"></i></div></div></div><div class="currentsong-wrapper"><div class="currentsong"></div></div><div class="control-menu right"><div class="button-wrapper left"><div id="stream" title="streaming on / off" class="left button"><i class="fa fa-volume-up"></i></div></div></div></div><div id="seek-bar-container"><div id="seek-bar" style="width: 0px;"></div></div><nav><div class="button-wrapper left"><div class="button text queue"><i class="fa fa-list"> Queue</i></div><div class="button text playlists"><i class="fa fa-file-audio-o"> Playlists </i></div><div class="button text browse"><i class="fa fa-folder-o"> Browse</i></div><div class="button text search active"><i class="fa fa-search"> Search</i></div></div></nav><main><div id="search"><input type="text" placeholder="search" value="hmm" class="search long"><select class="search"><option selected="selected">Any</option><option>Artist</option><option>Album</option><option>Title</option><option>Genre</option><option>Filename</option></select><div class="button-wrapper right"><div class="search button"><i class="fa fa-search"></i></div></div><div class="clear"></div><hr><div class="scrollable" style="height: 299px;"><div data-directory="Beenie.Man/Beenie Man - Undisputed - 2006 - FLAC/03 - Hmm Hmm.flac" class="dir"> <div class="attr">Beenie Man</div><span class="muted"><div class="attr space"></div><div class="attr">03</div><div class="attr space"></div><div class="attr">Undisputed</div><div class="attr space"></div></span><div class="attr">Hmm Hmm</div><span class="muted"><div class="attr space"></div><div class="attr">00:03:36</div></span><div class="button-wrapper right"><div class="append button"><i title="add to current playlist" class="fa fa-plus-square-o"></i></div><div class="load button"><i title="more" class="fa fa-ellipsis-v"></i></div></div><div class="clear"></div><div class="button-wrapper right"><div class="button lookup text"><i class="fa fa-folder-o"> look up in database</i></div><div class="button search text"><i class="fa fa-search">  search for artist</i></div><div class="button remove text"><i class="fa fa-remove"> remove from queue</i></div></div></div><div data-directory="Erykah.Badu/Erykah.Badu.-.New Amerykah Part Two (Return of the Ankh)/06 Umm Hmm .flac" class="dir"> <div class="attr">Erykah Badu</div><span class="muted"><div class="attr space"></div><div class="attr">06</div><div class="attr space"></div><div class="attr">New Amerykah Part Two (Return of the Ankh)</div><div class="attr space"></div></span><div class="attr">Umm Hmm</div><span class="muted"><div class="attr space"></div><div class="attr">00:03:46</div></span><div class="button-wrapper right"><div class="append button"><i title="add to current playlist" class="fa fa-plus-square-o"></i></div><div class="load button"><i title="more" class="fa fa-ellipsis-v"></i></div></div><div class="clear"></div><div class="button-wrapper right"><div class="button lookup text"><i class="fa fa-folder-o"> look up in database</i></div><div class="button search text"><i class="fa fa-search">  search for artist</i></div><div class="button remove text"><i class="fa fa-remove"> remove from queue</i></div></div></div><div data-directory="Led.Zeppelin/1997.Kashmir.(Led.Zeppelin.Sinfónico)/01 - Kashmmir - Dawn at the Great Pyramid - Kashmir- The Symphonic Led Zeppelin.mp3" class="dir"> <div class="attr">Kashmmir</div><span class="muted"><div class="attr space"></div><div class="attr">1</div><div class="attr space"></div><div class="attr">Kashmir:The Symphonic Led Zeppelin</div><div class="attr space"></div></span><div class="attr">Dawn at the Great Pyramid</div><span class="muted"><div class="attr space"></div><div class="attr">00:03:34</div></span><div class="button-wrapper right"><div class="append button"><i title="add to current playlist" class="fa fa-plus-square-o"></i></div><div class="load button"><i title="more" class="fa fa-ellipsis-v"></i></div></div><div class="clear"></div><div class="button-wrapper right"><div class="button lookup text"><i class="fa fa-folder-o"> look up in database</i></div><div class="button search text"><i class="fa fa-search">  search for artist</i></div><div class="button remove text"><i class="fa fa-remove"> remove from queue</i></div></div></div><div data-directory="Led.Zeppelin/1997.Kashmir.(Led.Zeppelin.Sinfónico)/02 - Kashmmir - Kashmir - Kashmir- The Symphonic Led Zeppelin.mp3" class="dir"> <div class="attr">Kashmmir</div><span class="muted"><div class="attr space"></div><div class="attr">2</div><div class="attr space"></div><div class="attr">Kashmir:The Symphonic Led Zeppelin</div><div class="attr space"></div></span><div class="attr">Kashmir</div><span class="muted"><div class="attr space"></div><div class="attr">00:07:54</div></span><div class="button-wrapper right"><div class="append button"><i title="add to current playlist" class="fa fa-plus-square-o"></i></div><div class="load button"><i title="more" class="fa fa-ellipsis-v"></i></div></div><div class="clear"></div><div class="button-wrapper right"><div class="button lookup text"><i class="fa fa-folder-o"> look up in database</i></div><div class="button search text"><i class="fa fa-search">  search for artist</i></div><div class="button remove text"><i class="fa fa-remove"> remove from queue</i></div></div></div><div data-directory="Led.Zeppelin/1997.Kashmir.(Led.Zeppelin.Sinfónico)/03 - Kashmmir - The Battle of Evermore - Kashmir- The Symphonic Led Zeppelin.mp3" class="dir"> <div class="attr">Kashmmir</div><span class="muted"><div class="attr space"></div><div class="attr">3</div><div class="attr space"></div><div class="attr">Kashmir:The Symphonic Led Zeppelin</div><div class="attr space"></div></span><div class="attr">The Battle of Evermore</div><span class="muted"><div class="attr space"></div><div class="attr">00:08:12</div></span><div class="button-wrapper right"><div class="append button"><i title="add to current playlist" class="fa fa-plus-square-o"></i></div><div class="load button"><i title="more" class="fa fa-ellipsis-v"></i></div></div><div class="clear"></div><div class="button-wrapper right"><div class="button lookup text"><i class="fa fa-folder-o"> look up in database</i></div><div class="button search text"><i class="fa fa-search">  search for artist</i></div><div class="button remove text"><i class="fa fa-remove"> remove from queue</i></div></div></div><div data-directory="Led.Zeppelin/1997.Kashmir.(Led.Zeppelin.Sinfónico)/04 - Kashmmir - Stairway to Heaven - Kashmir- The Sympho" class="dir"> <div class="attr">Kashmmir</div><span class="muted"><div class="attr space"></div><div class="attr">4</div><div class="attr space"></div><div class="attr">Kashmir:The Symphonic Led Zeppelin</div><div class="attr space"></div></span><div class="attr">Stairway to Heaven</div><span class="muted"><div class="attr space"></div><div class="attr">00:10:41</div></span><div class="button-wrapper right"><div class="append button"><i title="add to current playlist" class="fa fa-plus-square-o"></i></div><div class="load button"><i title="more" class="fa fa-ellipsis-v"></i></div></div><div class="clear"></div><div class="button-wrapper right"><div class="button lookup text"><i class="fa fa-folder-o"> look up in database</i></div><div class="button search text"><i class="fa fa-search">  search for artist</i></div><div class="button remove text"><i class="fa fa-remove"> remove from queue</i></div></div></div><div data-directory="Led.Zeppelin/1997.Kashmir.(Led.Zeppelin.Sinfónico)/05 - Kashmmir - When the Levee Breaks - Kashmir- The Symphonic Led Zeppelin.mp3" class="dir"> <div class="attr">Kashmmir</div><span class="muted"><div class="attr space"></div><div class="attr">5</div><div class="attr space"></div><div class="attr">Kashmir:The Symphonic Led Zeppelin</div><div class="attr space"></div></span><div class="attr">When the Levee Breaks</div><span class="muted"><div class="attr space"></div><div class="attr">00:07:17</div></span><div class="button-wrapper right"><div class="append button"><i title="add to current playlist" class="fa fa-plus-square-o"></i></div><div class="load button"><i title="more" class="fa fa-ellipsis-v"></i></div></div><div class="clear"></div><div class="button-wrapper right"><div class="button lookup text"><i class="fa fa-folder-o"> look up in database</i></div><div class="button search text"><i class="fa fa-search">  search for artist</i></div><div class="button remove text"><i class="fa fa-remove"> remove from queue</i></div></div></div><div data-directory="Led.Zeppelin/1997.Kashmir.(Led.Zeppelin.Sinfónico)/06 - Kashmmir - Going to California - Kashmir- The Symphonic Led Zeppelin.mp3" class="dir"> <div class="attr">Kashmmir</div><span class="muted"><div class="attr space"></div><div class="attr">6</div><div class="attr space"></div><div class="attr">Kashmir:The Symphonic Led Zeppelin</div><div class="attr space"></div></span><div class="attr">Going to California</div><span class="muted"><div class="attr space"></div><div class="attr">00:10:28</div></span><div class="button-wrapper right"><div class="append button"><i title="add to current playlist" class="fa fa-plus-square-o"></i></div><div class="load button"><i title="more" class="fa fa-ellipsis-v"></i></div></div><div class="clear"></div><div class="button-wrapper right"><div class="button lookup text"><i class="fa fa-folder-o"> look up in database</i></div><div class="button search text"><i class="fa fa-search">  search for artist</i></div><div class="button remove text"><i class="fa fa-remove"> remove from queue</i></div></div></div><div data-directory="Led.Zeppelin/1997.Kashmir.(Led.Zeppelin.Sinfónico)/07 - Kashmmir - Friends - Kashmir- The Symphonic Led Zeppelin.mp3" class="dir"> <div class="attr">Kashmmir</div><span class="muted"><div class="attr space"></div><div class="attr">7</div><div class="attr space"></div><div class="attr">Kashmir:The Symphonic Led Zeppelin</div><div class="attr space"></div></span><div class="attr">Friends</div><span class="muted"><div class="attr space"></div><div class="attr">00:05:43</div></span><div class="button-wrapper right"><div class="append button"><i title="add to current playlist" class="fa fa-plus-square-o"></i></div><div class="load button"><i title="more" class="fa fa-ellipsis-v"></i></div></div><div class="clear"></div><div class="button-wrapper right"><div class="button lookup text"><i class="fa fa-folder-o"> look up in database</i></div><div class="button search text"><i class="fa fa-search">  search for artist</i></div><div class="button remove text"><i class="fa fa-remove"> remove from queue</i></div></div></div><div data-directory="Led.Zeppelin/1997.Kashmir.(Led.Zeppelin.Sinfónico)/08 - Kashmmir - All My Love - Kashmir- The Symphonic Led Zeppelin.mp3" class="dir"> <div class="attr">Kashmmir</div><span class="muted"><div class="attr space"></div><div class="attr">8</div><div class="attr space"></div><div class="attr">Kashmir:The Symphonic Led Zeppelin</div><div class="attr space"></div></span><div class="attr">All My Love</div><span class="muted"><div class="attr space"></div><div class="attr">00:10:40</div></span><div class="button-wrapper right"><div class="append button"><i title="add to current playlist" class="fa fa-plus-square-o"></i></div><div class="load button"><i title="more" class="fa fa-ellipsis-v"></i></div></div><div class="clear"></div><div class="button-wrapper right"><div class="button lookup text"><i class="fa fa-folder-o"> look up in database</i></div><div class="button search text"><i class="fa fa-search">  search for artist</i></div><div class="button remove text"><i class="fa fa-remove"> remove from queue</i></div></div></div><div data-directory="Led.Zeppelin/1997.Kashmir.(Led.Zeppelin.Sinfónico)/09 - Kashmmir - Kulu Valley [Ambient Remix] - Kashmir- The" class="dir"> <div class="attr">Kashmmir</div><span class="muted"><div class="attr space"></div><div class="attr">9</div><div class="attr space"></div><div class="attr">Kashmir:The Symphonic Led Zeppelin</div><div class="attr space"></div></span><div class="attr">Kulu Valley [Ambient Remix]</div><span class="muted"><div class="attr space"></div><div class="attr">00:07:41</div></span><div class="button-wrapper right"><div class="append button"><i title="add to current playlist" class="fa fa-plus-square-o"></i></div><div class="load button"><i title="more" class="fa fa-ellipsis-v"></i></div></div><div class="clear"></div><div class="button-wrapper right"><div class="button lookup text"><i class="fa fa-folder-o"> look up in database</i></div><div class="button search text"><i class="fa fa-search">  search for artist</i></div><div class="button remove text"><i class="fa fa-remove"> remove from queue</i></div></div></div></div></div></main></div><audio src="http://ice.leukosia.eu/obamah" preload="none"></audio><script src="./turbosloth_files/jquery-2.1.1.js"></script><script src="./turbosloth_files/less.js" type="text/javascript">// use in development only!</script><script src="./turbosloth_files/tooltip.js" type="text/javascript"></script><script src="./turbosloth_files/socket.io-1.0.6.js" type="text/javascript"></script><script src="./turbosloth_files/client.js" type="text/javascript"></script><script src="./turbosloth_files/mpd.js" type="text/javascript"></script><!--script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js')--><!--script(src='/javascripts/angular.js')--><!--script(src='/bootstrap-3.2.0-dist/js/bootstrap.js')--></body></html>

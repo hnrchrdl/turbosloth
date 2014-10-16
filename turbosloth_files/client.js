@@ -183,11 +183,8 @@ function renderBrowse(folder) {
   $.ajax({
     url: 'browse/' + encodeURIComponent(folder)
   }).done(function(html){
-
     $('main').html(html);
-    
     fixScrollHeight(35);
-    
     $('#browse').find('.dir').find('a').off('click');
     $('#browse').find('.dir').find('a').on('click', function(e){
       e.preventDefault();
@@ -243,73 +240,31 @@ function renderSearch(searchString, searchType) {
   $.ajax({
     url: 'search/' + encodeURIComponent(searchString) + "/" + searchType
   }).done(function(html){
-
     $('main').html(html);
-    
     fixScrollHeight(50);
 
     // register Buttons
-    $('#search').on('click', '.button.search', function() {
+    $('#search').find('.search.button').off('click');
+    $('#search').find('.search.button').on('click', function(){
       var searchString = $('#search').find('input.search').val();
       var searchType = $('#search').find('select.search').val();
       renderSearch(searchString, searchType);
     });
 
-    $('#search').on('change', 'select.search', function() {
+    $('#search').find('select.search').off('change');
+    $('#search').find('select.search').on('change', function(){
       var searchString = $('#search').find('input.search').val();
       var searchType = $('#search').find('select.search').val();
       renderSearch(searchString, searchType);
     });
-    
-    $('#search').on('keyup', 'input.search-input', function(e) {
+    $('#search').find('input.search').off('keyup');
+    $('#search').find('input.search').on('keyup', function(e){
       if ( e.which === 13 ) {
-        var searchString = $('#search').find('input.search-input').val();
+        var searchString = $('#search').find('input.search').val();
         var searchType = $('#search').find('select.search').val();
         renderSearch(searchString, searchType);
       }
     });
-
-    // click append
-    $('#search').on('click', '.append.button', function(){
-      var dir = $(this).parents('.dir').attr('data-file');
-      console.log(dir);
-      socket.emit('mpd', 'add', [dir], function(err,msg){
-        if (err) {
-          console.log(err);
-        }
-      });
-    });
-
-    // click advanced
-    $('#search').on('click','.advanced', function() {
-      if ($(this).find('i').hasClass('fa-angle-down')) {
-        $(this).find('i').removeClass('fa-angle-down');
-        $(this).find('i').addClass('fa-angle-up');
-        $(this).parents('.dir').height($(this).parents('.dir').height()*2);
-      } else {
-        $(this).find('i').removeClass('fa-angle-up');
-        $(this).find('i').addClass('fa-angle-down');
-        $(this).parents('.dir').height($(this).parents('.dir').height()/2);
-      }
-    });
-
-    // click search artist
-    $('#search').on('click', '.search', function() {
-      var artist = $(this).parents('.dir').find('.attr.artist').text();
-      renderSearch(artist, 'Artist');
-    });
-
-    // click lookup
-    $('#search').on('click', '.lookup', function() {
-      try {
-        var directory = ($(this).parents('.dir').attr('data-file').split('/'));
-        directory.pop();
-        directory = directory.join('/');
-        console.log(directory);
-        renderBrowse(directory);
-      } catch (e) {}
-    });
-
 
   });
 }

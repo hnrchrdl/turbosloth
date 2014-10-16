@@ -1,12 +1,7 @@
 #search {
-  input {
-    width: 30%;
-    float:left;
-    margin-right: @long;
-    margin-bottom: @medium;
-  }
   .dir {
     height: @buttonHeight;
+    overflow: hidden;
     line-height: @buttonHeight;
     border-bottom: @extraLightBorder;
     .attr {
@@ -18,6 +13,12 @@
         border-right: @extraLightBorder;
       }
     }
+  }
+  input {
+    width: 30%;
+    float:left;
+    margin-right: @long;
+    margin-bottom: @medium;
   }
   .scrollable {
     overflow-y: scroll;

@@ -1,5 +1,5 @@
 #search
-  input.search.long(type='text',placeholder="search", value=searchString)
+  input.search-input.long(type='text',placeholder="search", value=searchString)
 
   select.search
     if type == 'Any'
@@ -34,8 +34,8 @@
   .scrollable
     if contents
       -each item in contents
-        .dir(data-directory= item.file)  
-          .attr=item.Artist
+        .dir(data-file= item.file)  
+          .attr.artist=item.Artist
           span.muted
             .attr.space
             .attr=item.Track
@@ -49,16 +49,18 @@
               - var time = secondsToTimeString(item.Time)
               .attr=time
           .button-wrapper.right
-            .append.button
-              i.fa.fa-plus-square-o(title="add to current playlist")
-            .load.button
-              i.fa.fa-ellipsis-v(title="more")
+            .append.button(title="add to queue")
+              i.fa.fa-plus-square-o
+            .advanced.button(title="more options")
+              i.fa.fa-angle-down
           .clear
-          .button-wrapper
-            .append.button.text
-              i.fa.fa-plus-square-o(title="add to current playlist")  add album
-            .load.button
-              i.fa.fa-ellipsis-v(title="more")
+          .button-wrapper.right
+            .button.lookup.text
+              i.fa.fa-folder-o  look up in database
+            .button.search.text
+              i.fa.fa-search   search for artist
+            .button.remove.text
+              i.fa.fa-plus-square  add all from album
 
     else
       span.muted 
