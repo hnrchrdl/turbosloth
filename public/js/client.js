@@ -20,6 +20,7 @@ $(document).ready(function() {
     }
   });
 
+
   
   $('#logout').on('click', function(){
     window.location = '/logout';

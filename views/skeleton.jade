@@ -6,13 +6,14 @@ head
   meta(name='viewport', content='width=device-width, initial-scale=1')
   title= title
 
-  link(rel='stylesheet/less', type='text/css', href='/src/less/styles.less')
+  //link(rel='stylesheet/less', type='text/css', href='/src/less/styles.less')
+  link(rel='stylesheet', href='/css/styles.css', type='text/css')
   link(href='//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css', rel='stylesheet')
   link(href='http://fonts.googleapis.com/css?family=Quicksand:300', rel='stylesheet', type='text/css')
+  link(rel='stylesheet', href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,700', type='text/css')
 
   //link(rel='stylesheet', href='/stylesheets/style.css')
   //link(rel='stylesheet', href="/bootstrap-3.2.0-dist/css/bootstrap.css")
-  //link(rel='stylesheet', href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,700', type='text/css')
   //link(rel="stylesheet", href="http://fonts.googleapis.com/css?family=Montserrat")
 
   script(type="text/javascript").
@@ -63,6 +64,14 @@ body
       .clear
       hr
 
+      .button-wrapper.left
+        #stream.left.button.text(title="streaming")
+          i.fa.fa-volume-up
+        #random.left.button.text(title="random mode")
+          i.fa.fa-random
+        #repeat.left.button.text(title="repeat mode")
+          i.fa.fa-repeat
+
       .albumart
 
       .currentsong-wrapper
@@ -86,13 +95,6 @@ body
       
       
       
-      .button-wrapper.left
-        #stream.left.button.text(title="streaming on / off")
-          i.fa.fa-volume-up
-        #random.left.button.text(title="streaming on / off")
-          i.fa.fa-random
-        #repeat.left.button.text(title="streaming on / off")
-          i.fa.fa-repeat
     
 
       #seek-bar-container

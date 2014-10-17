@@ -1,0 +1,367 @@
+.Container {
+  position: absolute;
+  left: 30px;
+  right: 30px;
+}
+.Header {
+  top: 0px;
+  height: 80px;
+  padding: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+.Header h1 {
+  color: #cccccc;
+}
+html,
+body,
+#background-wrapper {
+  height: 100%;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  color: #cccccc;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 300;
+  font-size: 11px;
+}
+#background-wrapper {
+  position: relative;
+  background-color: #0e0e15;
+}
+h1 {
+  margin: 0;
+  padding: 0;
+}
+a {
+  color: #14b874;
+  text-decoration: none;
+}
+a:hover {
+  color: #29a370;
+}
+hr {
+  border: none;
+  background-color: #14b874;
+  height: 1px;
+  margin: 0;
+}
+.clear {
+  clear: both;
+}
+.muted {
+  color: #666666;
+}
+.button-wrapper {
+  height: 30px;
+  line-height: 30px;
+  text-align: center;
+}
+.button-wrapper.left {
+  float: left;
+}
+.button-wrapper.right {
+  float: right;
+}
+.loading {
+  height: 30px;
+  line-height: 30px;
+  text-align: center;
+  display: none;
+}
+.loading.left {
+  float: left;
+}
+.loading.right {
+  float: right;
+}
+.button {
+  height: buttonHeight;
+  min-width: 30px;
+  cursor: pointer;
+  display: inline-block;
+  -webkit-transition: background-color 0.5s, -webkit-transform 0.5s;
+  transition: background-color 0.5s, transform 0.5s;
+}
+.button:hover {
+  background-color: rgba(242, 242, 242, 0.1);
+}
+.button.active {
+  color: #14b874;
+}
+.button.text {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+input,
+select {
+  display: inline-block;
+  background-color: #0e0e15;
+  color: #cccccc;
+  border: 1px solid rgba(242, 242, 242, 0.1);
+  height: 30px;
+  padding: 0 15px;
+  margin-bottom: 5px;
+}
+input:focus,
+select:focus {
+  border: 1px solid #14b874;
+}
+::-webkit-input-placeholder {
+  color: #666666;
+}
+:-moz-placeholder {
+  /* Firefox 18- */
+  color: #666666;
+}
+::-moz-placeholder {
+  /* Firefox 19+ */
+  color: #666666;
+}
+:-ms-input-placeholder {
+  color: #666666;
+}
+::selection {
+  background: #14b874;
+  color: #fff;
+}
+::-moz-selection {
+  background: #14b874;
+  color: #fff;
+}
+.login {
+  text-align: center;
+}
+.login h1 {
+  font-family: 'Quicksand', Helvetica, Sans-Serif;
+  font-weight: 300;
+  font-size: 56px;
+  text-align: center;
+  padding: 40px 0;
+  color: #cccccc;
+}
+.login .form-wrapper {
+  display: block;
+  bottom: 5px;
+}
+.login .form-wrapper input {
+  margin-left: 5px;
+}
+.login .button-wrapper {
+  display: inline-block;
+}
+.login .long {
+  width: 300px;
+}
+.login .extraLong {
+  width: 365px;
+}
+.login .short {
+  width: 50px;
+}
+header {
+  position: absolute;
+  left: 30px;
+  right: 30px;
+  top: 0px;
+  height: 80px;
+  padding: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+header h1 {
+  color: #cccccc;
+}
+header h1 {
+  float: left;
+  line-height: 80px;
+  font-family: 'Quicksand', Helvetica, sans-serif;
+  font-weight: 300;
+  font-size: 40px;
+}
+#submenu {
+  float: right;
+  margin-top: 5px;
+}
+#connection-info {
+  position: absolute;
+  bottom: 15px;
+  right: 0;
+  color: #666666;
+}
+#left {
+  position: absolute;
+  top: 80px;
+  bottom: 30px;
+  left: 30px;
+  width: 200px;
+}
+.control-menu {
+  position: absolute;
+  bottom: 10px;
+  left: 25px;
+}
+.currentsong-wrapper {
+  position: absolute;
+  bottom: 255px;
+  left: 0;
+  padding-left: 15px;
+  padding-top: 15px;
+  height: 55px;
+  border-left: 1px solid rgba(255, 255, 255, 0.2);
+  overflow-y: hidden;
+}
+.albumart {
+  position: absolute;
+  bottom: 40px;
+  height: 200px;
+  width: 200px;
+  background-color: #14b874;
+}
+#seek-bar-container {
+  position: absolute;
+  bottom: 0;
+  width: 198px;
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  -webkit-transition: border 0.5s, -webkit-transform 0.5s;
+  transition: border 0.5s, transform 0.5s;
+}
+#seek-bar-container:hover {
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+#seek-bar-container #seek-bar {
+  height: 8px;
+  width: 0%;
+  background-color: rgba(255, 255, 255, 0.2);
+}
+nav {
+  height: 30px;
+  border: none;
+}
+main {
+  position: absolute;
+  left: 30px;
+  right: 30px;
+  top: 80px;
+  bottom: 30px;
+  padding-top: 0;
+  margin-left: 220px;
+}
+.nav-main {
+  height: 30px;
+}
+#playlist .song {
+  height: 30px;
+  overflow: hidden;
+  line-height: 30px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+#playlist .song .attr {
+  display: inline-block;
+  margin-left: 15px;
+}
+#playlist .song .attr.space {
+  height: 15px;
+  margin-top: 7.5px;
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+}
+#playlist .song .attr.songpos.active {
+  color: #14b874;
+}
+#playlist .song.active {
+  border-bottom: 1px solid #14b874;
+}
+#playlist.scrollable {
+  overflow-y: scroll;
+}
+::-webkit-scrollbar {
+  width: 5px;
+  background-color: rgba(255, 255, 255, 0.2);
+}
+::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.5);
+}
+#manageplaylist input {
+  width: 30%;
+  margin: 15px 15px 15px 0;
+}
+#manageplaylist i.fa-save {
+  position: relative;
+  left: -40px;
+}
+#manageplaylist .playlist {
+  height: 30px;
+  line-height: 30px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+#manageplaylist .playlist .attr {
+  display: inline-block;
+  margin-left: 15px;
+}
+#manageplaylist .playlist .attr.space {
+  height: 15px;
+  margin-top: 7.5px;
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+}
+#manageplaylist .scrollable {
+  overflow-y: scroll;
+}
+#browse .dir-info {
+  float: left;
+  line-height: 30px;
+}
+#browse .dir-info .attr {
+  display: inline-block;
+  margin-left: 15px;
+}
+#browse .dir-info .attr.space {
+  height: 15px;
+  margin-top: 7.5px;
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+}
+#browse .dir {
+  height: 30px;
+  line-height: 30px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+#browse .dir .attr {
+  display: inline-block;
+  margin-left: 15px;
+}
+#browse .dir .attr.space {
+  height: 15px;
+  margin-top: 7.5px;
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+}
+#browse .scrollable {
+  overflow-y: scroll;
+}
+#search .dir {
+  height: 30px;
+  overflow: hidden;
+  line-height: 30px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+#search .dir .attr {
+  display: inline-block;
+  margin-left: 15px;
+}
+#search .dir .attr.space {
+  height: 15px;
+  margin-top: 7.5px;
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+}
+#search input,
+#search select {
+  margin: 15px 15px 15px 0;
+}
+#search i.fa-search.input-fa {
+  position: relative;
+  left: -40px;
+}
+#search input {
+  float: left;
+  width: 30%;
+}
+#search .scrollable {
+  overflow-y: scroll;
+}

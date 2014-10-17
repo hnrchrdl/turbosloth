@@ -27,10 +27,16 @@ MpdAorta.prototype = {
 
     //indicate current status of random and repeat 
     if (status.random === '1') {
-      $('.control-menu').find('#random').addClass('active');
+      $('#random').addClass('active');
+    }
+    else {
+      $('#random').removeClass('active'); 
     }
     if (status.repeat === '1') {
-      $('.control-menu').find('#repeat').addClass('active');
+      $('#repeat').addClass('active');
+    }
+    else {
+      $('#repeat').removeClass('active');
     }
 
     //render current song
@@ -135,6 +141,7 @@ MpdAorta.prototype = {
 };
 
 var MpdPlaylist = function(callback) {
+  $('nav').find('.loading.queue').show();
   var playlist = this;
   $.ajax({
     url:'/mpdplaylist'
@@ -236,9 +243,21 @@ MpdPlaylist.prototype = {
     // clear playlist
     $('#playlist-container').find('.clear').off('click');
     $('#playlist-container').find('.clear').on('click', function(){
-      socket.emit('mpd', 'clear', [], function(){
+      socket.emit('mpd', 'clear', [], function() {
         renderAorta(true);
       }); 
+    });
+
+    // shuffle playlist
+    $('#playlist-container').on('click', '.shuffle.button', function(){
+      socket.emit('mpd', 'shuffle', [], function(err, msg){
+        if (err) {
+          console.log(err);
+        }
+        else {
+          renderQueue();
+        }
+      });
     });
   }
 };
