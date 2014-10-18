@@ -9,7 +9,6 @@ var express = require('express'),
   bodyParser = require('body-parser'),
   session = require('express-session'),
   redis = require('redis'),
-  
   server = http.createServer(app);
 
 
@@ -18,13 +17,18 @@ var config = require('./config.json')[app.get('env')];
 
 //app.use(express.errorHandler(config.errorHandlerOptions));
 
-var r = require("redis").createClient(config.redisPort);
+//var r = require("redis").createClient(config.redisPort);
 redisClient = redis.createClient(config.redisPort, config.redisHost);
 redisClient.select(config.redisDatabase);
 
 server.listen(config.appPort, config.appHost, function() {
   console.log('listening on ' + config.appHost + ': ' + config.appPort);
 });
+
+module.exports = {
+  app: app
+};
+
 
 
 var io = require('./lib/sockets').listen(server);
@@ -89,6 +93,3 @@ app.use(function(err, req, res, next) {
 
 require('longjohn');
 
-module.exports = {
-  app: app
-};
