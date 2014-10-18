@@ -9,11 +9,21 @@ var express = require('express'),
   bodyParser = require('body-parser'),
   session = require('express-session'),
   redis = require('redis'),
-  redisClient = redis.createClient(6379, 'localhost'),
+  
   server = http.createServer(app);
 
-server.listen(3000, 'localhost', function() {
-  console.log('listening on localhost:3000');
+
+
+var config = require('./config.json')[app.get('env')];
+
+//app.use(express.errorHandler(config.errorHandlerOptions));
+
+var r = require("redis").createClient(config.redisPort);
+redisClient = redis.createClient(config.redisPort, config.redisHost);
+redisClient.select(config.redisDatabase);
+
+server.listen(config.appPort, config.appHost, function() {
+  console.log('listening on ' + config.appHost + ': ' + config.appPort);
 });
 
 

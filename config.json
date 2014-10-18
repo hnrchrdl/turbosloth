@@ -1,0 +1,26 @@
+{
+  "production": {
+    "appHost": "localhost",
+    "appPort": 3000,
+    "redisPort": 6379,
+    "redisHost": "localhost",
+    "redisDatabase": 0,
+    "errorHandlerOptions": {"dumpExceptions": false, "showStack": false}
+  },
+  "development": {
+    "appHost": "localhost",
+    "appPort": 3001,
+    "redisPort": 6379,
+    "redisHost": "localhost",
+    "redisDatabase": 1,
+    "errorHandlerOptions": {"dumpExceptions": true, "showStack": true}
+  },
+  "local": {
+    "appHost": "localhost",
+    "appPort": 8080,
+    "redisPort": 6379,
+    "redisHost": "localhost",
+    "redisDatabase": 2,
+    "errorHandlerOptions": {"dumpExceptions": true, "showStack": true}
+  }
+}
