@@ -12,8 +12,8 @@ var express = require('express'),
   redisClient = redis.createClient(6379, 'localhost'),
   server = http.createServer(app);
 
-server.listen(8080, function() {
-  console.log('listening on *:8080');
+server.listen(3001, 'localhost', function() {
+  console.log('listening on localhost:3001');
 });
 
 

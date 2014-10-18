@@ -46,7 +46,10 @@ MpdAorta.prototype = {
     }
     else {
       currentsong.html(song.Artist+ '<br>' + 
-        song.Title + '<br>' + '<span class="muted">' + song.Album + '</span>')
+        song.Title + '<br>' + '<span class="muted">' + song.Album + '</span>');
+      fetch_album_cover(song.Artist, song.Album, function(url) {
+        console.log(url);
+      });
     }
     //var currentTime = parseFloat(status.elapsed);
     //clearInterval(updateSongTime);
