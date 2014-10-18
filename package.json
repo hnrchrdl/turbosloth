@@ -8,6 +8,7 @@
   "dependencies": {
     "express": "~4.2.0",
     "express-session":"~1.7.6",
+    "express-sessions": "~2.5.11",
     "cookie": "~0.1.2",
     "cookie-parser": "~1.0.1",
     "cookie-signature":"~1.0.5",
@@ -21,6 +22,7 @@
     "redis":"~0.12.1",
     "morgan": "~1.0.0",
     "less": "~1.7.5",
-    "longjohn": "~0.2.4"
+    "longjohn": "~0.2.4",
+    "static-favicon": "~2.0.0"
   }
 }
