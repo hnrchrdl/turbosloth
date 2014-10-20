@@ -25,16 +25,11 @@ server.listen(config.appPort, config.appHost, function() {
   console.log('listening on ' + config.appHost + ': ' + config.appPort);
 });
 
-module.exports = {
-  app: app,
-  app_env: app.get('env')
-};
-
-
+module.exports.app_env = app.get('env');
+module.exports.config = config;
 
 var io = require('./lib/sockets').listen(server);
 var routes = require('./routes/index').router;
-
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -95,3 +90,4 @@ app.use(function(err, req, res, next) {
 
 require('longjohn');
 
+module.exports.app = app;
