@@ -1,123 +1,96 @@
 doctype html
 html(lang='en')
-head
-  meta(charset='utf-8')
-  meta(http-equiv='X-UA-Compatible', content='IE=edge')
-  meta(name='viewport', content='width=device-width, initial-scale=1')
-  title= title
 
-  //link(rel='stylesheet/less', type='text/css', href='/src/less/styles.less')
-  link(rel='stylesheet', href='/css/styles.css', type='text/css')
-  link(href='//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css', rel='stylesheet')
-  link(href='http://fonts.googleapis.com/css?family=Quicksand:300', rel='stylesheet', type='text/css')
-  link(rel='stylesheet', href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,700', type='text/css')
+  include ./head.jade
+  if stream
+    script(type="text/javascript").
+      var stream = '#{stream}';
 
-  //link(rel='stylesheet', href='/stylesheets/style.css')
-  //link(rel='stylesheet', href="/bootstrap-3.2.0-dist/css/bootstrap.css")
-  //link(rel="stylesheet", href="http://fonts.googleapis.com/css?family=Montserrat")
-
-  script(type="text/javascript").
-    var stream = '#{stream}';
-
-body
-  #background-wrapper
-    
-
-    header
-      h1 turbosloth
-      #submenu
-        .button-wrapper
-          #info.button.text
-            i.fa.fa-info  Info
-          #settings.button.text
-            i.fa.fa-cog  Settings
-          #logout.button.text
-            i.fa.fa-sign-out  Logout
-      #connection-info connected to #{mpdhost}:#{mpdport}
+  body
+    #background-wrapper
       
-
-    #left
-      nav
-        .button-wrapper.left
-          .button.text.queue.active
-            i.fa.fa-list  Queue
-        .loading.queue.right
-            i.fa.fa-spinner.fa-spin
-        .clear
-        .button-wrapper.left
-          .button.text.playlists 
-             i.fa.fa-file-audio-o  Playlists
-        .loading.playlists.right
-            i.fa.fa-spinner.fa-spin 
-        .clear
-        .button-wrapper.left
-          .button.text.browse
-            i.fa.fa-folder-o  Browse
-        .loading.browse.right
-            i.fa.fa-spinner.fa-spin
-        .clear
-        .button-wrapper.left
-          .button.text.search
-            i.fa.fa-search  Search
-        .loading.search.right
-            i.fa.fa-spinner.fa-spin
-      .clear
-      hr
-
-      .button-wrapper.left
-        #stream.left.button.text(title="streaming")
-          i.fa.fa-volume-up
-        #random.left.button.text(title="random mode")
-          i.fa.fa-random
-        #repeat.left.button.text(title="repeat mode")
-          i.fa.fa-repeat
-
-      .albumart
-
-      .currentsong-wrapper
-        .currentsong
-          a(href="")
-          br
-
+      header
+        h1 turbosloth
+        #submenu
+          .button-wrapper
+            #info.button.text
+              i.fa.fa-info  Info
+            #settings.button.text
+              i.fa.fa-cog  Settings
+            #logout.button.text
+              i.fa.fa-sign-out  Logout
+        #connection-info connected to #{mpdhost}:#{mpdport}
         
-      .control-menu.left
+      #left
+        nav
+          .button-wrapper.left
+            .button.text.queue.active
+              i.fa.fa-list  Queue
+          .loading.queue.right
+              i.fa.fa-spinner.fa-spin
+          .clear
+          .button-wrapper.left
+            .button.text.playlists 
+               i.fa.fa-file-audio-o  Playlists
+          .loading.playlists.right
+              i.fa.fa-spinner.fa-spin 
+          .clear
+          .button-wrapper.left
+            .button.text.browse
+              i.fa.fa-folder-o  Browse
+          .loading.browse.right
+              i.fa.fa-spinner.fa-spin
+          .clear
+          .button-wrapper.left
+            .button.text.search
+              i.fa.fa-search  Search
+          .loading.search.right
+              i.fa.fa-spinner.fa-spin
+        .clear
+        hr
+
         .button-wrapper.left
-          #previous.left.button(title="previous")
-            i.fa.fa-backward
-          #pause.left.button(title="pause")
-            i.fa.fa-pause
-          #play.left.button.active(title="play")
-            i.fa.fa-play
-          #stop.left.button(title="stop")
-            i.fa.fa-stop
-          #next.left.button(title="next")
-            i.fa.fa-forward
-      
-      
-      
-    
+          #stream.left.button.text(title="streaming")
+            i.fa.fa-volume-up
+          #random.left.button.text(title="random mode")
+            i.fa.fa-random
+          #repeat.left.button.text(title="repeat mode")
+            i.fa.fa-repeat
 
-      #seek-bar-container
-        #seek-bar
+        .albumart
 
-    main
-      block content
+        .currentsong-wrapper
+          .currentsong
+            a(href="")
+            br
+ 
+        .control-menu.left
+          .button-wrapper.left
+            #previous.left.button(title="previous")
+              i.fa.fa-backward
+            #pause.left.button(title="pause")
+              i.fa.fa-pause
+            #play.left.button.active(title="play")
+              i.fa.fa-play
+            #stop.left.button(title="stop")
+              i.fa.fa-stop
+            #next.left.button(title="next")
+              i.fa.fa-forward
 
-    
+        #seek-bar-container
+          #seek-bar
 
-    
-    
+      main
+        block content
 
-  audio(src= stream)
+    audio(src= stream)
 
-  script(src='/js/jquery-2.1.1.js')
-  script(src='/js/less.js', type='text/javascript') // use in development only!
-  script(src='/js/tooltip.js', type='text/javascript')
-  script(src='https://cdn.socket.io/socket.io-1.0.6.js', type='text/javascript')
-  script(src='/js/client.js', type='text/javascript')
-  script(src='/js/mpd.js', type='text/javascript')
-
-
-  //script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js')
-  //script(src='/javascripts/angular.js')
-  //script(src='/bootstrap-3.2.0-dist/js/bootstrap.js')
+    script(src='/js/jquery-2.1.1.js')
+    script(src='/js/less.js', type='text/javascript') // use in development only!
+    script(src='/js/tooltip.js', type='text/javascript')
+    script(src='https://cdn.socket.io/socket.io-1.0.6.js', type='text/javascript')
+    script(src='/js/mpd.js', type='text/javascript')
+    script(src='/js/client.js', type='text/javascript')
+    //script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js')
+    //script(src='/javascripts/angular.js')
+    //script(src='/bootstrap-3.2.0-dist/js/bootstrap.js')

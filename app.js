@@ -26,13 +26,15 @@ server.listen(config.appPort, config.appHost, function() {
 });
 
 module.exports = {
-  app: app
+  app: app,
+  app_env: app.get('env')
 };
 
 
 
 var io = require('./lib/sockets').listen(server);
 var routes = require('./routes/index').router;
+
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');

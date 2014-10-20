@@ -1,76 +1,70 @@
 doctype html
 html(lang='en')
-head
-  meta(charset='utf-8')
-  meta(http-equiv='X-UA-Compatible', content='IE=edge')
-  meta(name='viewport', content='width=device-width, initial-scale=1')
-  title= title
-  //link(rel='stylesheet/less', type='text/css', href='/src/less/styles.less')
-  link(rel='stylesheet', href='/css/styles.css', type='text/css')
-  link(rel='stylesheet', href='http://fonts.googleapis.com/css?family=Quicksand:300',  type='text/css')
 
-body
-  #background-wrapper.login
-    h1 turbosloth
-    <br>
-    .form-wrapper
-      h4 MPD
-      input#mpd-host.long(type="text", placeholder="url", value="") 
-      input#mpd-port.short(type="text", placeholder="port", value="")
-      <br>
-      input#mpd-password.extraLong(type="password", placeholder="password", value="")
-      <br>
-      h4 STREAM
-      input#stream-url.long(type="text", placeholder="url", value="")
-      input#stream-port.short(type="text", placeholder="port", value="")
-      
-      <br>
-      <br>
-      .button-wrapper
-        #enter.button.text.active S T A R T
-
-  script(src='/js/jquery-2.1.1.js')
-  script(src='/js/less.js', type='text/javascript') // use in development only!
-  // script for custom form posting
-  script(type="text/javascript").
-    
-    $("#enter").on("click", function(){
-      var mpd_host = $("#mpd-host").val(),
-        mpd_port = $("#mpd-port").val(),
-        mpd_password = $("#mpd-password").val(),
-        stream_url = $("#stream-url").val(),
-        stream_port = $("#stream-port").val();
-      console.log(stream_port);
-      post("/", {mpdhost:mpd_host,
-        mpdport:mpd_port,
-        mpdpassword:mpd_password,
-        streamurl:stream_url,
-        streamport:stream_port
-      });
-    });
+  include ./head.jade
   
+  body
+    #background-wrapper.login
+      h1 turbosloth
+      <br>
+      .form-wrapper
+        h4 MPD
+        input#mpd-host.long(type="text", placeholder="url", value="") 
+        input#mpd-port.short(type="text", placeholder="port", value="")
+        <br>
+        input#mpd-password.extraLong(type="password", placeholder="password", value="")
+        <br>
+        h4 STREAM
+        input#stream-url.long(type="text", placeholder="url", value="")
+        input#stream-port.short(type="text", placeholder="port", value="")
+        
+        <br>
+        <br>
+        .button-wrapper
+          #enter.button.text.active S T A R T
 
-    function post(path, params, method) {
-      method = method || "post"; // Set method to post by default if not specified.
+    script(src='/js/jquery-2.1.1.js')
+    script(src='/js/less.js', type='text/javascript') // use in development only!
+    // script for custom form posting
+    script(type="text/javascript").
+      
+      $("#enter").on("click", function(){
+        var mpd_host = $("#mpd-host").val(),
+          mpd_port = $("#mpd-port").val(),
+          mpd_password = $("#mpd-password").val(),
+          stream_url = $("#stream-url").val(),
+          stream_port = $("#stream-port").val();
+        console.log(stream_port);
+        post("/", {mpdhost:mpd_host,
+          mpdport:mpd_port,
+          mpdpassword:mpd_password,
+          streamurl:stream_url,
+          streamport:stream_port
+        });
+      });
+    
 
-      // The rest of this code assumes you are not using a library.
-      // It can be made less wordy if you use one.
-      var form = document.createElement("form");
-      form.setAttribute("method", method);
-      form.setAttribute("action", path);
+      function post(path, params, method) {
+        method = method || "post"; // Set method to post by default if not specified.
 
-      for(var key in params) {
-        if(params.hasOwnProperty(key)) {
-          var hiddenField = document.createElement("input");
-          hiddenField.setAttribute("type", "hidden");
-          hiddenField.setAttribute("value", params[key]);
-          hiddenField.setAttribute("name", key);
+        // The rest of this code assumes you are not using a library.
+        // It can be made less wordy if you use one.
+        var form = document.createElement("form");
+        form.setAttribute("method", method);
+        form.setAttribute("action", path);
 
-          form.appendChild(hiddenField);
+        for(var key in params) {
+          if(params.hasOwnProperty(key)) {
+            var hiddenField = document.createElement("input");
+            hiddenField.setAttribute("type", "hidden");
+            hiddenField.setAttribute("value", params[key]);
+            hiddenField.setAttribute("name", key);
+
+            form.appendChild(hiddenField);
+          }
         }
-      }
 
-      document.body.appendChild(form);
-      form.submit();
-    }
+        document.body.appendChild(form);
+        form.submit();
+      }
 

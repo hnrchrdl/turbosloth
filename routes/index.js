@@ -1,7 +1,7 @@
 var express = require('express'),
   router = express.Router(),
-  komponist = require('../lib/komponist');
-  //socket = require('../lib/sockets');
+  komponist = require('../lib/komponist'),
+  app_env = require('../app').app_env;
 
 
 //  ******************
@@ -60,8 +60,8 @@ router.post('/', function(req, res) {
   res.redirect('/');
 });
 
-// route for getting of /mpdplaylist
-router.get('/mpdplaylist', function(req,res) {
+// route for getting of /mpdqueue
+router.get('/mpdqueue', function(req,res) {
 
   var secondsToTimeString = function (seconds) {
 
@@ -75,7 +75,7 @@ router.get('/mpdplaylist', function(req,res) {
       //console.log(data[i]);
     //} 
 
-    res.render('playlist',{playlist:data,secondsToTimeString:secondsToTimeString});
+    res.render('queue',{queue:data,secondsToTimeString:secondsToTimeString});
   }); 
 });
 
@@ -186,5 +186,6 @@ router.get('/logout', function(req,res) {
 
 module.exports = {
   router: router
+  
 }
 //module.exports = router;

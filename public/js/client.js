@@ -1,31 +1,30 @@
 var socket = io();
-var __aorta, __playlist, audio;
+var audio_element = document.getElementsByTagName("audio")[0];
 
 jQuery.fx.interval = 100;
 
 $(document).ready(function() {
 
-  var init = true;
-  renderAorta(init);
-  // make sure the komponist client is created on server
-  
-  // play the audio element on start
-  audio = document.getElementsByTagName("audio")[0];
-  socket.emit('get_streaming_status', function(status) {
-    console.log(status);
-    if (status === true && stream !== undefined) {
-      // start streaming
-      audio.play();
-      $('#stream').addClass('active');
-    }
+  // fix window resize
+  $(window).on('resize', function(){
+    fixScrollHeight();
   });
 
+  // init script
+  var init = true;
+  playerHasChanged(init);
 
-  
+  // init the audio element on start
+  initAudioElement(audio_element);
+
+  //// nav top
+  // logout
   $('#logout').on('click', function(){
     window.location = '/logout';
   });
 
+  //// nav main left
+  // queue
   $('.button.queue').on('click', function(){
     $('nav').find('.button').removeClass('active');
     $('nav').find('.button.queue').addClass('active');
@@ -33,17 +32,23 @@ $(document).ready(function() {
     var init = true;
     renderAorta(init);
   });
+
+  // playlists
   $('.button.playlists').on('click', function(){
     $('nav').find('.button').removeClass('active');
     $('nav').find('.button.playlists').addClass('active');
     $('nav').find('.loading.playlists').show();
     renderPlaylists();
   });
+
+  // browse
   $('.button.browse').on('click', function(){
     $('nav').find('.button').removeClass('active');
     $('nav').find('.button.browse').addClass('active');
     renderBrowse("#");
   });
+
+  // search
   $('.button.search').on('click', function(){
     $('nav').find('.button').removeClass('active');
     $('nav').find('.button.search').addClass('active');
@@ -51,66 +56,228 @@ $(document).ready(function() {
     renderSearch("#", "any");
   });
 
+  //// nav sub left
+  //stream
   $('#stream').on('click', function() {
-
     if (stream !== undefined) {
       socket.emit('get_streaming_status', function(status) {
         //console.log(status);
         if (status === true) {
           // stop streaming
-          audio.pause();
-          $('#stream').removeClass('active');
-          audio.src = "";
+          audio_element.pause();
+          audio_element.src = "";
           socket.emit('set_streaming_status', false);
+          $('#stream').removeClass('active');
         }
         else {
           // start streaming
-          audio.src = stream;
-          audio.load();
-          audio.play();
-          $('#stream').addClass('active');
+          audio_element.src = stream;
+          audio_element.load();
+          audio_element.play();
           socket.emit('set_streaming_status', true);
+          $('#stream').addClass('active');
         }
       });
     }
   });
-  $(window).on('resize', function(){
-    fixScrollHeight();
+
+  // seek
+  $('#seek-bar-container').on('click', function(e) {
+    // seek bar width is 200
+    // subtract 30 for the left margin of x value
+    var seek_ratio = ( (e.clientX - 30 )/ 200);
+    var seek_sec = String(Math.round(seek_ratio * song.Time));
+    socket.emit('mpd','seekcur',[seek_sec]);
   });
 
 });
 
-socket.on('error', function (reason){
-  console.error('Unable to connect Socket.IO', reason);
-});
-
+//// sockets
 socket.on('connect', function (){
   console.log('established socket connection');
 });
-
+socket.on('error', function (reason){
+  console.error('Unable to connect Socket.IO', reason);
+});
 socket.on('change', function(system) {
   console.log('subsystem changed: ' + system);
   var init = false;
-  renderAorta(init);
+  playerHasChanged(init);
 });
 
-function renderAorta(init) {
-  __aorta = new MpdAorta(function(err, aorta) {
-    console.log('rendering aorta');
-    aorta.render();
-    aorta.registerHandler();
-    aorta.renderProgressBar();
-    init ? renderQueue() : aorta.indicate();
+function registerMpdInterface(status) {
+  // set the args for random, repeat and pause
+
+  var handlerList = [ 
+    [$('#left'), ('#previous'), 'previous', []],
+    [$('#left'), ('#next'), 'next', []], 
+    [$('#left'), ('#play'), 'play', []], 
+    [$('#left'), ('#pause'), 'pause', [(status.state === 'pause' ? 0 : 1)]], 
+    [$('#left'), ('#stop'), 'stop', []],
+    [$('#left'), ('#random'), 'random', [1 - status.random]],
+    [$('#left'), ('#repeat'), 'repeat', [1 - status.repeat]]
+  ];
+
+  for (i in handlerList) {
+    registerButton(handlerList[i][0], handlerList[i][1], handlerList[i][2], handlerList[i][3]);
+  }
+
+  // indicate the status (play, stop or pause)
+  $('.control-menu').find('.button').removeClass('active');
+  $('.control-menu').find('#' + status.state).addClass('active');
+
+  status.random === '1' ? $('#random').addClass('active') : $('#random').removeClass('active');
+  status.repeat === '1' ? $('#repeat').addClass('active') : $('#repeat').removeClass('active');
+    
+}
+
+function registerQueueFunctions() {
+  // refresh queue click
+  $('#queue-container').on('click', '.refresh' ,function() {
+    renderQueue();
+  });
+
+  // click play
+  $('#queue').on('click','.play', function() {
+    var songid = $(this).parents('.song').attr('data-id');
+    socket.emit('mpd', 'playid', [songid]);
+  });
+
+  // click advanced
+  $('#queue').on('click','.advanced', function() {
+    if ($(this).find('i').hasClass('fa-angle-down')) {
+      $(this).find('i').removeClass('fa-angle-down');
+      $(this).find('i').addClass('fa-angle-up');
+      $(this).parents('.song').height($(this).parents('.song').height()*2);
+    } else {
+      $(this).find('i').removeClass('fa-angle-up');
+      $(this).find('i').addClass('fa-angle-down');
+      $(this).parents('.song').height($(this).parents('.song').height()/2);
+    }
+  });
+
+  // click search artist
+  $('#queue').on('click', '.search', function() {
+    var artist = $(this).parents('.song').find('.attr.artist').text();
+    renderSearch(artist, 'Artist');
+  });
+
+  // click lookup
+  $('#queue').on('click', '.lookup', function() {
+    try {
+      var directory = ($(this).parents('.song').attr('data-file').split('/'));
+      directory.pop();
+      directory = directory.join('/');
+      renderBrowse(directory);
+    } catch (e) {
+      console.log('error in directory lookup: ' + e);
+    }
+  });
+
+  // click remove
+  $('#queue').on('click', '.remove', function() {
+    var song = $(this).parents('.song');
+    var songid = song.attr('data-id');
+    socket.emit('mpd', 'deleteid', [songid]);
+    song.remove();
+  });
+
+  // clear queue
+  $('#queue-container').on('click', '.clear.button', function(){
+    socket.emit('mpd', 'clear', [], function(err, msg) {
+      if (err) { console.log(err); }
+      else {
+        var init = true;
+        playerHasChanged(init);
+      }
+    }); 
+  });
+
+  // shuffle queue
+  $('#queue-container').on('click', '.shuffle.button', function(){
+    socket.emit('mpd', 'shuffle', [], function(err, msg) {
+      if (err) { console.log(err); }         
+      else { renderQueue(); }
+    });
   });
 }
 
-function renderQueue() {
-  __playlist = new MpdPlaylist(function(err, playlist) {
-    playlist.render();
-    playlist.indicate();
-    playlist.registerFunctionality();
-    fixScrollHeight();
+
+function playerHasChanged(init) {
+  var a = new Aorta(function(data) {
+    if (data) {
+      registerMpdInterface(data.status);
+      renderCurrentSong(data.status, data.song);
+      renderProgressBar(data.status);
+      init ? queueHasChanged() : highlightSongInQueue(data.song);
+    }
   });
+}
+
+function queueHasChanged() {
+  var q = new Queue(function(err, queue) {
+    if (queue) {
+      queue.render();
+      registerQueueFunctions();
+    }
+    else { console.log(err); }
+  });
+}
+
+function renderCurrentSong(status, song) {
+  var currentsong = $('#left').find('.currentsong');
+  if (status.state === 'stop') {
+    currentsong.text("");
+  }
+  else {
+    currentsong.html(song.Artist+ '<br>' + 
+        song.Title + '<br>' + '<span class="muted">' + 
+        song.Album + '</span>');
+  }
+  // fetch album cover
+  //fetch_album_cover(song.Artist, song.Album, function(url) {
+  //  console.log(url);
+  //});
+  // highlight current song in queue
+  highlightSongInQueue(song);
+}
+
+function highlightSongInQueue(song) {
+  $('#queue').find('.song').removeClass('active');
+  $('#queue').find('.song').find('.attr.songpos').removeClass('active');
+  $('#queue').find('.song.' + song.Id).addClass('active');
+  $('#queue').find('.song.' + song.Id).find('.attr.songpos').addClass('active');
+}
+
+function renderProgressBar(status) {
+  var progressBar = $('#seek-bar');
+  // start
+  var start = function startProgressbar (songTime,elapsed) {
+    var initial_width = elapsed / songTime * 100; 
+    var duration = songTime - elapsed;
+    progressBar
+      .stop()
+      .css('width',initial_width + '%')
+      .animate({'width': '100%'},duration * 1000, 'linear');
+  };
+  // stop
+  var stop = function stopProgressBar () {
+    progressBar.stop();
+  };
+
+  switch (status.state) {
+    case 'play':
+      var songTime = parseFloat(status.time.split(":")[1]);
+      var elapsed = parseFloat(status.elapsed);
+      start(songTime,elapsed);
+      break;
+    case 'pause':
+      stop();
+      break;
+    case 'stop':
+      stop();
+      progressBar.css('width',0);
+  }
 }
 
 function renderPlaylists() {
@@ -316,6 +483,34 @@ function renderSearch(searchString, searchType) {
   });
 }
 
+var registerButton = function(container, element, command, args, callback) {
+  // register the interface via JQuery on method
+
+  // container = JQuery Object containing the element
+  // element = button identifier as String
+  // command = mpd command as String
+  // args = command args of type Array, optional
+  container.on('click', element, function() {
+    // fire mpd command with optional callback
+    socket.emit('mpd', command, args, function(err,msg) {
+      if (callback) {
+        callback(err, msg);
+      }
+    });
+  });
+};
+
+function initAudioElement(audio_element) {
+  socket.emit('get_streaming_status', function(status) {
+    //console.log(status);
+    if (status === true && stream !== undefined) {
+      // start streaming
+      audio_element.play();
+      $('#stream').addClass('active');
+    }
+  });
+}
+
 function getStreamingStatus() {
   socket.emit('get_streaming_status', function(streaming) {
     return streaming;
@@ -340,6 +535,20 @@ function secondsToTimeString (seconds) {
 
 function info(infotext) {
   $('body').prepend('<div class="infotext">' + infotext + '</div>');
+}
+
+function autoScrollQueue() {
+  socket.emit('mpd', 'currentsong', [], function(err, song) {
+    if (song) {
+      var scrollable = $('#queue.scrollable');
+      var scrolltop = $('.song.' + song.Id).offset().top +
+          scrollable.scrollTop() -
+          scrollable.offset().top;
+      scrollable.animate({
+        scrollTop: scrolltop
+      }, 0);
+    }
+  });
 }
 
 function fetch_album_cover(artist, album) {

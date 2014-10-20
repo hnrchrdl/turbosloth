@@ -1,18 +1,16 @@
-#playlist-container
+#queue-container
   .nav-main
     .button-wrapper.left
-      .button.text.refresh(title="Refresh Playlist")
+      .button.text.refresh(title="refresh queue")
         i.fa.fa-refresh
-      .button.text.scroll(title="Scroll to current song")
-        i.fa.fa-angle-double-down
     .button-wrapper.right
-      .shuffle.button.text(title="shuffle playlist")
+      .shuffle.button.text(title="shuffle queue")
         i.fa.fa-random
-      .clear.button.text(title="clear playlist")
+      .clear.button.text(title="clear queue")
         i.fa.fa-eraser
   hr
-  #playlist.scrollable
-    - each song in playlist
+  #queue.scrollable
+    - each song in queue
       .song(class= song.Id, data-id= song.Id, data-file= song.file)
         .attr.songpos= song.Pos
         .attr.space
