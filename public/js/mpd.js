@@ -1,16 +1,25 @@
+//// Aorta
+// Constructor
 var Aorta = function(callback) {
   //console.log('MpdAorta constructor called' );
   // Object with the current song and status
   var aorta = this;
   socket.emit('mpd', 'currentsong', [], function(err, data) {
-    aorta.song = err ? err : data;
+    if (err) { console.log(err); }
+    else{ aorta.song = data; }
     socket.emit('mpd', 'status', [], function(err, data) {
-      aorta.status = err ? err : data;
+      if (err) { console.log(err); }
+      else {aorta.status = data; }
+      
+      registerMpdInterface(aorta.status);
+      
       callback(aorta);
     });
   });
 };
 
+//// Queue
+// Constructor
 var Queue = function(callback) {
   var queue = this;
   $.ajax({
@@ -22,6 +31,7 @@ var Queue = function(callback) {
     callback(err, {});
   });
 }
+// Prototypes
 Queue.prototype.render = function(html) {
     $('nav').find('.loading.queue').show();
     $('nav').find('.button').removeClass('active');
@@ -33,5 +43,56 @@ Queue.prototype.render = function(html) {
     socket.emit('mpd', 'currentsong', [], function(err, song) {
       highlightSongInQueue(song);
     });
-  
 };
+var Playlists = function(callback) {
+  var playlists = this;
+  $.ajax({
+    url:'/playlists'
+  }).success(function(data) {
+    playlists.html = data;
+    callback({}, playlists);  
+  }).fail(function(err) {
+    callback(err, {});
+  });
+}
+// Prototypes
+Queue.prototype.render = function(html) {
+  $('nav').find('.button').removeClass('active');
+  $('nav').find('.button.queue').addClass('active');
+}
+
+//// Browse
+// Constructor
+var Browse = function(callback) {
+  var playlists = this;
+  $.ajax({
+    url:'/browse'
+  }).success(function(data) {
+    browse.html = data;
+    callback({}, browse);  
+  }).fail(function(err) {
+    callback(err, {});
+  });
+}
+// Prototypes
+Browse.prototype.render = function(html) {
+  
+}
+
+//// Search
+// Constructor
+var Search = function(callback) {
+  var playlists = this;
+  $.ajax({
+    url:'/search'
+  }).success(function(data) {
+    search.html = data;
+    callback({}, search);  
+  }).fail(function(err) {
+    callback(err, {});
+  });
+}
+// Prototypes
+Search.prototype.render = function(html) {
+  
+}
