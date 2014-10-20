@@ -142,6 +142,49 @@ var initHandlers = function() {
     
     
     //// playlists
+    // save playlist
+    $('#playlists').on('keyup', 'input.save-playlist', function(){
+      if ( e.which === 13 ) {
+        socket.emit('mpd', 'save', [$('#save-playlist').val()], function(err, msg){
+          if (err) {
+            console.log(err);
+          }
+          else {
+            renderQueue();
+          }
+        });
+      }
+    });
+    // append
+    $('#playlists').on('click','.append.button', function() {
+      var playlist = $(this).parents('.playlist').attr('data-playlist');
+      socket.emit('mpd', 'load', [playlist], function(err,msg){
+        if (err) {
+          console.log(err);
+        }
+        else {
+          renderQueue();  
+        }
+      });
+    });
+    // load
+    $('#playlists').on('click', '.load.button', function() {
+      var playlist = $(this).parents('.playlist').attr('data-playlist');
+      socket.emit('mpd', 'clear', [], function(err,msg) {
+        socket.emit('mpd', 'load', [playlist], function(err,msg){
+          if (err) { console.log(err); }
+          else { renderQueue(); }
+        });
+      });
+    });
+    // delete
+    $('#playlists').on('click','.delete.button',function() {
+      var playlist = $(this).parents('.playlist').attr('data-playlist');
+      socket.emit('mpd', 'rm', [playlist], function(err,msg){
+        if (err) { console.log(err); }
+        else { renderQueue(); }
+      });
+    });
     
     //// browse
     
