@@ -49,7 +49,7 @@ function playlistsRequest() {
 function browseRequest(folder) {
   var b = new Browse(folder, function(err, browse) {
     if (err) { console.log(err); }
-    else if (browse) { browse.render(folder); }
+    else if (browse) { browse.render(); }
   });
 }
 function searchRequest(searchString, searchType) {
