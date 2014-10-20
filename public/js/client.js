@@ -1,4 +1,4 @@
-var socket = io();
+
 var audio_element = document.getElementsByTagName("audio")[0];
 
 jQuery.fx.interval = 100;
@@ -21,20 +21,6 @@ $(document).ready(function() {
   initHandlers();
   
 });
-//// sockets
-socket.on('connect', function (){
-  console.log('established socket connection');
-});
-socket.on('error', function (reason){
-  console.error('Unable to connect Socket.IO', reason);
-});
-socket.on('change', function(system) {
-  console.log('subsystem changed: ' + system);
-  var init = false;
-  playerHasChanged(init);
-});
-
-
 
 function playerHasChanged(init) {
   var a = new Aorta(function(data) {
@@ -54,61 +40,7 @@ function queueRequest() {
   });
 }
 
-function renderCurrentSong(status, song) {
-  var currentsong = $('#left').find('.currentsong');
-  if (status.state === 'stop') {
-    currentsong.text("");
-  }
-  else {
-    currentsong.html(song.Artist+ '<br>' + 
-        song.Title + '<br>' + '<span class="muted">' + 
-        song.Album + '</span>');
-  }
-  // fetch album cover
-  //fetch_album_cover(song.Artist, song.Album, function(url) {
-  //  console.log(url);
-  //});
-  // highlight current song in queue
-  highlightSongInQueue(song);
-}
 
-function highlightSongInQueue(song) {
-  $('#queue').find('.song').removeClass('active');
-  $('#queue').find('.song').find('.attr.songpos').removeClass('active');
-  $('#queue').find('.song.' + song.Id).addClass('active');
-  $('#queue').find('.song.' + song.Id).find('.attr.songpos').addClass('active');
-}
-
-function renderProgressBar(status) {
-  var progressBar = $('#seek-bar');
-  // start
-  var start = function startProgressbar (songTime,elapsed) {
-    var initial_width = elapsed / songTime * 100; 
-    var duration = songTime - elapsed;
-    progressBar
-      .stop()
-      .css('width',initial_width + '%')
-      .animate({'width': '100%'},duration * 1000, 'linear');
-  };
-  // stop
-  var stop = function stopProgressBar () {
-    progressBar.stop();
-  };
-
-  switch (status.state) {
-    case 'play':
-      var songTime = parseFloat(status.time.split(":")[1]);
-      var elapsed = parseFloat(status.elapsed);
-      start(songTime,elapsed);
-      break;
-    case 'pause':
-      stop();
-      break;
-    case 'stop':
-      stop();
-      progressBar.css('width',0);
-  }
-}
 
 function renderPlaylists() {
   // manage playlist click
