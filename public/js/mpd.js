@@ -90,19 +90,18 @@ Aorta.prototype.renderProgressBar = function() {
 //// Queue
 // Constructor
 var Queue = function(callback) {
-  var queue = this;
+  $('nav').find('.loading.queue').show();
   $.ajax({
     url:'/queue'
   }).success(function(data) {
-    queue.html = data;
-    callback({}, queue);  
+    this.html = data;
+    callback({}, this);  
   }).fail(function(err) {
     callback(err, {});
   });
 }
 // Prototypes
-Queue.prototype.render = function(html) {
-    $('nav').find('.loading.queue').show();
+Queue.prototype.render = function() {
     $('nav').find('.button').removeClass('active');
     $('nav').find('.button.queue').addClass('active');
     $('main').html(this.html);
@@ -113,47 +112,58 @@ Queue.prototype.render = function(html) {
       highlightSongInQueue(song);
     });
 };
+
+//// Playlists
+// Constructor
 var Playlists = function(callback) {
-  var playlists = this;
+  $('nav').find('.loading.playlists').show();
   $.ajax({
-    url:'/playlists'
-  }).success(function(data) {
-    playlists.html = data;
-    callback({}, playlists);  
-  }).fail(function(err) {
+    url: '/playlists'
+  }).success(function(data){
+    this.html = data;
+    callback({}, this);
+  }).fail(function(err){ 
+    console.log(err);
     callback(err, {});
   });
 }
 // Prototypes
-Queue.prototype.render = function(html) {
+Playlists.prototype.render = function() {
   $('nav').find('.button').removeClass('active');
-  $('nav').find('.button.queue').addClass('active');
+  $('nav').find('.button.playlists').addClass('active');
+  $('main').html(this.html);
+  fixScrollHeight();
+  $('nav').find('.loading.playlists').hide();
 }
 
 //// Browse
 // Constructor
 var Browse = function(callback) {
-  var playlists = this;
+  $('nav').find('.loading.browse').show();
   $.ajax({
-    url:'/browse'
+    url: 'browse/' + encodeURIComponent(folder)
   }).success(function(data) {
-    browse.html = data;
-    callback({}, browse);  
+    this.html = data;
+    callback({}, this);  
   }).fail(function(err) {
     callback(err, {});
   });
 }
 // Prototypes
 Browse.prototype.render = function(html) {
-  
+  $('nav').find('.button').removeClass('active');
+  $('nav').find('.button.browse').addClass('active');
+  $('main').html(this.html);
+  fixScrollHeight();
+  $('nav').find('.loading.browse').hide();
 }
 
 //// Search
 // Constructor
-var Search = function(callback) {
-  var playlists = this;
+var Search = function(searchString, searchType, callback) {
+  $('nav').find('.loading.search').show();
   $.ajax({
-    url:'/search'
+    url: 'search/' + encodeURIComponent(searchString) + "/" + searchType
   }).success(function(data) {
     search.html = data;
     callback({}, search);  
@@ -163,5 +173,9 @@ var Search = function(callback) {
 }
 // Prototypes
 Search.prototype.render = function(html) {
-  
+  $('nav').find('.button').removeClass('active');
+  $('nav').find('.button.search').addClass('active');
+  $('main').html(this.html);
+  fixScrollHeight();
+  $('nav').find('.loading.search').hide();
 }
