@@ -11,13 +11,9 @@ var express = require('express'),
   redis = require('redis'),
   server = http.createServer(app);
 
-
-
 var config = require('./config.json')[app.get('env')];
-
 //app.use(express.errorHandler(config.errorHandlerOptions));
 
-//var r = require("redis").createClient(config.redisPort);
 redisClient = redis.createClient(config.redisPort, config.redisHost);
 redisClient.select(config.redisDatabase);
 
@@ -25,7 +21,6 @@ server.listen(config.appPort, config.appHost, function() {
   console.log('listening on ' + config.appHost + ': ' + config.appPort);
 });
 
-module.exports.app_env = app.get('env');
 module.exports.config = config;
 
 var io = require('./lib/sockets').listen(server);
