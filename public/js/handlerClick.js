@@ -187,9 +187,97 @@ var initHandlers = function() {
     });
     
     //// browse
+    // dir a
+    $('#browse').on('click', '.dir a', function(e) {
+      e.preventDefault();
+      renderBrowse($(this).attr('data-dir'));
+    });
+    // dir-info a
+    $('#browse').on('click','.dir-info a', function(e) {
+      e.preventDefault();
+      renderBrowse("--" + $(this).attr('data-dir'));
+    });
+
+    // register Buttons
+    $('#browse').on('click', '.append.button', function() {
+      var dir = $(this).parents('.dir').attr('data-directory');
+      socket.emit('mpd', 'add', [dir], function(err, msg){
+        if (err) { console.log(err); }
+        else {
+          $('nav').find('.button').removeClass('active');
+          $('nav').find('.button.queue').addClass('active');
+          queueRequest();
+        }
+      });
+    });
+
+    $('#browse').on('click', '.load.button', function() {
+      var dir = $(this).parents('.dir').attr('data-directory');
+      socket.emit('mpd', 'clear', [], function(err,msg) {
+        socket.emit('mpd', 'add', [dir], function(err,msg){
+          if (err) { console.log(err); }
+          else {
+            $('nav').find('.button').removeClass('active');
+            $('nav').find('.button.queue').addClass('active');
+            queueRequest();
+          }
+        });
+      });
+    });
+    
     
     //// search
-
+    // enter on search field
+    $('#search').on('keyup', 'input.search-input', function(e) {
+      if ( e.which === 13 ) {
+        var searchString = $('#search').find('input.search-input').val();
+        var searchType = $('#search').find('select.search-select').val();
+        renderSearch(searchString, searchType);
+      }
+    });
+    // change of search category select
+    $('#search').on('change', 'select', function() {
+      var searchString = $('#search').find('input.search-input').val();
+      var searchType = $('#search').find('select.search-select').val();
+      renderSearch(searchString, searchType);
+    });
+    // click append
+    $('#search').on('click', '.append.button', function(){
+      var dir = $(this).parents('.dir').attr('data-file');
+      console.log(dir);
+      socket.emit('mpd', 'add', [dir], function(err,msg){
+        if (err) {
+          console.log(err);
+        }
+      });
+    });
+    // click advanced
+    $('#search').on('click','.advanced', function() {
+      if ($(this).find('i').hasClass('fa-angle-down')) {
+        $(this).find('i').removeClass('fa-angle-down');
+        $(this).find('i').addClass('fa-angle-up');
+        $(this).parents('.dir').height($(this).parents('.dir').height()*2);
+      } else {
+        $(this).find('i').removeClass('fa-angle-up');
+        $(this).find('i').addClass('fa-angle-down');
+        $(this).parents('.dir').height($(this).parents('.dir').height()/2);
+      }
+    });
+    // click search artist
+    $('#search').on('click', '.search', function() {
+      var artist = $(this).parents('.dir').find('.attr.artist').text();
+      renderSearch(artist, 'Artist');
+    });
+    // click lookup
+    $('#search').on('click', '.lookup', function() {
+      try {
+        var directory = ($(this).parents('.dir').attr('data-file').split('/'));
+        directory.pop();
+        directory = directory.join('/');
+        console.log(directory);
+        renderBrowse(directory);
+      } catch (e) {}
+    });
     
   }();
 };
