@@ -34,102 +34,6 @@ socket.on('change', function(system) {
   playerHasChanged(init);
 });
 
-function registerMpdInterface(status) {
-  // set the args for random, repeat and pause
-
-  var handlerList = [ 
-    [$('#left'), ('#previous'), 'previous', []],
-    [$('#left'), ('#next'), 'next', []], 
-    [$('#left'), ('#play'), 'play', []], 
-    [$('#left'), ('#pause'), 'pause', [(status.state === 'pause' ? 0 : 1)]], 
-    [$('#left'), ('#stop'), 'stop', []],
-    [$('#left'), ('#random'), 'random', [1 - status.random]],
-    [$('#left'), ('#repeat'), 'repeat', [1 - status.repeat]]
-  ];
-
-  for (i in handlerList) {
-    registerButton(handlerList[i][0], handlerList[i][1], handlerList[i][2], handlerList[i][3]);
-  }
-
-  // indicate the status (play, stop or pause)
-  $('.control-menu').find('.button').removeClass('active');
-  $('.control-menu').find('#' + status.state).addClass('active');
-
-  status.random === '1' ? $('#random').addClass('active') : $('#random').removeClass('active');
-  status.repeat === '1' ? $('#repeat').addClass('active') : $('#repeat').removeClass('active');
-    
-}
-
-function registerQueueFunctions() {
-  // refresh queue click
-  $('#queue-container').on('click', '.refresh' ,function() {
-    renderQueue();
-  });
-
-  // click play
-  $('#queue').on('click','.play', function() {
-    var songid = $(this).parents('.song').attr('data-id');
-    socket.emit('mpd', 'playid', [songid]);
-  });
-
-  // click advanced
-  $('#queue').on('click','.advanced', function() {
-    if ($(this).find('i').hasClass('fa-angle-down')) {
-      $(this).find('i').removeClass('fa-angle-down');
-      $(this).find('i').addClass('fa-angle-up');
-      $(this).parents('.song').height($(this).parents('.song').height()*2);
-    } else {
-      $(this).find('i').removeClass('fa-angle-up');
-      $(this).find('i').addClass('fa-angle-down');
-      $(this).parents('.song').height($(this).parents('.song').height()/2);
-    }
-  });
-
-  // click search artist
-  $('#queue').on('click', '.search', function() {
-    var artist = $(this).parents('.song').find('.attr.artist').text();
-    renderSearch(artist, 'Artist');
-  });
-
-  // click lookup
-  $('#queue').on('click', '.lookup', function() {
-    try {
-      var directory = ($(this).parents('.song').attr('data-file').split('/'));
-      directory.pop();
-      directory = directory.join('/');
-      renderBrowse(directory);
-    } catch (e) {
-      console.log('error in directory lookup: ' + e);
-    }
-  });
-
-  // click remove
-  $('#queue').on('click', '.remove', function() {
-    var song = $(this).parents('.song');
-    var songid = song.attr('data-id');
-    socket.emit('mpd', 'deleteid', [songid]);
-    song.remove();
-  });
-
-  // clear queue
-  $('#queue-container').on('click', '.clear.button', function(){
-    socket.emit('mpd', 'clear', [], function(err, msg) {
-      if (err) { console.log(err); }
-      else {
-        var init = true;
-        playerHasChanged(init);
-      }
-    }); 
-  });
-
-  // shuffle queue
-  $('#queue-container').on('click', '.shuffle.button', function(){
-    socket.emit('mpd', 'shuffle', [], function(err, msg) {
-      if (err) { console.log(err); }         
-      else { renderQueue(); }
-    });
-  });
-}
 
 
 function playerHasChanged(init) {
@@ -138,17 +42,14 @@ function playerHasChanged(init) {
       registerMpdInterface(data.status);
       renderCurrentSong(data.status, data.song);
       renderProgressBar(data.status);
-      init ? queueHasChanged() : highlightSongInQueue(data.song);
+      init ? queueRequest() : highlightSongInQueue(data.song);
     }
   });
 }
 
-function queueHasChanged() {
+function queueRequest() {
   var q = new Queue(function(err, queue) {
-    if (queue) {
-      queue.render();
-      registerQueueFunctions();
-    }
+    if (queue) { queue.render(); }
     else { console.log(err); }
   });
 }
@@ -219,62 +120,7 @@ function renderPlaylists() {
     fixScrollHeight();
     $('nav').find('.loading.playlists').hide();
     
-    // register buttons
-    $('#manageplaylist').on('keyup', 'input.save-playlist', function(){
-      if ( e.which === 13 ) {
-        socket.emit('mpd', 'save', [$('#save-playlist').val()], function(err, msg){
-          if (err) {
-            console.log(err);
-          }
-          else {
-            renderQueue();
-          }
-        });
-      }
-    });
-
-    $('#manageplaylist').find('.append.button').off('click');
-    $('#manageplaylist').find('.append.button').on('click', function(){
-      var playlist = $(this).parents('.playlist').attr('data-playlist');
-      socket.emit('mpd', 'load', [playlist], function(err,msg){
-        if (err) {
-          console.log(err);
-        }
-        else {
-          renderQueue();  
-        }
-      });
-    });
-
-    $('#manageplaylist').find('.load.button').off('click');
-    $('#manageplaylist').find('.load.button').on('click', function(){
-      var playlist = $(this).parents('.playlist').attr('data-playlist');
-      socket.emit('mpd', 'clear', [], function(err,msg) {
-        socket.emit('mpd', 'load', [playlist], function(err,msg){
-          if (err) {
-            console.log(err);
-          }
-          else {
-            $('nav').find('.button').removeClass('active');
-            $('nav').find('.button.queue').addClass('active');
-            renderQueue(); 
-          }
-        });
-      });
-    });
-
-    $('#manageplaylist').find('.delete.button').off('click');
-    $('#manageplaylist').find('.delete.button').on('click', function(){
-      var playlist = $(this).parents('.playlist').attr('data-playlist');
-      socket.emit('mpd', 'rm', [playlist], function(err,msg){
-        if (err) {
-          console.log(err);
-        }
-        else {
-          renderQueue();  
-        }
-      });
-    });
+    
   });
 }
 
@@ -411,23 +257,6 @@ function renderSearch(searchString, searchType) {
 
   });
 }
-
-var registerButton = function(container, element, command, args, callback) {
-  // register the interface via JQuery on method
-
-  // container = JQuery Object containing the element
-  // element = button identifier as String
-  // command = mpd command as String
-  // args = command args of type Array, optional
-  container.on('click', element, function() {
-    // fire mpd command with optional callback
-    socket.emit('mpd', command, args, function(err,msg) {
-      if (callback) {
-        callback(err, msg);
-      }
-    });
-  });
-};
 
 function initAudioElement(audio_element) {
   socket.emit('get_streaming_status', function(status) {
