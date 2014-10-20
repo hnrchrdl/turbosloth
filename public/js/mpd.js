@@ -3,29 +3,30 @@
 var Aorta = function(callback) {
   //console.log('MpdAorta constructor called' );
   // Object with the current song and status
-  var aorta = this;
-  socket.emit('mpd', 'currentsong', [], function(err, data) {
+  var a = this;
+  socket.emit('mpd', 'currentsong', [], function(err, song) {
     if (err) { 
       console.log(err);
-      aorta.song = undefined;
+      a.song = undefined;
     }
-    else{ aorta.song = data; }
-    socket.emit('mpd', 'status', [], function(err, data) {
+    else{ a.song = song; }
+    socket.emit('mpd', 'status', [], function(err, status) {
       if (err) { 
         console.log(err);
-        aorta.status = undefined;
+        a.status = undefined;
       }
-      else { aorta.status = data; }
+      else { a.status = status; }
       
-      registerMpdInterface(aorta.status);
+      registerMpdInterface(a.status);
       
-      callback(aorta);
+      callback(a);
     });
   });
 };
 // Prototypes
 Aorta.prototype.renderCurrentSong = function() {
   var song = this.song;
+  var status = this.status;
   
   // display the currently playing song
   var currentsong = $('#left').find('.currentsong');
@@ -90,12 +91,13 @@ Aorta.prototype.renderProgressBar = function() {
 //// Queue
 // Constructor
 var Queue = function(callback) {
+  var q = this;
   $('nav').find('.loading.queue').show();
   $.ajax({
     url:'/queue'
-  }).success(function(data) {
-    this.html = data;
-    callback({}, this);  
+  }).success(function(html) {
+    q.html = html;
+    callback({}, q);
   }).fail(function(err) {
     callback(err, {});
   });
@@ -116,12 +118,13 @@ Queue.prototype.render = function() {
 //// Playlists
 // Constructor
 var Playlists = function(callback) {
+  var p = this;
   $('nav').find('.loading.playlists').show();
   $.ajax({
     url: '/playlists'
-  }).success(function(data){
-    this.html = data;
-    callback({}, this);
+  }).success(function(html){
+    p.html = html;
+    callback({}, p);
   }).fail(function(err){ 
     console.log(err);
     callback(err, {});
@@ -138,13 +141,14 @@ Playlists.prototype.render = function() {
 
 //// Browse
 // Constructor
-var Browse = function(callback) {
+var Browse = function(folder, callback) {
+  var b = this;
   $('nav').find('.loading.browse').show();
   $.ajax({
     url: 'browse/' + encodeURIComponent(folder)
-  }).success(function(data) {
-    this.html = data;
-    callback({}, this);  
+  }).success(function(html) {
+    b.html = html;
+    callback({}, b);  
   }).fail(function(err) {
     callback(err, {});
   });
@@ -161,12 +165,13 @@ Browse.prototype.render = function(html) {
 //// Search
 // Constructor
 var Search = function(searchString, searchType, callback) {
+  var s = this;
   $('nav').find('.loading.search').show();
   $.ajax({
     url: 'search/' + encodeURIComponent(searchString) + "/" + searchType
-  }).success(function(data) {
-    search.html = data;
-    callback({}, search);  
+  }).success(function(html) {
+    s.html = html;
+    callback({}, s);  
   }).fail(function(err) {
     callback(err, {});
   });
