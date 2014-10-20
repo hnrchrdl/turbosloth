@@ -18,7 +18,7 @@ var Aorta = function(callback) {
       else { a.status = status; }
       
       registerMpdInterface(a.status);
-      
+
       callback(a);
     });
   });
@@ -97,6 +97,7 @@ var Queue = function(callback) {
     url:'/queue'
   }).success(function(html) {
     q.html = html;
+    console.log(q);
     callback({}, q);
   }).fail(function(err) {
     callback(err, {});
@@ -110,8 +111,8 @@ Queue.prototype.render = function() {
     fixScrollHeight();
     $('nav').find('.loading.queue').hide();
     // highlight current song in playlist
-    socket.emit('mpd', 'currentsong', [], function(err, song) {
-      highlightSongInQueue(song);
+    new Aorta(function(a) {
+      a.highlightSongInQueue();
     });
 };
 

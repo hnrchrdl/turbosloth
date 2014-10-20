@@ -15,28 +15,27 @@ var initHandlers = function() {
       $('nav').find('.button').removeClass('active');
       $('nav').find('.button.queue').addClass('active');
       $('nav').find('.loading.queue').show();
-      var init = true;
-      renderAorta(init);
+      queueRequest();
     });
     // playlists
     $('.button.playlists').on('click', function(){
       $('nav').find('.button').removeClass('active');
       $('nav').find('.button.playlists').addClass('active');
       $('nav').find('.loading.playlists').show();
-      renderPlaylists();
+      playlistsRequest();
     });
     // browse
     $('.button.browse').on('click', function(){
       $('nav').find('.button').removeClass('active');
       $('nav').find('.button.browse').addClass('active');
-      renderBrowse("#");
+      browseRequest("#");
     });
     // search
     $('.button.search').on('click', function(){
       $('nav').find('.button').removeClass('active');
       $('nav').find('.button.search').addClass('active');
       $('nav').find('.loading.search').show();
-      renderSearch("#", "any");
+      searchRequest("#", "any");
     });
     
     
@@ -278,41 +277,74 @@ var initHandlers = function() {
         renderBrowse(directory);
       } catch (e) {}
     });
-    
+
   }();
+
 };
 
 
-function registerMpdInterface(status) {
+var registerMpdInterface = function(status) {
   
-  var container = $('#left');
-  var handlerList = [ 
-    {'element':'#previous', 'command':'previous', 'args':[]},
-    {'element':'#next', 'command':'next', []},
-    {'element':'#play', 'command':'play', []}, 
-    {'element':'#pause', 'command':'pause', 'args':[(status.state === 'pause' ? 0 : 1)]}, 
-    {'element':'#stop', 'command':'stop', 'args':[]],
-    {'element':'#random', 'command':'random', 'args':[1 - status.random]},
-    {'element':'#repeat', 'command':'repeat', 'args':[1 - status.repeat]}
-  ];
+  return function () {
 
-  for (i in handlerList) {
-    var handle = handlerList[i];
-    container.on('click', handle.element, function() {
-      socket.emit('mpd', handle.command, handle.args, function(err, msg) {
-        if (err) { console.log(err); } 
-        else if (callback) { callback(err, msg); }
+    $('#left').on('click', '#previous', function() {
+      socket.emit('mpd', 'previous', [], function(err, msg) {
+        if (err) { console.log(err); }
+        else { console.log(msg); }
       });
-  }
+    });
 
-  // indicate the status (play, stop or pause)
-  $('.control-menu').find('.button').removeClass('active');
-  $('.control-menu').find('#' + status.state).addClass('active');
+    $('#left').on('click', '#next', function() {
+      socket.emit('mpd', 'next', [], function(err, msg) {
+        if (err) { console.log(err); }
+        else { console.log(msg); }
+      });
+    });
 
-  status.random === '1' ? $('#random').addClass('active') : $('#random').removeClass('active');
-  status.repeat === '1' ? $('#repeat').addClass('active') : $('#repeat').removeClass('active');
+    $('#left').on('click', '#play', function() {
+      socket.emit('mpd', 'play', [], function(err, msg) {
+        if (err) { console.log(err); }
+        else { console.log(msg); }
+      });
+    });
+
+    $('#left').on('click', '#pause', function() {
+      socket.emit('mpd', 'pause', [(status.state === 'pause' ? 0 : 1)], function(err, msg) {
+        if (err) { console.log(err); }
+        else { console.log(msg); }
+      });
+    });
+
+    $('#left').on('click', '#stop', function() {
+      socket.emit('mpd', 'stop', [], function(err, msg) {
+        if (err) { console.log(err); }
+        else { console.log(msg); }
+      });
+    });
+
+    $('#left').on('click', '#random', function() {
+      socket.emit('mpd', 'random', [1 - status.random], function(err, msg) {
+        if (err) { console.log(err); }
+        else { console.log(msg); }
+      });
+    });
+
+    $('#left').on('click', '#repeat', function() {
+      socket.emit('mpd', 'repeat', [1 - status.repeat], function(err, msg) {
+        if (err) { console.log(err); }
+        else { console.log(msg); }
+      });
+    });
+
+    // indicate the status (play, stop or pause)
+    $('.control-menu').find('.button').removeClass('active');
+    $('.control-menu').find('#' + status.state).addClass('active');
+
+    status.random === '1' ? $('#random').addClass('active') : $('#random').removeClass('active');
+    status.repeat === '1' ? $('#repeat').addClass('active') : $('#repeat').removeClass('active');
+  }()
     
-}
+};
 
 
 

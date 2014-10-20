@@ -23,33 +23,36 @@ $(document).ready(function() {
 });
 
 function playerHasChanged(init) {
-  var a = new Aorta(function(data) {
-    if (data) {
-      registerMpdInterface(data.status);
-      renderCurrentSong(data.status, data.song);
-      renderProgressBar(data.status);
-      init ? queueRequest() : highlightSongInQueue(data.song);
+  var a = new Aorta(function(a) {
+    if (a) {
+      registerMpdInterface(a.status);
+      a.renderCurrentSong(a.status, a.song);
+      a.renderProgressBar(a.status);
+      init ? queueRequest() : a.highlightSongInQueue(a.song);
     }
   });
 }
 
 function queueRequest() {
   var q = new Queue(function(err, queue) {
-    if (err) { console.log(err); }
-    else if (queue) { queue.render(); }
+    if (queue) { queue.render(); }
+    else if (err) { console.log('queue err: ' + err); }
+     
   });
 }
 
 function playlistsRequest() {
   var p = new Playlists(function(err, playlists) {
-    if (err) {console.log(err); }
-    else if (playlists) { playlists.render(); }
+    if (playlists) { playlists.render(); }
+    else if (err) {console.log(err); }
+     
   });
 }
 function browseRequest(folder) {
   var b = new Browse(folder, function(err, browse) {
-    if (err) { console.log(err); }
-    else if (browse) { browse.render(); }
+    if (browse) { browse.render(); }
+    else if (err) { console.log(err); }
+     
   });
 }
 function searchRequest(searchString, searchType) {
@@ -57,8 +60,7 @@ function searchRequest(searchString, searchType) {
     searchString = "#";
   }
   var s = new Search(searchString, searchType, function(err, search) {
-    if (err) { console.log(err); }
-    else if (search) { search.render(); }
-  }
+    if (search) { search.render(); }
+    else if (err) { console.log(err); }
+  });
 }
-
