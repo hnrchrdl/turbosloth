@@ -14,7 +14,7 @@ var Aorta = function(callback) {
 var Queue = function(callback) {
   var queue = this;
   $.ajax({
-    url:'/mpdqueue'
+    url:'/queue'
   }).success(function(data) {
     queue.html = data;
     callback({}, queue);  
