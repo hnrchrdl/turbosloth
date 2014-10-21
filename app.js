@@ -12,6 +12,7 @@ var express = require('express'),
   server = http.createServer(app);
 
 var config = require('./config.json')[app.get('env')];
+module.exports.config = config;
 //app.use(express.errorHandler(config.errorHandlerOptions));
 
 redisClient = redis.createClient(config.redisPort, config.redisHost);
@@ -21,15 +22,17 @@ server.listen(config.appPort, config.appHost, function() {
   console.log('listening on ' + config.appHost + ': ' + config.appPort);
 });
 
-module.exports.config = config;
+
 
 var io = require('./lib/sockets').listen(server);
 var routes = require('./routes/index').router;
+app.use('/', routes);
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
-app.use(favicon());
+
 app.use(logger('dev'));
+app.use(favicon());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
 app.use(express.static(path.join(__dirname, 'public')));
@@ -50,8 +53,6 @@ app.use(session({
   saveUninitialized: true
 }));
 
-app.use('/', routes);
-
 /// catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
@@ -63,7 +64,7 @@ app.use(function(req, res, next) {
 
 // development error handler
 // will print stacktrace
-if (app.get('env') === 'development') {
+if (app.get('env') === 'development' || 'local') {
   app.use(function(err, req, res, next) {
     res.status(err.status || 500);
     res.render('error', {
@@ -71,18 +72,20 @@ if (app.get('env') === 'development') {
       error: err
     });
   });
+  require('longjohn'); 
+}
+else {
+  // production error handler
+  // no stacktraces leaked to user
+  app.use(function(err, req, res, next) {
+    res.status(err.status || 500);
+    res.render('error', {
+      message: err.message,
+      error: {}
+    });
+  });
 }
 
-// production error handler
-// no stacktraces leaked to user
-app.use(function(err, req, res, next) {
-  res.status(err.status || 500);
-  res.render('error', {
-    message: err.message,
-    error: {}
-  });
-});
 
-require('longjohn');
 
 module.exports.app = app;
