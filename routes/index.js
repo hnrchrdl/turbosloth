@@ -29,6 +29,7 @@ router.get('/', function(req, res) {
       req.session.streamurl = undefined;
     }
 
+
     //render skeleton
     res.render('skeleton', {
       title: 'turbosloth',
@@ -56,6 +57,7 @@ router.post('/', function(req, res) {
 router.get('/queue', function(req, res) {
   var komponistClient = komponist.getClient(req.sessionID);
   komponistClient.playlistinfo(function(err, data) {
+
     data = Object.keys(data[0]).length === 0 ? undefined : data;
     err ?
         res.render('queue',{queue:err, secondsToTimeString:secondsToTimeString}) :
@@ -67,6 +69,7 @@ router.get('/queue', function(req, res) {
 router.get('/playlists', function(req, res) {
   var komponistClient = komponist.getClient(req.sessionID);
   komponistClient.listplaylists(function(err, data) {
+
     data = Object.keys(data[0]).length === 0 ? undefined : data;
     err ?
         res.render('playlists', {playlists:err}) : 
