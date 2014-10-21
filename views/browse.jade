@@ -2,15 +2,15 @@
   .dir-info
     if url_array
       .attr
-        a(href="#", data-dir="#") root
+        a.browse-breadcrumb(href="#", data-dir="#") root
       - each url, i in url_array
         .attr /
         .attr
-          a(href="#", data-dir= i)= url
+          a.browse-breadcrumb(href="#", data-dir= i)= url
     else
       .attr /
   .button-wrapper.right
-    .button.lookup.text(title="update database")
+    .button.browse-update-database.text(title="update database")
       i.fa.fa-refresh
 
   .clear
@@ -20,21 +20,21 @@
       - each item in dirs
         .dir(data-directory= item.directory)
           .attr 
-            a(href="#", data-dir= item.directory)
+            a.browse-dir(href="#", data-dir= item.directory)
               i.fa.fa-folder-o  
           .attr= item.name
           .button-wrapper.right
-            .append.button(title="add to current playlist")
+            .button.browse-append(title="add folder to current playlist")
               i.fa.fa-plus-square
-            .load.button(title="replace current playlist")
+            .button.browse-load(title="replace current playlist with folder")
               i.fa.fa-asterisk
     if files != []
       - each item in files
-        .dir(data-directory= item.directory)
+        .dir(data-directory= item.file)
           .attr
             i.fa.fa-file-o  
           .attr
             span= item.name
           .button-wrapper.right
-            .append.button(title="add to current playlist")
+            .button.browse-append(title="add song to current playlist")
               i.fa.fa-plus-square-o

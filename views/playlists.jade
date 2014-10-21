@@ -1,5 +1,5 @@
 #playlists
-  input#save-playlist.long(type='text',placeholder="save as new playlist")
+  input.playlists-save.long(type='text',placeholder="save as new playlist")
   i.fa.fa-save
   .clear
   hr
@@ -15,11 +15,11 @@
           .attr
             | last modified: --date--
         .button-wrapper.right
-          .append.button(title="add to current playlist")
+          .button.playlists-append(title="add to current playlist")
             i.fa.fa-plus-square-o
-          .load.button(title="replace current playlist")
+          .button.playlists-load(title="replace current playlist")
             i.fa.fa-asterisk
           //.space
           //.attr.space
-          .delete.button
+          .button.playlists-delete
             i.fa.fa-remove

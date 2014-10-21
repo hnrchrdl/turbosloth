@@ -32,20 +32,6 @@ function info(infotext) {
   $('body').prepend('<div class="infotext">' + infotext + '</div>');
 }
 
-function autoScrollQueue() {
-  socket.emit('mpd', 'currentsong', [], function(err, song) {
-    if (song) {
-      var scrollable = $('#queue.scrollable');
-      var scrolltop = $('.song.' + song.Id).offset().top +
-          scrollable.scrollTop() -
-          scrollable.offset().top;
-      scrollable.animate({
-        scrollTop: scrolltop
-      }, 0);
-    }
-  });
-}
-
 function fetch_album_cover(artist, album) {
   $.ajax({
     url: 'http://www.musicbrainz.org/ws/2/recording/?query=artist:' + artist +
@@ -59,7 +45,6 @@ function fetch_album_cover(artist, album) {
     url = null;
     return url;
   });
-  
 }
 
 function xmlToJson(xml) {

@@ -46,17 +46,17 @@
               - var time = secondsToTimeString(item.Time)
               .attr=time
           .button-wrapper.right
-            .append.button(title="add to queue")
+            .button.search-append(title="add to queue")
               i.fa.fa-plus-square-o
-            .advanced.button(title="more options")
+            .button.search-advanced(title="more options")
               i.fa.fa-angle-down
           .clear
           .button-wrapper.right
-            .button.lookup.text
+            .button.text.search-lookup
               i.fa.fa-folder-o  look up in database
-            .button.search.text
+            .button.text.search-artist
               i.fa.fa-search   search for artist
-            .button.remove.text
+            .button.text.search-add-from-album
               i.fa.fa-plus-square  add all from album
 
     else

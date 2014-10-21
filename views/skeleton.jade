@@ -9,6 +9,9 @@ html(lang='en')
   if stream
     script(type="text/javascript").
       var stream = '#{stream}';
+  else
+    script(type="text/javascript").
+      var stream = undefined;
 
   body
     #background-wrapper
@@ -53,22 +56,27 @@ html(lang='en')
         .clear
         hr
 
-        .button-wrapper.left
-          #stream.left.button.text(title="streaming")
-            i.fa.fa-volume-up
-          #random.left.button.text(title="random mode")
+        #player-options.button-wrapper.left
+          if !stream
+            #stream.left.button.text.disabled(title="no streaming source")
+              i.fa.fa-volume-up
+          else
+            #stream.left.button.text(title="streaming")
+              i.fa.fa-volume-up
+            
+          #random.button.left.text(title="random mode")
             i.fa.fa-random
           #repeat.left.button.text(title="repeat mode")
             i.fa.fa-repeat
 
-        .albumart
+        #albumart
 
-        .currentsong-wrapper
-          .currentsong
+        #currentsong-wrapper
+          #currentsong
             a(href="")
             br
  
-        .control-menu.left
+        #control-menu.left
           .button-wrapper.left
             #previous.left.button(title="previous")
               i.fa.fa-backward

@@ -1,4 +1,5 @@
 var initHandlers = function() {
+
   return function() {
     
     ////// static
@@ -7,7 +8,6 @@ var initHandlers = function() {
     $('#logout').on('click', function(){
       window.location = '/logout';
     });
-    
     
     //// nav main left
     // queue
@@ -39,55 +39,76 @@ var initHandlers = function() {
     });
     
     
-    
     //// nav sub left
     //stream
-    $('#stream').on('click', function() {
-      if (stream !== undefined) {
-        socket.emit('get_streaming_status', function(status) {
-          if (status === true) { // stop streaming
-            audio_element.pause();
-            audio_element.src = "";
-            socket.emit('set_streaming_status', false);
-            $('#stream').removeClass('active');
-          }
-          else { // start streaming
-            audio_element.src = stream;
-            audio_element.load();
-            audio_element.play();
-            socket.emit('set_streaming_status', true);
-            $('#stream').addClass('active');
-          }
-        });
-      }
-    });
+    if (stream) {
+      $('#stream').on('click', function() {
+        if (stream !== undefined) {
+          socket.emit('get_streaming_status', function(status) {
+            if (status === true) { // stop streaming
+              audio_element.pause();
+              audio_element.src = "";
+              socket.emit('set_streaming_status', false);
+              $('#stream').removeClass('active');
+            }
+            else { // start streaming
+              audio_element.src = stream;
+              audio_element.load();
+              audio_element.play();
+              socket.emit('set_streaming_status', true);
+              $('#stream').addClass('active');
+            }
+          });
+        }
+      });
+    }
     
-    
-
     //// seek
     $('#seek-bar-container').on('click', function(e) {
       // seek bar width is 200
       // subtract 30 for the left margin of x value
-      var seek_ratio = ( (e.clientX - 30 )/ 200);
-      var seek_sec = String(Math.round(seek_ratio * song.Time));
-      socket.emit('mpd','seekcur',[seek_sec]);
+      new Aorta(function(a) {
+        try {
+          var song = a.song;
+          var seek_ratio = ( (e.clientX - 30 )/ 200);
+          var seek_sec = String(Math.round(seek_ratio * song.Time));
+          socket.emit('mpd','seekcur',[seek_sec]);
+        } catch(e) { console.log(e); }
+      }); 
     });
-    
     
     
     ////// dynamic
     //// queue
     // refresh queue click
-    $('#queue-container').on('click', '.refresh' ,function() {
-      renderQueue();
+    $('main').on('click', '.queue-refresh' ,function() {
+      console.log('f');
+      queueRequest();
+    });
+    // clear queue
+    $('main').on('click', '.queue-clear', function(){
+      socket.emit('mpd', 'clear', [], function(err, msg) {
+        if (err) { console.log(err); }
+        else {
+          var init = true;
+          playerHasChanged(init);
+        }
+      });
+    });
+    // shuffle queue
+    $('main').on('click', '.queue-shuffle', function(){
+      socket.emit('mpd', 'shuffle', [], function(err, msg) {
+        if (err) { console.log(err); }         
+        else { queueRequest(); }
+      });
     });
     // click play
-    $('#queue').on('click','.play', function() {
+    $('main').on('click', '.queue-play', function() {
       var songid = $(this).parents('.song').attr('data-id');
       socket.emit('mpd', 'playid', [songid]);
     });
     // click advanced
-    $('#queue').on('click','.advanced', function() {
+    $('main').on('click','.queue-advanced', function() {
       if ($(this).find('i').hasClass('fa-angle-down')) {
         $(this).find('i').removeClass('fa-angle-down');
         $(this).find('i').addClass('fa-angle-up');
@@ -99,106 +120,89 @@ var initHandlers = function() {
       }
     });
     // click search artist
-    $('#queue').on('click', '.search', function() {
+    $('main').on('click', '.queue-search', function() {
       var artist = $(this).parents('.song').find('.attr.artist').text();
-      renderSearch(artist, 'Artist');
+      searchRequest(artist, 'Artist');
     });
     // click lookup
-    $('#queue').on('click', '.lookup', function() {
+    $('main').on('click', '.queue-lookup', function() {
       try {
         var directory = ($(this).parents('.song').attr('data-file').split('/'));
         directory.pop();
         directory = directory.join('/');
-        renderBrowse(directory);
+        browseRequest(directory);
       } catch (e) {
         console.log('error in directory lookup: ' + e);
       }
     });
     // click remove
-    $('#queue').on('click', '.remove', function() {
+    $('main').on('click', '.queue-remove', function() {
       var song = $(this).parents('.song');
       var songid = song.attr('data-id');
       socket.emit('mpd', 'deleteid', [songid]);
       song.remove();
     });
-    // clear queue
-    $('#queue-container').on('click', '.clear.button', function(){
-      socket.emit('mpd', 'clear', [], function(err, msg) {
-        if (err) { console.log(err); }
-        else {
-          var init = true;
-          playerHasChanged(init);
-        }
-      }); 
-    });
-    // shuffle queue
-    $('#queue-container').on('click', '.shuffle.button', function(){
-      socket.emit('mpd', 'shuffle', [], function(err, msg) {
-        if (err) { console.log(err); }         
-        else { renderQueue(); }
-      });
-    });
     
     
     //// playlists
     // save playlist
-    $('#playlists').on('keyup', 'input.save-playlist', function(){
+    $('main').on('keyup', '.playlists-save', function(){
       if ( e.which === 13 ) {
         socket.emit('mpd', 'save', [$('#save-playlist').val()], function(err, msg){
           if (err) {
             console.log(err);
           }
           else {
-            renderQueue();
+            queueRequest();
           }
         });
       }
     });
     // append
-    $('#playlists').on('click','.append.button', function() {
+    $('main').on('click','.playlists-append', function() {
       var playlist = $(this).parents('.playlist').attr('data-playlist');
       socket.emit('mpd', 'load', [playlist], function(err,msg){
         if (err) {
           console.log(err);
         }
         else {
-          renderQueue();  
+          queueRequest();  
         }
       });
     });
     // load
-    $('#playlists').on('click', '.load.button', function() {
+    $('main').on('click', '.playlists-load.button', function() {
       var playlist = $(this).parents('.playlist').attr('data-playlist');
       socket.emit('mpd', 'clear', [], function(err,msg) {
         socket.emit('mpd', 'load', [playlist], function(err,msg){
           if (err) { console.log(err); }
-          else { renderQueue(); }
+          else { queueRequest(); }
         });
       });
     });
     // delete
-    $('#playlists').on('click','.delete.button',function() {
+    $('main').on('click','.playlists-delete',function() {
       var playlist = $(this).parents('.playlist').attr('data-playlist');
       socket.emit('mpd', 'rm', [playlist], function(err,msg){
         if (err) { console.log(err); }
-        else { renderQueue(); }
+        else { queueRequest(); }
       });
     });
     
     //// browse
     // dir a
-    $('#browse').on('click', '.dir a', function(e) {
+    $('main').on('click', 'a.browse-dir', function(e) {
       e.preventDefault();
-      renderBrowse($(this).attr('data-dir'));
+      browseRequest($(this).attr('data-dir'));
     });
     // dir-info a
-    $('#browse').on('click','.dir-info a', function(e) {
+    $('main').on('click','a.browse-breadcrumb', function(e) {
       e.preventDefault();
-      renderBrowse("--" + $(this).attr('data-dir'));
+      browseRequest("--" + $(this).attr('data-dir'));
     });
 
     // register Buttons
-    $('#browse').on('click', '.append.button', function() {
+    $('main').on('click', '.browse-append', function() {
       var dir = $(this).parents('.dir').attr('data-directory');
       socket.emit('mpd', 'add', [dir], function(err, msg){
         if (err) { console.log(err); }
@@ -210,7 +214,7 @@ var initHandlers = function() {
       });
     });
 
-    $('#browse').on('click', '.load.button', function() {
+    $('main').on('click', '.browse-load', function() {
       var dir = $(this).parents('.dir').attr('data-directory');
       socket.emit('mpd', 'clear', [], function(err,msg) {
         socket.emit('mpd', 'add', [dir], function(err,msg){
@@ -227,21 +231,21 @@ var initHandlers = function() {
     
     //// search
     // enter on search field
-    $('#search').on('keyup', 'input.search-input', function(e) {
+    $('main').on('keyup', 'input.search-input', function(e) {
       if ( e.which === 13 ) {
         var searchString = $('#search').find('input.search-input').val();
         var searchType = $('#search').find('select.search-select').val();
-        renderSearch(searchString, searchType);
+        searchRequest(searchString, searchType);
       }
     });
     // change of search category select
-    $('#search').on('change', 'select', function() {
+    $('main').on('change', 'select.search-select', function() {
       var searchString = $('#search').find('input.search-input').val();
       var searchType = $('#search').find('select.search-select').val();
-      renderSearch(searchString, searchType);
+      searchRequest(searchString, searchType);
     });
     // click append
-    $('#search').on('click', '.append.button', function(){
+    $('main').on('click', '.search-append', function(){
       var dir = $(this).parents('.dir').attr('data-file');
       console.log(dir);
       socket.emit('mpd', 'add', [dir], function(err,msg){
@@ -251,7 +255,7 @@ var initHandlers = function() {
       });
     });
     // click advanced
-    $('#search').on('click','.advanced', function() {
+    $('main').on('click','.search-advanced', function() {
       if ($(this).find('i').hasClass('fa-angle-down')) {
         $(this).find('i').removeClass('fa-angle-down');
         $(this).find('i').addClass('fa-angle-up');
@@ -263,19 +267,23 @@ var initHandlers = function() {
       }
     });
     // click search artist
-    $('#search').on('click', '.search', function() {
+    $('main').on('click', '.search-artist', function() {
       var artist = $(this).parents('.dir').find('.attr.artist').text();
-      renderSearch(artist, 'Artist');
+      searchRequest(artist, 'Artist');
     });
     // click lookup
-    $('#search').on('click', '.lookup', function() {
+    $('main').on('click', '.search-lookup', function() {
       try {
         var directory = ($(this).parents('.dir').attr('data-file').split('/'));
         directory.pop();
         directory = directory.join('/');
         console.log(directory);
-        renderBrowse(directory);
+        browseRequest(directory);
       } catch (e) {}
+    });
+    // click add all from album
+    $('#search').on('click', '.search-add-from-album', function() {
+      
     });
 
   }();
@@ -287,49 +295,55 @@ var registerMpdInterface = function(status) {
   
   return function () {
 
-    $('#left').on('click', '#previous', function() {
+    // unbind all elements to prevent multiple assignment
+    $('#control-menu').off('click'); 
+    $('#player-options').off('click');
+
+    $('#control-menu').on('click', '#previous', function() {
       socket.emit('mpd', 'previous', [], function(err, msg) {
         if (err) { console.log(err); }
         else { console.log(msg); }
       });
     });
 
-    $('#left').on('click', '#next', function() {
+    $('#control-menu').on('click', '#next', function() {
       socket.emit('mpd', 'next', [], function(err, msg) {
         if (err) { console.log(err); }
         else { console.log(msg); }
       });
     });
 
-    $('#left').on('click', '#play', function() {
+    $('#control-menu').on('click', '#play', function() {
       socket.emit('mpd', 'play', [], function(err, msg) {
         if (err) { console.log(err); }
         else { console.log(msg); }
       });
     });
 
-    $('#left').on('click', '#pause', function() {
+    $('#control-menu').on('click', '#pause', function() {
       socket.emit('mpd', 'pause', [(status.state === 'pause' ? 0 : 1)], function(err, msg) {
         if (err) { console.log(err); }
         else { console.log(msg); }
       });
     });
 
-    $('#left').on('click', '#stop', function() {
+    $('#control-menu').on('click', '#stop', function() {
       socket.emit('mpd', 'stop', [], function(err, msg) {
         if (err) { console.log(err); }
         else { console.log(msg); }
       });
     });
 
-    $('#left').on('click', '#random', function() {
+
+    $('#player-options').on('click', '#random', function() {
       socket.emit('mpd', 'random', [1 - status.random], function(err, msg) {
+        console.log(status);
         if (err) { console.log(err); }
         else { console.log(msg); }
       });
     });
 
-    $('#left').on('click', '#repeat', function() {
+    $('#player-options').on('click', '#repeat', function() {
       socket.emit('mpd', 'repeat', [1 - status.repeat], function(err, msg) {
         if (err) { console.log(err); }
         else { console.log(msg); }
@@ -337,11 +351,12 @@ var registerMpdInterface = function(status) {
     });
 
     // indicate the status (play, stop or pause)
-    $('.control-menu').find('.button').removeClass('active');
-    $('.control-menu').find('#' + status.state).addClass('active');
+    $('#control-menu').find('.button').removeClass('active');
+    $('#control-menu').find('#' + status.state).addClass('active');
 
     status.random === '1' ? $('#random').addClass('active') : $('#random').removeClass('active');
     status.repeat === '1' ? $('#repeat').addClass('active') : $('#repeat').removeClass('active');
+
   }()
     
 };

@@ -9,7 +9,7 @@ var Aorta = function(callback) {
       console.log(err);
       a.song = undefined;
     }
-    else{ a.song = song; }
+    else { a.song = song; }
     socket.emit('mpd', 'status', [], function(err, status) {
       if (err) { 
         console.log(err);
@@ -29,7 +29,7 @@ Aorta.prototype.renderCurrentSong = function() {
   var status = this.status;
   
   // display the currently playing song
-  var currentsong = $('#left').find('.currentsong');
+  var currentsong = $('#currentsong');
   if (status.state === 'stop') {
     currentsong.text("");
   }
@@ -55,6 +55,17 @@ Aorta.prototype.highlightSongInQueue = function() {
   $('#queue').find('.song.' + song.Id).addClass('active');
   $('#queue').find('.song.' + song.Id).find('.attr.songpos').addClass('active');
 }
+Aorta.prototype.scrollToCurrentSong = function() {
+  if (this.song) {
+    var scrollable = $('#queue.scrollable');
+    var scrolltop = $('.song.' + this.song.Id).offset().top +
+        scrollable.scrollTop() -
+        scrollable.offset().top;
+    scrollable.animate({
+      scrollTop: scrolltop
+    }, 500);
+  }
+};
 Aorta.prototype.renderProgressBar = function() {
   var status = this.status;
   
@@ -97,7 +108,6 @@ var Queue = function(callback) {
     url:'/queue'
   }).success(function(html) {
     q.html = html;
-    console.log(q);
     callback({}, q);
   }).fail(function(err) {
     callback(err, {});
@@ -113,7 +123,8 @@ Queue.prototype.render = function() {
     // highlight current song in playlist
     new Aorta(function(a) {
       a.highlightSongInQueue();
-    });
+      a.scrollToCurrentSong();
+    }); 
 };
 
 //// Playlists

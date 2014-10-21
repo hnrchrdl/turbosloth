@@ -24,7 +24,7 @@ server.listen(config.appPort, config.appHost, function() {
 var io = require('./lib/sockets').listen(server);
 
 var routes = require('./routes/index').router;
-app.use('/', routes);
+
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -51,12 +51,13 @@ app.use(session({
   saveUninitialized: true
 }));
 
-// forward app config
-app.use({
-  config: function (req, res) {
-    return config;
-  }
+// forward app config to res
+app.use(function (req, res, next) {  
+    res.locals.config = config;
+    next();
 });
+
+app.use('/', routes);
 
 /// catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -64,6 +65,8 @@ app.use(function(req, res, next) {
   err.status = 404;
   next(err);
 });
+
+
 
 /// error handlers
 

@@ -36,7 +36,7 @@ function playerHasChanged(init) {
 function queueRequest() {
   var q = new Queue(function(err, queue) {
     if (queue) { queue.render(); }
-    else if (err) { console.log('queue err: ' + err); }
+    else if (err) { console.log(err); }
      
   });
 }
@@ -44,7 +44,7 @@ function queueRequest() {
 function playlistsRequest() {
   var p = new Playlists(function(err, playlists) {
     if (playlists) { playlists.render(); }
-    else if (err) {console.log(err); }
+    else if (err) { console.log(err); }
      
   });
 }

@@ -97,6 +97,13 @@ hr {
 	&.active {
 		color:	@primary;
 	}
+	&.disabled {
+		color: @darkGray;
+		&:hover {
+			background: none;
+			cursor: default;
+		}
+	}
 	-webkit-transition: background-color 0.5s, -webkit-transform 0.5s;
   transition: background-color 0.5s, transform 0.5s;
   &.text {

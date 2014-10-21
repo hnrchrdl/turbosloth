@@ -21,19 +21,20 @@ router.get('/', function(req, res) {
       komponist.authenticate(sessionID, password);
     }
     if (!komponistClientExists) {
+      console.log('registering komponist changes');
       komponist.registerChange(sessionID);
     }
-    
-    var stream = (req.session.streamport === "") ?  
-        req.session.streamurl : 
-        req.session.streamurl + ':' + req.session.streamport;
+
+    if (req.session.streamurl === "") {
+      req.session.streamurl = undefined;
+    }
 
     //render skeleton
     res.render('skeleton', {
       title: 'turbosloth',
       mpdhost: req.session.mpdhost,
       mpdport: req.session.mpdport,
-      stream: stream
+      stream: req.session.streamurl
     });
   }
 
@@ -48,7 +49,6 @@ router.post('/', function(req, res) {
   req.session.mpdport = req.body.mpdport || undefined;
   req.session.mpdpassword = req.body.mpdpassword || undefined;
   req.session.streamurl = req.body.streamurl || undefined;
-  req.session.streamport = req.body.streamport || undefined;
   res.redirect('/');
 });
 
@@ -56,6 +56,7 @@ router.post('/', function(req, res) {
 router.get('/queue', function(req, res) {
   var komponistClient = komponist.getClient(req.sessionID);
   komponistClient.playlistinfo(function(err, data) {
+    data = Object.keys(data[0]).length === 0 ? undefined : data;
     err ?
         res.render('queue',{queue:err, secondsToTimeString:secondsToTimeString}) :
         res.render('queue',{queue :data, secondsToTimeString:secondsToTimeString});
@@ -66,6 +67,7 @@ router.get('/queue', function(req, res) {
 router.get('/playlists', function(req, res) {
   var komponistClient = komponist.getClient(req.sessionID);
   komponistClient.listplaylists(function(err, data) {
+    data = Object.keys(data[0]).length === 0 ? undefined : data;
     err ?
         res.render('playlists', {playlists:err}) : 
         res.render('playlists', {playlists:data});

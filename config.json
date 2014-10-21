@@ -1,6 +1,6 @@
 {
   "production": {
-    "appEnv": "prod",
+    "appEnv": "production",
     "appHost": "localhost",
     "appPort": 3000,
     "redisPort": 6379,

@@ -2,9 +2,9 @@ head
   meta(charset='utf-8')
   meta(http-equiv='X-UA-Compatible', content='IE=edge')
   meta(name='viewport', content='width=device-width, initial-scale=1')
-  title= title
+  title= title || 'turbosloth'
   
-  if production
+  if config.appEnv === 'production'
     link(rel='stylesheet', href='/css/styles.css', type='text/css')
   else
     link(rel='stylesheet/less', type='text/css', href='/src/less/styles.less')
@@ -14,7 +14,6 @@ head
   //link(rel='stylesheet' href=#{protocol} + '://fonts.googleapis.com/css?family=Open+Sans:400,300,700' type='text/css')
   link(rel='stylesheet' href='https://fonts.googleapis.com/css?family=Quicksand:300' type='text/css')
   link(rel='stylesheet' href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,700' type='text/css')
+  //link(rel="stylesheet", href="https://fonts.googleapis.com/css?family=Montserrat")
 
-  //link(rel='stylesheet', href='/stylesheets/style.css')
   //link(rel='stylesheet', href="/bootstrap-3.2.0-dist/css/bootstrap.css")
-  //link(rel="stylesheet", href="http://fonts.googleapis.com/css?family=Montserrat")

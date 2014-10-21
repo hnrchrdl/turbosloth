@@ -1,51 +1,64 @@
 #queue-container
   .nav-main
     .button-wrapper.left
-      .button.text.refresh(title="refresh queue")
+      .button.text.queue-refresh(title="refresh queue")
         i.fa.fa-refresh
     .button-wrapper.right
-      .shuffle.button.text(title="shuffle queue")
+      .button.text.queue-shuffle(title="shuffle queue")
         i.fa.fa-random
-      .clear.button.text(title="clear queue")
+      .button.text.queue-clear(title="clear queue")
         i.fa.fa-eraser
   hr
   #queue.scrollable
-    - each song in queue
-      .song(class= song.Id, data-id= song.Id, data-file= song.file)
-        .attr.songpos= song.Pos
-        .attr.space
-        if song.Artist
-          .attr.artist=song.Artist
-          .attr.space
-        span.muted
-          if song.Track
-            .attr=song.Track
+    if !queue
+      .song.muted playlist empty
+    else
+      - each song in queue
+        .song(class= song.Id, data-id= song.Id, data-file= song.file)
+          span.muted
+            .attr.songpos= song.Pos
             .attr.space
+          if song.Artist
+            .attr.artist=song.Artist
+            span.muted
+              .attr.space
+          else
+            .attr.Artist= song.file
+            span.muted
+              .attr.space
           if song.Album
-            .attr.album=song.Album
-            if song.Date
-              |  (#{song.Date})
-          .attr.space
-        .attr.title #{song.Title || 'unknown'}
-        .attr.space
-        span.muted
+            span.muted
+              .attr.album=song.Album
+          if song.Date
+            span.muted
+              .attr= '(' + song.Date + ')'
+          if song.Track
+            span.muted
+              .attr=song.Track
+              .attr.space
+          
+          if song.Title
+            .attr.title= song.Title || 'unknown'
+            span.muted
+              .attr.space
           if song.Genre
-            .attr.genre #{song.Genre}
-            .attr.space
+            span.muted
+              .attr.genre #{song.Genre}
+              .attr.space
           if song.Time
             - var time = secondsToTimeString(song.Time)
-            .attr.time #{time}
-        .button-wrapper.right
-          .button.play(title="play song")
-            i.fa.fa-play
-          .button.advanced(title="more options")
-            i.fa.fa-angle-down
-        .clear
-        .button-wrapper.right
-          .button.lookup.text
-            i.fa.fa-folder-o  look up in database
-          .button.search.text
-            i.fa.fa-search   search for artist
-          .button.remove.text
-            i.fa.fa-remove  remove from queue
-        
+            span.muted
+              .attr.time= time
+          .button-wrapper.right
+            .button.queue-play(title="play song")
+              i.fa.fa-play
+            .button.queue-advanced(title="more options")
+              i.fa.fa-angle-down
+          .clear
+          .button-wrapper.right
+            .button.text.queue-lookup
+              i.fa.fa-folder-o  go to folder
+            .button.text.queue-search
+              i.fa.fa-search   search for artist
+            .button.text.queue-remove
+              i.fa.fa-remove  remove from queue
