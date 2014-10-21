@@ -88,6 +88,13 @@ hr {
 .button.active {
   color: #14b874;
 }
+.button.disabled {
+  color: #666666;
+}
+.button.disabled:hover {
+  background: none;
+  cursor: default;
+}
 .button.text {
   padding-left: 15px;
   padding-right: 15px;
@@ -194,12 +201,12 @@ header h1 {
   left: 30px;
   width: 200px;
 }
-.control-menu {
+#control-menu {
   position: absolute;
   bottom: 10px;
   left: 25px;
 }
-.currentsong-wrapper {
+#currentsong-wrapper {
   position: absolute;
   bottom: 255px;
   left: 0;
@@ -209,7 +216,7 @@ header h1 {
   border-left: 1px solid rgba(255, 255, 255, 0.2);
   overflow-y: hidden;
 }
-.albumart {
+#albumart {
   position: absolute;
   bottom: 40px;
   height: 200px;
@@ -249,28 +256,28 @@ main {
 .nav-main {
   height: 30px;
 }
-#playlist .song {
+#queue .song {
   height: 30px;
   overflow: hidden;
   line-height: 30px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 }
-#playlist .song .attr {
+#queue .song .attr {
   display: inline-block;
   margin-left: 15px;
 }
-#playlist .song .attr.space {
+#queue .song .attr.space {
   height: 15px;
   margin-top: 7.5px;
   border-right: 1px solid rgba(255, 255, 255, 0.2);
 }
-#playlist .song .attr.songpos.active {
+#queue .song .attr.songpos.active {
   color: #14b874;
 }
-#playlist .song.active {
+#queue .song.active {
   border-bottom: 1px solid #14b874;
 }
-#playlist.scrollable {
+#queue.scrollable {
   overflow-y: scroll;
 }
 ::-webkit-scrollbar {
@@ -280,29 +287,29 @@ main {
 ::-webkit-scrollbar-thumb {
   background-color: rgba(255, 255, 255, 0.5);
 }
-#manageplaylist input {
+#playlists input {
   width: 30%;
   margin: 15px 15px 15px 0;
 }
-#manageplaylist i.fa-save {
+#playlists i.fa-save {
   position: relative;
   left: -40px;
 }
-#manageplaylist .playlist {
+#playlists .playlist {
   height: 30px;
   line-height: 30px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 }
-#manageplaylist .playlist .attr {
+#playlists .playlist .attr {
   display: inline-block;
   margin-left: 15px;
 }
-#manageplaylist .playlist .attr.space {
+#playlists .playlist .attr.space {
   height: 15px;
   margin-top: 7.5px;
   border-right: 1px solid rgba(255, 255, 255, 0.2);
 }
-#manageplaylist .scrollable {
+#playlists .scrollable {
   overflow-y: scroll;
 }
 #browse .dir-info {
