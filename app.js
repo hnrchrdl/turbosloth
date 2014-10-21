@@ -1,15 +1,14 @@
-//app = require('express.io')()
-var express = require('express'),
-  app = express(),
-  http = require('http'),
-  path = require('path'),
-  favicon = require('static-favicon'),
-  logger = require('morgan'),
-  cookieParser = require('cookie-parser'),
-  bodyParser = require('body-parser'),
-  session = require('express-session'),
-  redis = require('redis'),
-  server = http.createServer(app);
+var express = require('express')
+  , app = express()
+  , http = require('http')
+  , path = require('path')
+  , favicon = require('static-favicon')
+  , logger = require('morgan')
+  , cookieParser = require('cookie-parser')
+  , bodyParser = require('body-parser')
+  , session = require('express-session')
+  , redis = require('redis')
+  , server = http.createServer(app);
 
 var config = require('./config.json')[app.get('env')];
 module.exports.config = config;
@@ -22,9 +21,8 @@ server.listen(config.appPort, config.appHost, function() {
   console.log('listening on ' + config.appHost + ': ' + config.appPort);
 });
 
-
-
 var io = require('./lib/sockets').listen(server);
+
 var routes = require('./routes/index').router;
 app.use('/', routes);
 
@@ -52,6 +50,13 @@ app.use(session({
   resave: true,
   saveUninitialized: true
 }));
+
+// forward app config
+app.use({
+  config: function (req, res) {
+    return config;
+  }
+});
 
 /// catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -85,7 +90,5 @@ else {
     });
   });
 }
-
-
 
 module.exports.app = app;
