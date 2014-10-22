@@ -16,9 +16,7 @@ var Aorta = function(callback) {
         a.status = undefined;
       }
       else { a.status = status; }
-      
       registerMpdInterface(a.status);
-
       callback(a);
     });
   });
@@ -30,13 +28,11 @@ Aorta.prototype.renderCurrentSong = function() {
   
   // display the currently playing song
   var currentsong = $('#currentsong');
-  if (status.state === 'stop') {
-    currentsong.text("");
-  }
+  if (status.state === 'stop') { currentsong.text(""); }
   else {
-    currentsong.html(song.Artist+ '<br>' + 
-        song.Title + '<br>' + '<span class="muted">' + 
-        song.Album + '</span>');
+    currentsong.html(song.Artist + '<br>' + 
+        song.Title + '<br>' + 
+        '<span class="muted">' + song.Album + '</span>');
   }
   
   // fetch album cover
@@ -46,15 +42,14 @@ Aorta.prototype.renderCurrentSong = function() {
 
   this.highlightSongInQueue();
   this.renderProgressBar();
-}
+};
 Aorta.prototype.highlightSongInQueue = function() {
   var song = this.song;
-  
   $('#queue').find('.song').removeClass('active');
   $('#queue').find('.song').find('.attr.songpos').removeClass('active');
   $('#queue').find('.song.' + song.Id).addClass('active');
   $('#queue').find('.song.' + song.Id).find('.attr.songpos').addClass('active');
-}
+};
 Aorta.prototype.scrollToCurrentSong = function() {
   if (this.song) {
     var scrollable = $('#queue.scrollable');
@@ -68,7 +63,6 @@ Aorta.prototype.scrollToCurrentSong = function() {
 };
 Aorta.prototype.renderProgressBar = function() {
   var status = this.status;
-  
   var progressBar = $('#seek-bar');
   // start
   var start = function startProgressbar (songTime,elapsed) {
@@ -83,7 +77,6 @@ Aorta.prototype.renderProgressBar = function() {
   var stop = function stopProgressBar () {
     progressBar.stop();
   };
-
   switch (status.state) {
     case 'play':
       var songTime = parseFloat(status.time.split(":")[1]);
@@ -97,7 +90,7 @@ Aorta.prototype.renderProgressBar = function() {
       stop();
       progressBar.css('width',0);
   }
-}
+};
 
 //// Queue
 // Constructor
@@ -109,17 +102,18 @@ var Queue = function(callback) {
   }).success(function(html) {
     q.html = html;
     callback({}, q);
-  }).fail(function(err) {
+  }).fail(function(jqXHR, err) {
     callback(err, {});
+  }).always(function() {
+    $('nav').find('.loading.queue').hide();
   });
-}
+};
 // Prototypes
 Queue.prototype.render = function() {
     $('nav').find('.button').removeClass('active');
     $('nav').find('.button.queue').addClass('active');
     $('main').html(this.html);
     fixScrollHeight();
-    $('nav').find('.loading.queue').hide();
     // highlight current song in playlist
     new Aorta(function(a) {
       a.highlightSongInQueue();
@@ -134,22 +128,23 @@ var Playlists = function(callback) {
   $('nav').find('.loading.playlists').show();
   $.ajax({
     url: '/playlists'
-  }).success(function(html){
+  }).done(function(html){
     p.html = html;
     callback({}, p);
-  }).fail(function(err){ 
+  }).fail(function(jqXHR, err){ 
     console.log(err);
     callback(err, {});
+  }).always(function() {
+    $('nav').find('.loading.playlists').hide();
   });
-}
+};
 // Prototypes
 Playlists.prototype.render = function() {
   $('nav').find('.button').removeClass('active');
   $('nav').find('.button.playlists').addClass('active');
   $('main').html(this.html);
   fixScrollHeight();
-  $('nav').find('.loading.playlists').hide();
-}
+};
 
 //// Browse
 // Constructor
@@ -161,18 +156,19 @@ var Browse = function(folder, callback) {
   }).success(function(html) {
     b.html = html;
     callback({}, b);  
-  }).fail(function(err) {
+  }).fail(function(jqXHR, err) {
     callback(err, {});
+  }).always(function() {
+    $('nav').find('.loading.browse').hide();
   });
-}
+};
 // Prototypes
 Browse.prototype.render = function(html) {
   $('nav').find('.button').removeClass('active');
   $('nav').find('.button.browse').addClass('active');
   $('main').html(this.html);
   fixScrollHeight();
-  $('nav').find('.loading.browse').hide();
-}
+};
 
 //// Search
 // Constructor
@@ -184,15 +180,16 @@ var Search = function(searchString, searchType, callback) {
   }).success(function(html) {
     s.html = html;
     callback({}, s);  
-  }).fail(function(err) {
+  }).fail(function(jqXHR, err) {
     callback(err, {});
+  }).always(function() {
+    $('nav').find('.loading.search').hide();
   });
-}
+};
 // Prototypes
 Search.prototype.render = function(html) {
   $('nav').find('.button').removeClass('active');
   $('nav').find('.button.search').addClass('active');
   $('main').html(this.html);
   fixScrollHeight();
-  $('nav').find('.loading.search').hide();
-}
+};
