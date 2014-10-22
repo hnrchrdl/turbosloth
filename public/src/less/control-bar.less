@@ -7,20 +7,23 @@
 }
 
 #control-menu {
-	position: 	absolute;
+	position: 		absolute;
 	bottom: 		@seekBarContainerHeight;
-	left: 			(@leftWidth - @buttonHeight * 5) / 2;
+	.button {
+		width:		@leftWifth / 5;
+		font-size:	@biggerFont;
+	}
 }
 
 #currentsong-wrapper {
 	position:		absolute;
 	bottom: 		@seekBarContainerHeight + @buttonHeight + @leftWidth + @medium;
-	left: 		0;
-	padding-left: 	@medium;
-	padding-top:	@medium;
-	height: 		@controlBarHeight - @medium * 3;
-	border-left: 	@extraLightBorder;
-	overflow-y:	hidden;
+	left: 			0;
+	padding-left: 		@medium;
+	padding-top:		@medium;
+	main-height: 		@controlBarHeight - @medium * 3;
+	border-left: 		@extraLightBorder;
+	//overflow-y:		hidden;
 }
 
 #albumart {
@@ -34,22 +37,20 @@
 #seek-bar-container {
 	position: absolute;
 	bottom: 			0;
-	width:				198px;
-	//height: 		@seekBarContainerHeight;
+	width:				@leftWidth -2;
 	cursor: 			pointer;
 	border:				@extraLightBorder;
-	//border-bottom:		@extraLightBorder;
-	&:hover {
-		//border-top: 1px solid @transparentWhite;
-		border: 1px solid @transparentWhite;
-	}
-	-webkit-transition: border 0.5s, -webkit-transform 0.5s;
-    transition: border 0.5s, transform 0.5s;
+	
 	#seek-bar {
 		height: @seekBarContainerHeight - 2;
 		width: 0%;
 		background-color: @transparentWhite2;
-		//background-color: @primary;
-
 	}
+	
+	&:hover {
+		border: 1px solid @transparentWhite;
+	}
+	
+	-webkit-transition: border 0.5s, -webkit-transform 0.5s;
+    	transition: border 0.5s, transform 0.5s;
 }
