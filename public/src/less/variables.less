@@ -1,35 +1,37 @@
 //// Variables
 
 /// paths
-@images: 		"img";
+@images: 		    "img";
 
 
 
 /// fonts
-@fontsize:    11px;
-@bigger:      16px;
-@lightGray:	 	  hsl(0,0%,55%);
-@darkGray: 		  hsl(0,0%,40%);
-@almostWhite: 	hsl(0,0%,80%);
-@almostBlack: 	hsl(0,0%,15%);
+@fontsize:          11px;
+@bigger:            16px;
+@lightGray:	 	    hsl(0,0%,55%);
+@darkGray: 		    hsl(0,0%,40%);
+@almostWhite:   	hsl(0,0%,80%);
+@almostBlack: 	    hsl(0,0%,15%);
 
 /// backgrounds
-@transparentWhite: 	hsla(0,0%,100%,0.5);
-@transparentWhite2: hsla(0,0%,100%,0.2);
-@transparentGray: 	hsla(0,0%,10%,0.6);
-@hoverBackground: 	hsla(0,0%,95%,0.1);
-@background:        hsl(240,20%,7%);
+@transparentWhite: 	    hsla(0,0%,100%,0.5);
+@transparentWhite2:     hsla(0,0%,100%,0.2);
+@transparentGray: 	    hsla(0,0%,10%,0.6);
+@hoverBackground: 	    hsla(0,0%,95%,0.1);
+@background:            hsl(210, 29%, 24%); //wet asphalt
+//@background:          hsl(192, 15%, 94%); //clouds
+//@background:          hsl(184, 9%, 62%); //concrete
 
 /// border
-@lightBorder: 		  1px solid @transparentWhite; 
-@extraLightBorder: 	1px solid @transparentWhite2; 
+@lightBorder: 		    1px solid @transparentWhite; 
+@extraLightBorder: 	    1px solid @transparentWhite2; 
 
 /// colors
-//@primary:        	hsl(160, 100%, 50%);
-@primary:         hsl(155, 80%, 40%);
-//@primary:         hsl(190, 100%, 50%);
-//@primary:        	hsl(160, 90%, 45%);
-//@primary:        	  hsl(200, 90%, 45%);
+//colors inspired by http://flatuicolors.com/
+@primary:       hsl(168, 76%, 42%); //turquoise 
+//@primary:     hsl(6, 78%, 57%); //alizarin
+//@primary:     hsl(168, 76%, 36%); //green sea
+
 
  
 // Primary Variants -
@@ -51,16 +53,16 @@
 @cornerFaded:    	hsl(hue(@corner), 60%, 65%);
 
 // heights, margins and paddings
-@headerHeight: 				    60px;
-@controlBarHeight: 			  100px;
-@seekBarContainerHeight: 	10px;
-@leftWidth:               200px;
-@buttonHeight: 				    30px;
-@seekBarHContainerHeight:	@medium;
-@navHeight:					      @buttonHeight;
-@songHeight:					    50px;
-@inputLong:               300px;
-@inputShort:              50px;
-@long:                    30px;
-@short: 					        @long / 6;
-@medium:					        @long / 2;
+@headerHeight:              60px;
+@controlBarHeight:          100px;
+@seekBarContainerHeight:    10px;
+@leftWidth:                 200px;
+@buttonHeight:              30px;
+@seekBarHContainerHeight:   @medium;
+@navHeight:                 @buttonHeight;
+@songHeight:                50px;
+@inputLong:                 300px;
+@inputShort:                50px;
+@long:                      30px;
+@short: 					@long / 6;
+@medium:					@long / 2;
