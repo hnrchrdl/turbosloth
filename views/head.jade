@@ -4,11 +4,11 @@ head
   meta(name='viewport', content='width=device-width, initial-scale=1')
   title= title || 'turbosloth'
   
-  if config.appEnv === 'production'
+  if config['appEnv'] === 'production'
     link(rel='stylesheet', href='/css/styles.css', type='text/css')
   else
     link(rel='stylesheet/less', type='text/css', href='/src/less/styles.less')
-  
+
   link(href='//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css' rel='stylesheet')
   //link(rel='stylesheet' href=#{protocol} + '://fonts.googleapis.com/css?family=Quicksand:300' type='text/css')
   //link(rel='stylesheet' href=#{protocol} + '://fonts.googleapis.com/css?family=Open+Sans:400,300,700' type='text/css')

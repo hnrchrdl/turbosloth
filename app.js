@@ -12,6 +12,7 @@ var express = require('express')
 
 var config = require('./config.json')[app.get('env')];
 module.exports.config = config;
+console.log(config);
 //app.use(express.errorHandler(config.errorHandlerOptions));
 
 redisClient = redis.createClient(config.redisPort, config.redisHost);

@@ -21,36 +21,42 @@ html(lang='en')
         #submenu
           .button-wrapper
             #info.button.text
-              i.fa.fa-info  Info
+              i.fa.fa-info
+              |  Info
             #settings.button.text
-              i.fa.fa-cog  Settings
+              i.fa.fa-cog
+              |  Settings
             #logout.button.text
-              i.fa.fa-sign-out  Logout
-        #connection-info connected to #{mpdhost}:#{mpdport}
+              i.fa.fa-sign-out
+              |  Logout
         
       #left
         nav
           .button-wrapper.left
             .button.text.queue.active
-              i.fa.fa-list  Queue
+              i.fa.fa-list
+              |  Queue
           .loading.queue.right
               i.fa.fa-spinner.fa-spin
           .clear
           .button-wrapper.left
             .button.text.playlists 
-               i.fa.fa-file-audio-o  Playlists
+              i.fa.fa-file-audio-o
+              |  Playlists
           .loading.playlists.right
               i.fa.fa-spinner.fa-spin 
           .clear
           .button-wrapper.left
             .button.text.browse
-              i.fa.fa-folder-o  Browse
+              i.fa.fa-folder-o
+              |  Browse
           .loading.browse.right
               i.fa.fa-spinner.fa-spin
           .clear
           .button-wrapper.left
             .button.text.search
-              i.fa.fa-search  Search
+              i.fa.fa-search
+              |  Search
           .loading.search.right
               i.fa.fa-spinner.fa-spin
         .clear
@@ -95,6 +101,8 @@ html(lang='en')
       main
         block content
 
+    #connection-info 
+      | turbosloth v.0.1 | connected to #{mpdhost}:#{mpdport}
     audio(src= stream)
 
     include ./scripts.jade

@@ -1,28 +1,54 @@
 main {
-  // background patterns are taken from subtlepatterns.com. thank you!
-  //background:   url("@{images}/congruent_outline.png");
-  //background:   url("@{images}/classy_fabric.png");
-  //background:   url("@{images}/grey_wash_wall.png");
-  //background:   url("@{images}/assault.png");
-  //background:   url("@{images}/binding_dark.png");
-  //background:   url("@{images}/black_lozenge.png");
-  //background:   url("@{images}/noisy_net.png");
-  //background:   url("@{images}/stardust.png");
-  //background:   url("@{images}/stressed_linen.png");
-  //background:   url("@{images}/subtle_carbon.png");
-  //background:   url("@{images}/twinkle_twinkle.png");
-  //background:   url("@{images}/zwartevilt.png");
-  //background-color: hsla(0,0%,0%,20%);
-	.Container;
-	//top: 				@headerHeight + @controlBarHeight + @seekBarContainerHeight + @navHeight + @long;
-	top:          @headerHeight;
-  bottom: 		  @long;
-	//background-color: @transparentGray;
-  //padding:      @medium;
-  padding-top:  0;
-  margin-left:  @leftWidth + 20px;
+  position:         absolute;
+  top:              @headerHeight + @medium;
+  bottom:           @long;
+  left:             @leftWidth + (@long * 2);
+  right:            @long;
+
+	.song, .dir, .playlist {
+  	height: 	      @buttonHeight;
+  	overflow: 	    hidden;
+  	line-height: 	  @buttonHeight;
+  	border-bottom: 	1px solid @concrete;
+	
+  	.attr {
+  		display: 	inline-block;
+  		margin-left: 	@medium;
+  		
+  		&.space {
+  			height: 	@short;
+  			margin-top: 	(@buttonHeight / 2) - (@short / 2) -2;
+  			border-right: 	1px solid @concrete;
+  		}
+        		
+  		&.songpos.active {
+  			color: @primary;
+  		}
+  		
+  	}
+  	
+  	&.active {
+  		//border-bottom: 1px solid @primary;
+  		border-bottom: 1px solid @muted;
+  		//background-color: @hoverBackground;
+  	}
+  }
+  
 }
+.scrollable {
+      overflow-y: scroll; 
+}
+
 .nav-main {
 	height: @buttonHeight;
 	//border-bottom: @lightBorder;
 }
+
+::-webkit-scrollbar {
+	width:	@short;
+	background-color: @clouds;
+}
+::-webkit-scrollbar-thumb {
+	background-color: @concrete;
+}
+

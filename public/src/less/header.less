@@ -1,22 +1,25 @@
 header {
-	.Container;
-	.Header;
+	position:		absolute;
+	left: 			0px;
+	right: 			0px;
+	top: 			0px;
+	padding-left:	@long;
+	padding-right: @long;
+	height:			@headerHeight;
+	border-bottom: 1px solid @concrete;
+	background-color: 	@clouds;
+
 	h1 {
+		color: 		@concrete; 
 		float: left;
 		line-height: @headerHeight;
 		font-family: 'Quicksand', Helvetica, sans-serif;
 		font-weight: 300;
 		font-size: 40px;
 	}
-}
-#submenu {
-	float: 		right;
-	margin-top: @short;
-}
-#connection-info {
-	position: 	absolute;
-	bottom: 	@medium;
-	right: 		0;
-	color: 		@darkGray;
 
+	#submenu {
+		float: 		right;
+		margin-top: 	(@headerHeight - @buttonHeight) / 2;
+	}
 }
