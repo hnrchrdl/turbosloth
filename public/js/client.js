@@ -48,6 +48,7 @@ function playlistsRequest() {
      
   });
 }
+
 function browseRequest(folder) {
   var b = new Browse(folder, function(err, browse) {
     if (browse) { browse.render(); }
@@ -55,6 +56,7 @@ function browseRequest(folder) {
      
   });
 }
+
 function searchRequest(searchString, searchType) {
   if (searchString === "" || searchString === " " ) {
     searchString = "#";
