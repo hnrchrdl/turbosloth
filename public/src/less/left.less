@@ -1,17 +1,17 @@
 #left {
-	position: 	absolute;
-	top: 		@headerHeight;
-	bottom: 	@long;
-	left: 		@long;
-	width: 		@leftWidth;
+	position: 		absolute;
+	top: 			@headerHeight;
+	bottom: 		@long;
+	left: 			@long;
+	width: 			@leftWidth;
 }
 
 #control-menu {
 	position: 		absolute;
 	bottom: 		@seekBarContainerHeight;
 	.button {
-		width:		@leftWifth / 5;
-		font-size:	@biggerFont;
+		width:			@leftWifth / 5;
+		font-size:		@bigger;
 	}
 }
 
@@ -36,10 +36,10 @@
 
 #seek-bar-container {
 	position: absolute;
-	bottom: 			0;
-	width:				@leftWidth -2;
-	cursor: 			pointer;
-	border:				@extraLightBorder;
+	bottom: 		0;
+	width:			@leftWidth -2;
+	cursor: 		pointer;
+	border:			@extraLightBorder;
 	
 	#seek-bar {
 		height	 		@seekBarContainerHeight - 2;
@@ -48,7 +48,7 @@
 	}
 	
 	&:hover {
-		border: 	1px solid @transparentWhite;
+		border: 		1px solid @transparentWhite;
 	}
 	
 	-webkit-transition: 	border 0.5s, -webkit-transform 0.5s;
