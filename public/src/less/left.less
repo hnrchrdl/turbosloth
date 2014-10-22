@@ -1,6 +1,6 @@
 #left {
-	position: 		absolute;
-	top: 			@headerHeight;
+	position: 	absolute;
+	top: 				@headerHeight + @medium;
 	bottom: 		@long;
 	left: 			@long;
 	width: 			@leftWidth;
@@ -8,10 +8,10 @@
 
 #control-menu {
 	position: 		absolute;
-	bottom: 		@seekBarContainerHeight;
+	bottom: 			@seekBarContainerHeight;
 	.button {
-		width:			@leftWifth / 5;
-		font-size:		@bigger;
+	width:				@leftWidth / 5;
+	//font-size:		@bigger;
 	}
 }
 
@@ -19,38 +19,33 @@
 	position:		absolute;
 	bottom: 		@seekBarContainerHeight + @buttonHeight + @leftWidth + @medium;
 	left: 			0;
-	padding-left: 		@medium;
+	padding-left: 	@medium;
 	padding-top:		@medium;
-	main-height: 		@controlBarHeight - @medium * 3;
+	min-height: 		@controlBarHeight - @medium * 3;
 	border-left: 		@extraLightBorder;
 	//overflow-y:		hidden;
 }
 
 #albumart {
-	position: 		absolute;
-	bottom: 		@seekBarContainerHeight + @buttonHeight;
-	height: 		@leftWidth;
-	width: 			@leftWidth;
-	background-color: 	@primary;
+	position: 				absolute;
+	bottom: 					@seekBarContainerHeight + @buttonHeight;
+	height: 					@leftWidth;
+	width: 						@leftWidth;
+	background-color: @primary;
 }
 
 #seek-bar-container {
-	position: absolute;
+	position: 	absolute;
 	bottom: 		0;
-	width:			@leftWidth -2;
+	//height:			@seekBarContainerHeight;
+	width:			@leftWidth - 2;
 	cursor: 		pointer;
-	border:			@extraLightBorder;
+	border-left:			1px solid @muted;
+	border-right:			1px solid @muted;
 	
 	#seek-bar {
-		height	 		@seekBarContainerHeight - 2;
-		width: 			0%;
-		background-color: 	@transparentWhite2;
+		height:	 						@seekBarContainerHeight - 2;
+		width: 							0%;
+		background-color: 	@primary;
 	}
-	
-	&:hover {
-		border: 		1px solid @transparentWhite;
-	}
-	
-	-webkit-transition: 	border 0.5s, -webkit-transform 0.5s;
-    	transition: border 0.5s, transform 0.5s;
 }

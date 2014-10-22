@@ -3,9 +3,9 @@ html,body,#background-wrapper {
 	width: 			100%;
 	padding: 		0;
 	margin: 		0;
-	color:			@almostWhite;
-	font-family: 		'consolas', sans-serif;
-	font-weight:		300;
+	font-family: 		'Open Sans', sans-serif;
+	font-weight:		400;
+	color:				@fontPrimary;
 	font-size: 		@fontSize;
 }
 
@@ -31,17 +31,16 @@ body {
 	background-color: 	@background;
 }
 
+#connection-info {
+		position: absolute;
+		bottom: 	@short;
+		right: 		@long;
+		color: 		@concrete;
+}
+
 h1 {
 	margin: 0;
 	padding: 0;
-}
-
-a {
-	color: @primary;
-	text-decoration: 	none;
-	&:hover {
-		color: 				@primaryDark;
-	}
 }
 
 hr {
@@ -57,7 +56,7 @@ hr {
 }
 
 .muted {
-	color: @darkGray;
+	color: @muted;
 }
 
 .button-wrapper {
@@ -84,26 +83,28 @@ hr {
 	}
 }
 
+a {
+	color: @primary;
+}
+
 .button {
 	height: 		buttonHeight;
 	min-width:  @buttonHeight;
 	cursor: 		pointer;
 	display: 		inline-block;
 	&:hover {
-		background-color: @hoverBackground;
+		color: 		@primary;
 	}
 	&.active {
 		color:	@primary;
 	}
 	&.disabled {
-		color: @darkGray;
+		color: @muted;
 		&:hover {
 			background: none;
 			cursor: default;
 		}
 	}
-	-webkit-transition: background-color 0.5s, -webkit-transform 0.5s;
-  transition: background-color 0.5s, transform 0.5s;
   &.text {
   	padding-left: @medium;
    	padding-right: @medium; 
@@ -114,8 +115,8 @@ input, select {
 	display: 					inline-block;
 	//background-color: @transparentGray;
 	background-color: @background;
-	color: 						@almostWhite;
-	border: 					1px solid @hoverBackground;
+	color: 						@fontPrimary;
+	border: 					1px solid @muted;
 	height: 					@long;
 	padding: 					0 @medium;
 	margin-bottom: 		@short;
@@ -125,16 +126,16 @@ input, select {
 }
 
 ::-webkit-input-placeholder {
-   color: @darkGray;
+   color: @muted;
 }
 :-moz-placeholder { /* Firefox 18- */
-   color: @darkGray;  
+   color: @muted;  
 }
 ::-moz-placeholder {  /* Firefox 19+ */
-   color: @darkGray;  
+   color: @muted;  
 }
 :-ms-input-placeholder {  
-   color: @darkGray;  
+   color: @muted;  
 }
 
 

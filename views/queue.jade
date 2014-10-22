@@ -1,4 +1,4 @@
-#queue-container
+#queue
   .nav-main
     .button-wrapper.left
       .button.text.queue-refresh(title="refresh queue")
@@ -9,7 +9,7 @@
       .button.text.queue-clear(title="clear queue")
         i.fa.fa-eraser
   hr
-  #queue.scrollable
+  .scrollable
     if !queue
       .song.muted playlist empty
     else
@@ -57,8 +57,11 @@
           .clear
           .button-wrapper.right
             .button.text.queue-lookup
-              i.fa.fa-folder-o  go to folder
+              i.fa.fa-folder-o
+              |  go to folder
             .button.text.queue-search
-              i.fa.fa-search   search for artist
+              i.fa.fa-search
+              |  search for artist
             .button.text.queue-remove
-              i.fa.fa-remove  remove from queue
+              i.fa.fa-remove
+              |  remove from queue
