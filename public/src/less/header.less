@@ -1,14 +1,16 @@
 header {
 	position:		absolute;
-	left: 			@long;
-	right: 			@long;
+	left: 			0px;
+	right: 			0px;
 	top: 			0px;
+	padding-left:	@long;
+	padding-right: @long;
 	height:			@headerHeight;
-	border-bottom: 		@extraLightBorder;
-	background-color: 	@headerBackground;
+	border-bottom: 1px solid @concrete;
+	background-color: 	@clouds;
 
 	h1 {
-		color: 	@almostWhite;
+		color: 		@concrete; 
 		float: left;
 		line-height: @headerHeight;
 		font-family: 'Quicksand', Helvetica, sans-serif;
@@ -18,14 +20,6 @@ header {
 
 	#submenu {
 		float: 		right;
-		margin-top: 	@short;
+		margin-top: 	(@headerHeight - @buttonHeight) / 2;
 	}
-	
-	#connection-info {
-		position: 	absolute;
-		bottom: 	@medium;
-		right: 		0;
-		color: 		@darkGray;
-	}
-
 }

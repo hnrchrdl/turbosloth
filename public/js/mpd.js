@@ -52,7 +52,7 @@ Aorta.prototype.highlightSongInQueue = function() {
 };
 Aorta.prototype.scrollToCurrentSong = function() {
   if (this.song) {
-    var scrollable = $('#queue.scrollable');
+    var scrollable = $('#queue').find('.scrollable');
     var scrolltop = $('.song.' + this.song.Id).offset().top +
         scrollable.scrollTop() -
         scrollable.offset().top;

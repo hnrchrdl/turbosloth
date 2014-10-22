@@ -1,42 +1,42 @@
 main {
-	position:		absolute;
-	top:          		@headerHeight;
-  	bottom: 		@long;
-  	margin-left:  		@leftWidth + @long;
-  	
-  	.song, dir, playlist {
-		height: 	@buttonHeight;
-		overflow: 	hidden;
-		line-height: 	@buttonHeight;
-		border-bottom: 	@extraLightBorder;
-		
-		.attr {
-			display: 	inline-block;
-			margin-left: 	@medium;
-			
-			&.space {
-				height: 	@medium;
-				margin-top: 	@buttonHeight / 2 - @medium / 2;
-				border-right: 	@extraLightBorder;
-			}
-			
-			&.songpos.active {
-				color: @primary;
-			}
-			
-		}
-		
-		&.active {
-			//border-bottom: 1px solid @primary;
-			border-bottom: 1px solid @primary;
-			//background-color: @hoverBackground;
-		}
-		
-	}
+  position:         absolute;
+  top:              @headerHeight + @medium;
+  bottom:           @long;
+  left:             @leftWidth + (@long * 2);
+  right:            @long;
+
+	.song, .dir, .playlist {
+  	height: 	      @buttonHeight;
+  	overflow: 	    hidden;
+  	line-height: 	  @buttonHeight;
+  	border-bottom: 	1px solid @concrete;
 	
-	&.scrollable {
-		overflow: scroll;		
-	}
+  	.attr {
+  		display: 	inline-block;
+  		margin-left: 	@medium;
+  		
+  		&.space {
+  			height: 	@short;
+  			margin-top: 	(@buttonHeight / 2) - (@short / 2) -2;
+  			border-right: 	1px solid @concrete;
+  		}
+        		
+  		&.songpos.active {
+  			color: @primary;
+  		}
+  		
+  	}
+  	
+  	&.active {
+  		//border-bottom: 1px solid @primary;
+  		border-bottom: 1px solid @muted;
+  		//background-color: @hoverBackground;
+  	}
+  }
+  
+}
+.scrollable {
+      overflow-y: scroll; 
 }
 
 .nav-main {
@@ -46,9 +46,9 @@ main {
 
 ::-webkit-scrollbar {
 	width:	@short;
-	background-color: @transparentWhite2;
+	background-color: @clouds;
 }
 ::-webkit-scrollbar-thumb {
-	background-color: @transparentWhite;
+	background-color: @concrete;
 }
 
