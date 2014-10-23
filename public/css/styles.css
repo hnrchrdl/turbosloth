@@ -130,7 +130,7 @@ select:focus {
   font-size: 56px;
   text-align: center;
   padding: 40px 0;
-  color: #2b3d4f;
+  color: #95a6a7;
 }
 .login .form-wrapper {
   display: block;
@@ -162,6 +162,24 @@ header {
   border-bottom: 1px solid #95a6a7;
   background-color: #edf1f2;
 }
+header #info-wrapper {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  height: 30px;
+}
+header #info-wrapper #info {
+  position: relative;
+  left: -50%;
+  height: 30px;
+  line-height: 30px;
+  overflow: hidden;
+  color: #95a6a7;
+  padding: 0 15px;
+  text-align: center;
+  border-bottom: 1px solid #95a6a7;
+}
 header h1 {
   color: #95a6a7;
   float: left;
@@ -176,10 +194,18 @@ header #submenu {
 }
 #left {
   position: absolute;
-  top: 65px;
+  top: 50px;
   bottom: 30px;
   left: 30px;
   width: 200px;
+}
+nav {
+  padding: 15px 0;
+  border-bottom: 1px solid #95a6a7;
+}
+#player-options {
+  padding: 15px 0;
+  font-size: 14px;
 }
 #control-menu {
   position: absolute;

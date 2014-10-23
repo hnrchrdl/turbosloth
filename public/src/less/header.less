@@ -7,7 +7,27 @@ header {
 	padding-right: @long;
 	height:			@headerHeight;
 	border-bottom: 1px solid @concrete;
-	background-color: 	@clouds;
+	background-color: @clouds;
+
+	#info-wrapper {
+	display: 		none;
+		position: absolute;
+		top: 			0;
+		left: 		50%;
+		height: 	@buttonHeight;
+		#info {
+			position: 	relative;
+			left: 			-50%;
+			height: 		@buttonHeight;
+			//background-color: @primary;
+			line-height: @buttonHeight;
+			overflow: 		hidden;
+			color: 				@concrete;
+			padding: 			0 @medium;
+			text-align: 	center;
+			border-bottom: 1px solid @concrete;
+		}
+	}
 
 	h1 {
 		color: 		@concrete; 
