@@ -146,7 +146,7 @@ var initHandlers = function() {
     
     //// playlists
     // save playlist
-    $('main').on('keyup', '.playlists-save', function(){
+    $('main').on('keyup', '.playlists-save', function(e){
       if ( e.which === 13 ) {
         socket.emit('mpd', 'save', [$('#save-playlist').val()], function(err, msg){
           if (err) {
