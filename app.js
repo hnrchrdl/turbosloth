@@ -8,8 +8,8 @@ var express = require('express')
   , bodyParser = require('body-parser')
   , session = require('express-session')
   , redis = require('redis')
-  , server = http.createServer(app)
-  , passport = require("passport");
+  , server = http.createServer(app);
+  //, passport = require("passport");
   
 if (app.get('env') !== 'production') {
   require('longjohn'); // for detailed error logging in dev
@@ -56,8 +56,8 @@ app.use(session({
   resave: true,
   saveUninitialized: true
 }));
-app.use(passport.initialize());
-app.use(passport.session());
+//app.use(passport.initialize());
+//app.use(passport.session());
 
 // forward app config to res
 app.use(function (req, res, next) {  
