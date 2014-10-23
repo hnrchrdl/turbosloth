@@ -20,15 +20,15 @@ html(lang='en')
         h1 turbosloth
         #submenu
           .button-wrapper
-            #info.button.text
-              i.fa.fa-info
-              |  Info
             #settings.button.text
               i.fa.fa-cog
               |  Settings
             #logout.button.text
               i.fa.fa-sign-out
               |  Logout
+
+        #info-wrapper
+          #info
         
       #left
         nav
@@ -59,8 +59,7 @@ html(lang='en')
               |  Search
           .loading.search.right
               i.fa.fa-spinner.fa-spin
-        .clear
-        hr
+          .clear
 
         #player-options.button-wrapper.left
           if !stream
@@ -69,11 +68,6 @@ html(lang='en')
           else
             #stream.left.button.text(title="streaming")
               i.fa.fa-volume-up
-            
-          #random.button.left.text(title="random mode")
-            i.fa.fa-random
-          #repeat.left.button.text(title="repeat mode")
-            i.fa.fa-repeat
 
         #albumart
 

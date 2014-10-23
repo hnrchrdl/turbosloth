@@ -6,13 +6,13 @@ var Aorta = function(callback) {
   var a = this;
   socket.emit('mpd', 'currentsong', [], function(err, song) {
     if (err) { 
-      console.log(err);
+      console.log('error fetching current song: ' + err);
       a.song = undefined;
     }
     else { a.song = song; }
     socket.emit('mpd', 'status', [], function(err, status) {
       if (err) { 
-        console.log(err);
+        console.log('error fetching status: ' + err);
         a.status = undefined;
       }
       else { a.status = status; }
@@ -23,43 +23,50 @@ var Aorta = function(callback) {
 };
 // Prototypes
 Aorta.prototype.renderCurrentSong = function() {
+  
   var song = this.song;
   var status = this.status;
-  
-  // display the currently playing song
-  var currentsong = $('#currentsong');
-  if (status.state === 'stop') { currentsong.text(""); }
-  else {
-    currentsong.html(song.Artist + '<br>' + 
-        song.Title + '<br>' + 
-        '<span class="muted">' + song.Album + '</span>');
-  }
+  try {
+    // display the currently playing song
+    var currentsong = $('#currentsong');
+    if (status.state === 'stop') { currentsong.text(""); }
+    else {
+      currentsong.html(song.Artist + '<br>' + 
+          song.Title + '<br>' + 
+          '<span class="muted">' + song.Album + '</span>');
+    }
+  } catch(err) { console.log(err); }
   
   // fetch album cover
   //fetch_album_cover(song.Artist, song.Album, function(url) {
   //  console.log(url);
   //});
-
-  this.highlightSongInQueue();
-  this.renderProgressBar();
+  if (this.song) {
+    this.highlightSongInQueue();
+    this.renderProgressBar();
+  }
 };
 Aorta.prototype.highlightSongInQueue = function() {
-  var song = this.song;
-  $('#queue').find('.song').removeClass('active');
-  $('#queue').find('.song').find('.attr.songpos').removeClass('active');
-  $('#queue').find('.song.' + song.Id).addClass('active');
-  $('#queue').find('.song.' + song.Id).find('.attr.songpos').addClass('active');
+  try {
+    var song = this.song;
+    $('#queue').find('.song').removeClass('active');
+    $('#queue').find('.song').find('.attr.songpos').removeClass('active');
+    $('#queue').find('.song.' + song.Id).addClass('active');
+    $('#queue').find('.song.' + song.Id).find('.attr.songpos').addClass('active');
+  } catch (err) { console.log(err); }
 };
 Aorta.prototype.scrollToCurrentSong = function() {
-  if (this.song) {
-    var scrollable = $('#queue').find('.scrollable');
-    var scrolltop = $('.song.' + this.song.Id).offset().top +
+  try {
+    if (this.song) {
+      var scrollable = $('#queue').find('.scrollable');
+      var scrolltop = $('.song.' + this.song.Id).offset().top +
         scrollable.scrollTop() -
         scrollable.offset().top;
-    scrollable.animate({
-      scrollTop: scrolltop
-    }, 500);
-  }
+      scrollable.animate({
+        scrollTop: scrolltop
+      }, 0);
+    } 
+  } catch (err) { console.log('cannot scroll to song ' + song + '. reason: ' + err); }
 };
 Aorta.prototype.renderProgressBar = function() {
   var status = this.status;
@@ -77,19 +84,21 @@ Aorta.prototype.renderProgressBar = function() {
   var stop = function stopProgressBar () {
     progressBar.stop();
   };
-  switch (status.state) {
-    case 'play':
-      var songTime = parseFloat(status.time.split(":")[1]);
-      var elapsed = parseFloat(status.elapsed);
-      start(songTime,elapsed);
-      break;
-    case 'pause':
-      stop();
-      break;
-    case 'stop':
-      stop();
-      progressBar.css('width',0);
-  }
+  try {
+    switch (status.state) {
+      case 'play':
+        var songTime = parseFloat(status.time.split(":")[1]);
+        var elapsed = parseFloat(status.elapsed);
+        start(songTime,elapsed);
+        break;
+      case 'pause':
+        stop();
+        break;
+      case 'stop':
+        stop();
+        progressBar.css('width',0);
+    }
+  } catch(err) { console.log(err) }
 };
 
 //// Queue

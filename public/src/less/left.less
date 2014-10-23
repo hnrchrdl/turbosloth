@@ -1,17 +1,27 @@
 #left {
 	position: 	absolute;
-	top: 				@headerHeight + @medium;
+	top: 				@headerHeight;
 	bottom: 		@long;
 	left: 			@long;
 	width: 			@leftWidth;
+}
+nav {
+		padding:			 @medium 0;
+		border-bottom:	1px solid @concrete;
+}
+
+#player-options {
+		padding:			 @medium 0;
+		font-size: @bigger;
+	
 }
 
 #control-menu {
 	position: 		absolute;
 	bottom: 			@seekBarContainerHeight;
 	.button {
-	width:				@leftWidth / 5;
-	//font-size:		@bigger;
+		width:				@leftWidth / 5;
+		//font-size:		@bigger;
 	}
 }
 

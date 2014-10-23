@@ -26,23 +26,38 @@
       option(selected) Filename
     else
       option Filename
+  |  found #{contents.length} songs 
+  a.add-all-from-search(href ="#") (add all)
+
   .clear
+
   hr
   .scrollable
     if contents
       -each item in contents
-        .dir(data-file= item.file)  
-          .attr.artist=item.Artist
-          span.muted
+        .dir(data-file= item.file)
+          if item.Artist
+            .attr.artist=item.Artist
             .attr.space
-            .attr=item.Track
+          else
+            item.file
             .attr.space
-            .attr=item.Album
+          if item.Album
+            span.muted  
+              .attr.album=item.Album
+              .attr.space
+          if item.Track
+            span.muted
+              .attr=item.Track
+              .attr.space
+          if item.Title
+            .attr=item.Title
             .attr.space
-          .attr=item.Title
+          if item.Genre
+            span.muted
+              .attr= item.Genre
           if item.Time
             span.muted
-              .attr.space
               - var time = secondsToTimeString(item.Time)
               .attr=time
           .button-wrapper.right
@@ -60,7 +75,11 @@
               |  search for artist
             .button.text.search-add-from-album
               i.fa.fa-plus-square
-              |  add all from album
+              |  add album
+            .button.text.search-add-from-artist
+              i.fa.fa-plus-square
+              |  add artist
+
 
     else
       span.muted 

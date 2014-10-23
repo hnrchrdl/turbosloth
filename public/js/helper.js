@@ -19,9 +19,9 @@ function setStreamingStatus(status) {
 }
 
 function fixScrollHeight() {
-  console.log($('main').height());
-  console.log($('.scrollable').position().top);
-  $('.scrollable').height($('main').height() - $('.scrollable').position().top);
+  try {
+    $('.scrollable').height($('main').height() - $('.scrollable').position().top);
+  } catch (err) { console.log(err); }
 }
 
 function secondsToTimeString (seconds) {
@@ -30,8 +30,16 @@ function secondsToTimeString (seconds) {
   return date.toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1");
 }
 
-function info(infotext) {
-  $('body').prepend('<div class="infotext">' + infotext + '</div>');
+var timer;
+function showInfo(text, duration) { 
+  $('#info-wrapper').stop(true,true).fadeOut();
+  $('#info').html(text);
+  $('#info-wrapper').show();
+  clearTimeout(timer);
+  //$('#info-wrapper').stop().fadeOut();
+  timer = setTimeout(function() {
+    $('#info-wrapper').fadeOut(1500);
+  }, duration);
 }
 
 function fetch_album_cover(artist, album) {

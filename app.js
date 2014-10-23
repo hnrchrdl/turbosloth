@@ -9,6 +9,11 @@ var express = require('express')
   , session = require('express-session')
   , redis = require('redis')
   , server = http.createServer(app);
+  //, passport = require("passport");
+  
+if (app.get('env') !== 'production') {
+  require('longjohn'); // for detailed error logging in dev
+}
 
 var config = require('./config.json')[app.get('env')];
 module.exports.config = config;
@@ -51,12 +56,24 @@ app.use(session({
   resave: true,
   saveUninitialized: true
 }));
+//app.use(passport.initialize());
+//app.use(passport.session());
 
 // forward app config to res
 app.use(function (req, res, next) {  
     res.locals.config = config;
     next();
 });
+
+// Simple route middleware to ensure user is authenticated.
+//   Use this route middleware on any resource that needs to be protected.  If
+//   the request is authenticated (typically via a persistent login session),
+//   the request will proceed.  Otherwise, the user will be redirected to the
+//   login page.
+function ensureAuthenticated(req, res, next) {
+  if (req.isAuthenticated()) { return next(); }
+  res.redirect('/login')
+}
 
 app.use('/', routes);
 
@@ -81,18 +98,16 @@ if (app.get('env') === 'development' || 'local') {
       error: err
     });
   });
-  require('longjohn'); 
+ 
 }
-else {
-  // production error handler
-  // no stacktraces leaked to user
-  app.use(function(err, req, res, next) {
-    res.status(err.status || 500);
-    res.render('error', {
-      message: err.message,
-      error: {}
-    });
+// production error handler
+// no stacktraces leaked to user
+app.use(function(err, req, res, next) {
+  res.status(err.status || 500);
+  res.render('error', {
+    message: err.message,
+    error: {}
   });
-}
+});
 
 module.exports.app = app;
