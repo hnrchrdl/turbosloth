@@ -25,5 +25,9 @@
     "redisHost": "localhost",
     "redisDatabase": 2,
     "errorHandlerOptions": {"dumpExceptions": true, "showStack": true}
+  },
+  "lastfm": {
+    "key": "my_key",
+    "secret": "my_secret"
   }
 }
