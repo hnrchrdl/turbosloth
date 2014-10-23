@@ -10,14 +10,18 @@ var Aorta = function(callback) {
       a.song = undefined;
     }
     else { a.song = song; }
+    console.log(a.song);
     socket.emit('mpd', 'status', [], function(err, status) {
       if (err) { 
         console.log('error fetching status: ' + err);
         a.status = undefined;
+        console.log(a.status);
       }
       else { a.status = status; }
-      registerMpdInterface(a.status);
-      callback(a);
+      if (a.status && a.song) {
+        registerMpdInterface(a.status);
+        callback(a);
+      }
     });
   });
 };

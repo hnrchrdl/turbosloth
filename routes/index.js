@@ -15,7 +15,6 @@ router.get('/', function(req, res) {
           port = req.session.mpdport,
           host = req.session.mpdhost,
           password = req.session.mpdpassword;
-
     var komponistClientExists = komponist.init(sessionID,port,host,password);
     if (password !== "") {
       komponist.authenticate(sessionID, password);
@@ -24,7 +23,6 @@ router.get('/', function(req, res) {
       console.log('registering komponist changes');
       komponist.registerChange(sessionID);
     }
-
     if (req.session.streamurl === "") {
       req.session.streamurl = undefined;
     }
