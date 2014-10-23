@@ -8,7 +8,8 @@ var express = require('express')
   , bodyParser = require('body-parser')
   , session = require('express-session')
   , redis = require('redis')
-  , server = http.createServer(app);
+  , server = http.createServer(app)
+  , passport = require("passport");
   
 if (app.get('env') !== 'production') {
   require('longjohn'); // for detailed error logging in dev

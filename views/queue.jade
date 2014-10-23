@@ -3,15 +3,22 @@
     .button-wrapper.left
       .button.text.queue-refresh(title="refresh queue")
         i.fa.fa-refresh
+      .button#random.right.text(title="toggle random ")
+        i.fa.fa-question
+      .button#repeat.right.text(title="toggle repeat")
+        i.fa.fa-repeat
+      .button#consume.right.text(title="toggle consume")
+        i.fa.fa-long-arrow-down
     .button-wrapper.right
       .button.text.queue-shuffle(title="shuffle queue")
         i.fa.fa-random
       .button.text.queue-clear(title="clear queue")
         i.fa.fa-eraser
+
   hr
   .scrollable
     if !queue
-      .song.muted playlist empty
+      .song.muted queue empty
     else
       - each song in queue
         .song(class= song.Id, data-id= song.Id, data-file= song.file)
