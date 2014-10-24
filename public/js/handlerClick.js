@@ -337,107 +337,106 @@ var initHandlers = function() {
 };
 
 var registerMpdInterface = function(status) {
+  if (status) {
+    return function () {
+        // unbind all elements to prevent multiple assignment
+      $('#control-menu').off('click'); 
+      $('#player-options').off('click');
   
-  return function () {
-
-    // unbind all elements to prevent multiple assignment
-    $('#control-menu').off('click'); 
-    $('#player-options').off('click');
-
-    $('#control-menu').on('click', '#previous', function() {
-      socket.emit('mpd', 'previous', [], function(err, msg) {
-        if (err) { showInfo("error: " + err, 2000); }
-        else { showInfo("previous"); }
+      $('#control-menu').on('click', '#previous', function() {
+        socket.emit('mpd', 'previous', [], function(err, msg) {
+          if (err) { showInfo("error: " + err, 2000); }
+          else { showInfo("previous"); }
+        });
       });
-    });
-
-    $('#control-menu').on('click', '#next', function() {
-      socket.emit('mpd', 'next', [], function(err, msg) {
-        if (err) { showInfo("error: " + err, 2000); }
-        else { showInfo("next"); }
+  
+      $('#control-menu').on('click', '#next', function() {
+        socket.emit('mpd', 'next', [], function(err, msg) {
+          if (err) { showInfo("error: " + err, 2000); }
+          else { showInfo("next"); }
+        });
       });
-    });
-
-    $('#control-menu').on('click', '#play', function() {
-      socket.emit('mpd', 'play', [], function(err, msg) {
-        if (err) { showInfo("error: " + err, 2000); }
-        else { showInfo("play"); }
+  
+      $('#control-menu').on('click', '#play', function() {
+        socket.emit('mpd', 'play', [], function(err, msg) {
+          if (err) { showInfo("error: " + err, 2000); }
+          else { showInfo("play"); }
+        });
       });
-    });
-
-    $('#control-menu').on('click', '#pause', function() {
-      socket.emit('mpd', 'pause', [(status.state === 'pause' ? 0 : 1)], function(err, msg) {
-        if (err) { showInfo("error: " + err, 2000); }
-        else { showInfo("pause"); }
+  
+      $('#control-menu').on('click', '#pause', function() {
+        socket.emit('mpd', 'pause', [(status.state === 'pause' ? 0 : 1)], function(err, msg) {
+          if (err) { showInfo("error: " + err, 2000); }
+          else { showInfo("pause"); }
+        });
       });
-    });
-
-    $('#control-menu').on('click', '#stop', function() {
-      socket.emit('mpd', 'stop', [], function(err, msg) {
-        if (err) { showInfo("error: " + err, 2000); }
-        else { showInfo("stop"); }
+  
+      $('#control-menu').on('click', '#stop', function() {
+        socket.emit('mpd', 'stop', [], function(err, msg) {
+          if (err) { showInfo("error: " + err, 2000); }
+          else { showInfo("stop"); }
+        });
       });
-    });
-
-
-    $('#queue').on('click', '#random', function() {
-      socket.emit('mpd', 'random', [1 - status.random], function(err, msg) {
-        if (err) { showInfo("error: " + err, 2000); }
-        else {
-          var random = 1 - status.random === 1 ? "on" : "off";
-          showInfo("random: " + random, 1000); 
+  
+  
+      $('#queue').on('click', '#random', function() {
+        socket.emit('mpd', 'random', [1 - status.random], function(err, msg) {
+          if (err) { showInfo("error: " + err, 2000); }
+          else {
+            var random = 1 - status.random === 1 ? "on" : "off";
+            showInfo("random: " + random, 1000); 
+          }
+        });
+      });
+  
+      $('#queue').on('click', '#repeat', function() {
+        socket.emit('mpd', 'repeat', [1 - status.repeat], function(err, msg) {
+          if (err) { showInfo("error: " + err, 2000); }
+          else { 
+            var repeat = 1 - status.repeat === 1 ? "on" : "off";
+            showInfo("repeat: " + repeat, 1000); 
+          }
+        });
+      });
+  
+      $('#queue').on('click', '#consume', function() {
+        socket.emit('mpd', 'consume', [1 - status.consume], function(err, msg) {
+          if (err) { showInfo("error: " + err, 2000); }
+          else {
+            var consume = 1 - status.consume === 1 ? "on" : "off";
+            showInfo("consume: " + consume, 1000); 
+          }
+        });
+      });
+  
+      // indicate the status (play, pause, stop)
+      $('#control-menu').find('.button').removeClass('active');
+      $('#control-menu').find('#' + status.state).addClass('active');
+  
+      // indicate the status (repeat, random, comsume)
+      var random = $('#random');
+      if (status.random === '1') {
+        if (!random.hasClass('active')) {
+          random.addClass('active');
         }
-      });
-    });
-
-    $('#queue').on('click', '#repeat', function() {
-      socket.emit('mpd', 'repeat', [1 - status.repeat], function(err, msg) {
-        if (err) { showInfo("error: " + err, 2000); }
-        else { 
-          var repeat = 1 - status.repeat === 1 ? "on" : "off";
-          showInfo("repeat: " + repeat, 1000); 
+      } else { random.removeClass('active'); }
+  
+      var repeat = $('#repeat');
+      if (status.repeat === '1') {
+        if (!repeat.hasClass('active')) {
+          repeat.addClass('active');
         }
-      });
-    });
-
-    $('#queue').on('click', '#consume', function() {
-      socket.emit('mpd', 'consume', [1 - status.consume], function(err, msg) {
-        if (err) { showInfo("error: " + err, 2000); }
-        else {
-          var consume = 1 - status.consume === 1 ? "on" : "off";
-          showInfo("consume: " + consume, 1000); 
+      } else { repeat.removeClass('active'); }
+      
+      var consume = $('#consume');
+      if (status.consume === '1') {
+        if (!consume.hasClass('active')) {
+          consume.addClass('active');
         }
-      });
-    });
-
-    // indicate the status (play, pause, stop)
-    $('#control-menu').find('.button').removeClass('active');
-    $('#control-menu').find('#' + status.state).addClass('active');
-
-    // indicate the status (repeat, random, comsume)
-    var random = $('#random');
-    if (status.random === '1') {
-      if (!random.hasClass('active')) {
-        random.addClass('active');
-      }
-    } else { random.removeClass('active'); }
-
-    var repeat = $('#repeat');
-    if (status.repeat === '1') {
-      if (!repeat.hasClass('active')) {
-        repeat.addClass('active');
-      }
-    } else { repeat.removeClass('active'); }
-    
-    var consume = $('#consume');
-    if (status.consume === '1') {
-      if (!consume.hasClass('active')) {
-        consume.addClass('active');
-      }
-    } else { consume.removeClass('active'); }
-
-  }();
-    
+      } else { consume.removeClass('active'); }
+  
+    }();
+  }
 };
 
 
