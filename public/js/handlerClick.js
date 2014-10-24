@@ -48,6 +48,7 @@ var initHandlers = function() {
             if (status === true) { // stop streaming
               audio_element.pause();
               audio_element.src = "";
+              showInfo("streaming: off" , 2000);
               socket.emit('set_streaming_status', false);
               $('#stream').removeClass('active');
             }
@@ -55,6 +56,7 @@ var initHandlers = function() {
               audio_element.src = stream;
               audio_element.load();
               audio_element.play();
+              showInfo("streaming: on" , 2000);
               socket.emit('set_streaming_status', true);
               $('#stream').addClass('active');
             }
@@ -72,8 +74,11 @@ var initHandlers = function() {
           var song = a.song;
           var seek_ratio = ( (e.clientX - 30 )/ 200);
           var seek_sec = String(Math.round(seek_ratio * song.Time));
-          socket.emit('mpd','seekcur',[seek_sec]);
-        } catch(e) { console.log(e); }
+          socket.emit('mpd','seekcur',[seek_sec], function(err, msg) {
+            if (err) {  }
+            else { showInfo("seek to: " + secondsToTimeString(seek_ratio * song.Time) , 2000); }
+          });
+        } catch(err) { showInfo("error: " + err , 2000); }
       }); 
     });
     
@@ -186,9 +191,7 @@ var initHandlers = function() {
       socket.emit('mpd', 'clear', [], function(err, msg) {
         socket.emit('mpd', 'load', [playlist], function(err, msg){
           if (err) { showInfo("error: " + err, 2000); }
-          else { 
-            showInfo("queue replaced with '" + playlist + "'", 1500); 
-          }
+          else { showInfo("queue replaced with '" + playlist + "'", 1500); }
         });
       });
     });
@@ -211,18 +214,18 @@ var initHandlers = function() {
     });
     
     //// browse
-    // dir a
+    // browse dir a
     $('main').on('click', 'a.browse-dir', function(e) {
       e.preventDefault();
       browseRequest($(this).attr('data-dir'));
     });
-    // dir-info a
+    // browse dir-info a
     $('main').on('click','a.browse-breadcrumb', function(e) {
       e.preventDefault();
       browseRequest("--" + $(this).attr('data-dir'));
     });
 
-    // register Buttons
+    // browse append
     $('main').on('click', '.browse-append', function() {
       var dir = $(this).parents('.dir').attr('data-directory');
       socket.emit('mpd', 'add', [dir], function(err, msg) {
@@ -230,7 +233,7 @@ var initHandlers = function() {
         else { showInfo("folder '" + dir + "' appended to queue", 1500); }
       });
     });
-
+    // browse load
     $('main').on('click', '.browse-load', function() {
       var dir = $(this).parents('.dir').attr('data-directory');
       socket.emit('mpd', 'clear', [], function(err,msg) {
@@ -260,7 +263,7 @@ var initHandlers = function() {
     // click append
     $('main').on('click', '.search-append', function(){
       var dir = $(this).parents('.dir').attr('data-file');
-      socket.emit('mpd', 'add', [dir], function(err,msg){
+      socket.emit('mpd', 'add', [dir], function(err, msg) {
         if (err) { showInfo("error: " + err, 2000); }
         else { showInfo("song '" + dir + "' added to queue", 1500); }
       });
@@ -296,8 +299,6 @@ var initHandlers = function() {
       try {
         var artist = $(this).parents('.dir').find('.attr.artist').text();
         var album = $(this).parents('.dir').find('.attr.album').text();
-        console.log(artist);
-        console.log(album);
         socket.emit('mpd', 'findadd', ['Artist',artist,'Album',album], function(err, msg) {
           if (err) { showInfo("error: " + err, 2000); }
           else { showInfo(album + "' by " + artist + " added", 1500); }
@@ -307,7 +308,6 @@ var initHandlers = function() {
     });
     // click add all from artist
     $('main').on('click', '.search-add-from-artist', function() {
-      console.log('check');
       try {
         var artist = $(this).parents('.dir').find('.attr.artist').text();
         socket.emit('mpd', 'findadd', ['Artist', artist], function(err, msg) {
@@ -333,11 +333,8 @@ var initHandlers = function() {
       catch (err) { showInfo("error: " + err, 2000); }
     });
 
-
   }();
-
 };
-
 
 var registerMpdInterface = function(status) {
   
