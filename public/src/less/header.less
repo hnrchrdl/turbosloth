@@ -1,45 +1,44 @@
 header {
-	position:		absolute;
-	left: 			0px;
-	right: 			0px;
-	top: 			0px;
-	padding-left:	@long;
-	padding-right: @long;
-	height:			@headerHeight;
-	border-bottom: 1px solid @concrete;
-	background-color: @clouds;
-
+	position:						absolute;
+	left: 							0px;
+	right: 							0px;
+	top: 								0px;
+	padding-left:				@long;
+	padding-right: 			@long;
+	height:							@headerHeight;
+	line-height: 				@headerHeight;
+	border-bottom: 			1px solid @muted;
+	background-color: 	@primary;
 	#info-wrapper {
-	display: 		none;
-		position: absolute;
-		top: 			0;
-		left: 		50%;
-		height: 	@buttonHeight;
+	display: 							none;
+		position: 					absolute;
+		top: 								0;
+		left: 							50%;
+		height: 						@buttonHeight;
+		text-align: 				center;
 		#info {
-			position: 	relative;
-			left: 			-50%;
-			height: 		@buttonHeight;
-			//background-color: @primary;
-			line-height: @buttonHeight;
-			overflow: 		hidden;
-			color: 				@concrete;
-			padding: 			0 @medium;
-			text-align: 	center;
-			border-bottom: 1px solid @concrete;
+			position: 					relative;
+			left: 							-50%;
+			//height: 					@buttonHeight;
+			//line-height: 			@buttonHeight;
+			overflow: 					hidden;
+			color: 							@muted;
+			padding: 						0 @medium;
+			border-bottom: 			1px solid @subtle;
 		}
 	}
 
 	h1 {
-		color: 		@concrete; 
-		float: left;
-		line-height: @headerHeight;
-		font-family: 'Quicksand', Helvetica, sans-serif;
-		font-weight: 300;
-		font-size: 40px;
+		//float: left;
+		color: 				@concrete; 
+		font-family: 	'Quicksand', Helvetica, sans-serif;
+		font-weight: 	300;
+		font-size: 		40px;
 	}
 
 	#submenu {
-		float: 		right;
-		margin-top: 	(@headerHeight - @buttonHeight) / 2;
+		float: 					right;
+		line-height: 		@headerHeight;
+		//margin-top: 	(@headerHeight - @buttonHeight) / 2;
 	}
 }
