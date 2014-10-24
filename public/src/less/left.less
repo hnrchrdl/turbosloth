@@ -4,58 +4,55 @@
 	bottom: 		@long;
 	left: 			@long;
 	width: 			@leftWidth;
-}
-nav {
-		padding:			 @medium 0;
-		border-bottom:	1px solid @concrete;
-}
 
-#player-options {
-		padding:			 @medium 0;
-		font-size: @bigger;
-	
-}
-
-#control-menu {
-	position: 		absolute;
-	bottom: 			@seekBarContainerHeight;
-	.button {
-		width:				@leftWidth / 5;
-		//font-size:		@bigger;
+	nav {
+			padding:			 	@medium 0;
+			border-bottom:	1px solid @muted;
 	}
-}
-
-#currentsong-wrapper {
-	position:		absolute;
-	bottom: 		@seekBarContainerHeight + @buttonHeight + @leftWidth + @medium;
-	left: 			0;
-	padding-left: 	@medium;
-	padding-top:		@medium;
-	min-height: 		@controlBarHeight - @medium * 3;
-	border-left: 		@extraLightBorder;
-	//overflow-y:		hidden;
-}
-
-#albumart {
-	position: 				absolute;
-	bottom: 					@seekBarContainerHeight + @buttonHeight;
-	height: 					@leftWidth;
-	width: 						@leftWidth;
-	background-color: @primary;
-}
-
-#seek-bar-container {
-	position: 	absolute;
-	bottom: 		0;
-	//height:			@seekBarContainerHeight;
-	width:			@leftWidth - 2;
-	cursor: 		pointer;
-	border-left:			1px solid @muted;
-	border-right:			1px solid @muted;
 	
-	#seek-bar {
-		height:	 						@seekBarContainerHeight - 2;
-		width: 							0%;
-		background-color: 	@primary;
+	#player-options {
+			padding:			@medium 0;
+			font-size: 		@bigger;
+	}
+	
+	#currentsong-wrapper {
+		position:				absolute;
+		bottom: 				@seekBarContainerHeight + @buttonHeight + @leftWidth + @medium;
+		//left: 					0;
+		padding: 				@medium 0 @medium @medium;
+		border-left: 		1px solid @muted;
+		//min-height: 		@controlBarHeight - @medium * 3;
+		//overflow-y:		hidden;
+	}
+	
+	#albumart {
+		position: 				absolute;
+		bottom: 					@seekBarContainerHeight + @buttonHeight;
+		height: 					@leftWidth;
+		width: 						@leftWidth;
+		background-color: @primary;
+	}
+	
+	#control-menu {
+		position: 			absolute;
+		bottom: 				@seekBarContainerHeight;
+		.button {
+			width:				@leftWidth / 5;
+		}
+	}
+	
+	#seek-bar-container {
+		position: 			absolute;
+		bottom: 				0;
+		//height:					@seekBarContainerHeight;
+		width:					@leftWidth - 2;
+		cursor: 				pointer;
+		border-left:		1px solid @muted;
+		border-right:		1px solid @muted;
+		#seek-bar {
+			height:	 						@seekBarContainerHeight - 2;
+			width: 							0%;
+			background-color: 	@primary;
+		}
 	}
 }
