@@ -2,8 +2,8 @@ html, body {
 	height: 		100%;
 	width: 			100%;
 	padding:		0;
-	margin			0;
-	font-family		'Open Sans', sans-serif;
+	margin:			0;
+	font-family:		'Open Sans', sans-serif;
 	font-weight:		400;
 	color:			@fontPrimary;
 	font-size: 		@fontSize;
@@ -64,26 +64,27 @@ hr {
 	&.right {
 		float: 					right;
 	}
-}
-.button {
-	//height: 		@buttonHeight;
-	//min-width:  @buttonHeight;
-	display: 		inline-block;
-	cursor: 		pointer;
-	 &.text {
-  	padding-left: 		@medium;
-   	padding-right: 		@medium; 
-  }
-  &:hover {
-		color: 						@primary;
-	}
-	&.active {
-		color:						@primary;
-	}
-	&.disabled {
-		color: 						@muted;
-		&:hover {
-			cursor					default;
+
+	.button {
+		height: 		@buttonHeight;
+		min-width:  @buttonHeight;
+		display: 		inline-block;
+		cursor: 		pointer;
+		&.text {
+	  	padding-left: 		@medium;
+	   	padding-right: 		@medium; 
+	  }
+	  &:hover {
+			color: 						@primary;
+		}
+		&.active {
+			color:						@primary;
+		}
+		&.disabled {
+			color: 						@muted;
+			&:hover {
+				cursor:					default;
+			}
 		}
 	}
 }
@@ -104,6 +105,9 @@ hr {
 input, select {
 	display: 						inline-block;
 	height: 						@long;
+	box-sizing: 				border-box;
+  -moz-box-sizing: 		border-box;
+  -webkit-box-sizing: border-box;
 	background-color: 	@background;
 	color: 							@fontPrimary;
 	border: 						1px solid @subtle;
@@ -111,6 +115,7 @@ input, select {
 	margin-bottom: 			@short;
 	&:focus {
 		border: 						1px solid @primary;
+		outline: 0;
 	}
 }
 

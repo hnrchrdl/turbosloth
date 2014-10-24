@@ -7,6 +7,7 @@
 //colors collection, inspired by http://flatuicolors.com/
 @clouds:        hsl(192, 15%, 94%); //clouds
 @concrete:      hsl(184, 9%, 62%); //concrete
+@silver:        hsl(204, 8%, 76%);
 @turquoise:     hsl(168, 76%, 42%); //turquoise
 @alizarin:      hsl(6, 78%, 57%); //alizarin
 @greenSea:      hsl(168, 76%, 36%); //green sea
@@ -14,11 +15,11 @@
 
 // color palette
 @primary:           @alizarin;
-@background:        @clouds;
-@background2:       @concrete;
+@background:        lighten(@clouds, 4%);
+@background2:       @background;
 @fontPrimary:       @wetAsphalt;
 @muted:             fadeout(@fontPrimary, 30%);
-@subtle:            fadeout(@fontPrimary, 60%);
+@subtle:            fadeout(@fontPrimary, 90%);
 
 
 /// font sizes
@@ -28,12 +29,12 @@
 
 // heights, margins and paddings
 @headerHeight:              50px;
-//@seekBarContainerHeight:    10px;
+//@seekBarContainerHeight:  10px;
 @leftWidth:                 200px;
 @buttonHeight:              30px;
-//@seekBarHContainerHeight:   @medium;
-//@navHeight:                 @buttonHeight;
-//@songHeight:                50px;
+@seekBarHeight:             10px;
+//@navHeight:               @buttonHeight;
+//@songHeight:              50px;
 @inputLong:                 300px;
 @inputShort:                50px;
 @long:                      30px;

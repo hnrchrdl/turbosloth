@@ -351,6 +351,7 @@ var registerMpdInterface = function(status) {
       });
   
       $('#control-menu').on('click', '#next', function() {
+        console.log('debug click');
         socket.emit('mpd', 'next', [], function(err, msg) {
           if (err) { showInfo("error: " + err, 2000); }
           else { showInfo("next"); }
@@ -404,7 +405,7 @@ var registerMpdInterface = function(status) {
           if (err) { showInfo("error: " + err, 2000); }
           else {
             var consume = 1 - status.consume === 1 ? "on" : "off";
-            showInfo("consume: " + consume, 1000); 
+            showInfo("consume: " + consume, 1000);
           }
         });
       });

@@ -7,8 +7,8 @@ header {
 	padding-right: 			@long;
 	height:							@headerHeight;
 	line-height: 				@headerHeight;
-	border-bottom: 			1px solid @muted;
-	background-color: 	@primary;
+	//border-bottom: 			1px solid @muted;
+	background-color: 	@background2;
 	#info-wrapper {
 	display: 							none;
 		position: 					absolute;
@@ -29,8 +29,8 @@ header {
 	}
 
 	h1 {
-		//float: left;
-		color: 				@concrete; 
+		float: left;
+		color: 				@muted; 
 		font-family: 	'Quicksand', Helvetica, sans-serif;
 		font-weight: 	300;
 		font-size: 		40px;
@@ -39,6 +39,6 @@ header {
 	#submenu {
 		float: 					right;
 		line-height: 		@headerHeight;
-		//margin-top: 	(@headerHeight - @buttonHeight) / 2;
+		margin-top: 	(@headerHeight - @buttonHeight) / 2;
 	}
 }

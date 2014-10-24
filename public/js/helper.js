@@ -32,7 +32,7 @@ function secondsToTimeString (seconds) {
 
 var timer;
 function showInfo(text, duration) { 
-  $('#info-wrapper').stop(true,true).fadeOut();
+  $('#info-wrapper').stop(true,true).fadeOut(1500);
   $('#info').html(text);
   $('#info-wrapper').show();
   clearTimeout(timer);

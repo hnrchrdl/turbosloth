@@ -10,7 +10,6 @@ var Aorta = function(callback) {
       a.song = undefined;
     }
     else { a.song = song; }
-    console.log(a.song);
     socket.emit('mpd', 'status', [], function(err, status) {
       if (err) { 
         console.log('error fetching status: ' + err);
@@ -115,7 +114,6 @@ Aorta.prototype.renderProgressBar = function() {
         progressBar.css('width',0);
     }
   } catch(err) { console.log(err); }
-  }
 };
 
 //// Queue

@@ -56,7 +56,7 @@ router.get('/queue', function(req, res) {
   komponistClient.playlistinfo(function(err, data) {
     data = Object.keys(data[0]).length === 0 ? undefined : data;
     err ?
-        res.render('queue',{queue:err, secondsToTimeString:secondsToTimeString}) :
+        res.render('queue',{queue: err, secondsToTimeString:secondsToTimeString}) :
         res.render('queue',{queue :data, secondsToTimeString:secondsToTimeString});
   }); 
 });
@@ -83,7 +83,6 @@ router.get('/browse/:url', function(req, res) {
   }
   else if (url.substr(0,2) === "--") { // breadcrumb hit
     var entry = url.substr(2,3);
-    console.log(entry);
     req.session.url = req.session.url.slice(0,entry+1);
     url = req.session.url.join('/');
   } else { // get url from uri
