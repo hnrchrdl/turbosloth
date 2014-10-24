@@ -24,11 +24,14 @@ $(document).ready(function() {
 
 function playerHasChanged(init) {
   var a = new Aorta(function(a) {
-    if (a) {
-      registerMpdInterface(a.status);
-      a.renderCurrentSong(a.status, a.song);
-      a.renderProgressBar(a.status);
-      init ? queueRequest() : a.highlightSongInQueue(a.song);
+    a.renderCurrentSong();
+    a.renderProgressBar();
+    registerMpdInterface(a.status);
+    //console.log(a.status.consume);
+    if (init) {
+      queueRequest();
+    } else {
+      a.highlightSongInQueue(a.song);
     }
   });
 }

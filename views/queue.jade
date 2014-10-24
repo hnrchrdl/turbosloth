@@ -23,7 +23,7 @@
       - each song in queue
         .song(class= song.Id, data-id= song.Id, data-file= song.file)
           span.muted
-            .attr.songpos= song.Pos
+            .attr.songpos= (parseInt(song.Pos) + 1)
             .attr.space
           if song.Artist
             .attr.artist=song.Artist

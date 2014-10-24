@@ -4,49 +4,37 @@
 @images: 		    "img";
 
 /// colors
-//colors inspired by http://flatuicolors.com/
+//colors collection, inspired by http://flatuicolors.com/
 @clouds:        hsl(192, 15%, 94%); //clouds
 @concrete:      hsl(184, 9%, 62%); //concrete
+@silver:        hsl(204, 8%, 76%);
 @turquoise:     hsl(168, 76%, 42%); //turquoise
 @alizarin:      hsl(6, 78%, 57%); //alizarin
 @greenSea:      hsl(168, 76%, 36%); //green sea
 @wetAsphalt:    hsl(210, 29%, 24%); //wet asphalt
 
-@primary:         @alizarin;
-@primaryLight:    hsl(hue(@primary), 100%, 70%);
-@variant:         spin((@primary), 180);
+// color palette
+@primary:           @alizarin;
+@background:        lighten(@clouds, 4%);
+@background2:       @background;
+@fontPrimary:       @wetAsphalt;
+@muted:             fadeout(@fontPrimary, 30%);
+@subtle:            fadeout(@fontPrimary, 90%);
 
 
-/// fonts
+/// font sizes
 @fontSize:          11px;
 @bigger:            14px;
-@fontPrimary:       @wetAsphalt;
-@muted:             @concrete;
-
-/// backgrounds
-@transparentWhite:      @greenSea;
-@transparentWhite2:     @greenSea;
-@transparentGray:       @greenSea;
-@hoverBackground:       @concrete;
-@background:            @clouds;
-@headerBackground:      @concrete;
-
-/// border
-//@lightBorder:         1px solid @greenSea; 
-@lightBorder:           1px solid @muted; 
-@extraLightBorder:      1px solid @muted;
-
 
 
 // heights, margins and paddings
 @headerHeight:              50px;
-@controlBarHeight:          100px;
-@seekBarContainerHeight:    10px;
+//@seekBarContainerHeight:  10px;
 @leftWidth:                 200px;
 @buttonHeight:              30px;
-@seekBarHContainerHeight:   @medium;
-@navHeight:                 @buttonHeight;
-@songHeight:                50px;
+@seekBarHeight:             10px;
+//@navHeight:               @buttonHeight;
+//@songHeight:              50px;
 @inputLong:                 300px;
 @inputShort:                50px;
 @long:                      30px;
