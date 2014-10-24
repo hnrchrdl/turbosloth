@@ -1,48 +1,45 @@
 main {
   position:         absolute;
-  top:              @headerHeight + @medium;
+  top:              @headerHeight;
   bottom:           @long;
   left:             @leftWidth + (@long * 2);
   right:            @long;
-
+  padding-top:			@medium;
 	.song, .dir, .playlist {
   	height: 	      @buttonHeight;
-  	overflow: 	    hidden;
   	line-height: 	  @buttonHeight;
-  	border-bottom: 	1px solid @concrete;
-	
+  	overflow: 	    hidden;
+  	border-bottom: 	1px solid @subtle;
   	.attr {
   		display: 	inline-block;
   		margin-left: 	@medium;
-  		
   		&.space {
-  			height: 	@short;
-  			margin-top: 	(@buttonHeight / 2) - (@short / 2) -2;
-  			border-right: 	1px solid @concrete;
+  			height: 	@medium;
+  			margin-top: 	(@buttonHeight / 2) - (@short / 2) - 2;
+  			border-right: 	1px solid @subtle;
   		}
-        		
   		&.songpos.active {
   			color: @primary;
   		}
   	}
-  	
   	&.active {
+  		border-bottom: 1px solid @primary;
   		//border-bottom: 1px solid @primary;
-  		border-bottom: 1px solid @muted;
   		//background-color: @hoverBackground;
   	}
   }
   
-}
-.scrollable {
-      overflow-y: scroll; 
+	.scrollable {
+	  overflow-y: scroll; 
+	}
+
+	.nav-main {
+		height: @buttonHeight;
+		//border-bottom: @lightBorder;
+	}
 }
 
-.nav-main {
-	height: @buttonHeight;
-	//border-bottom: @lightBorder;
-}
-
+//pseudo classes for scrollbar
 ::-webkit-scrollbar {
 	width:	@short;
 	background-color: @clouds;
