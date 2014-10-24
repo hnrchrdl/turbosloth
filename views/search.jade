@@ -26,8 +26,9 @@
       option(selected) Filename
     else
       option Filename
-  |  found #{contents.length} songs 
-  a.add-all-from-search(href ="#") (add all)
+  if contents
+    |  found #{contents.length} songs 
+    a.add-all-from-search(href ="#") (add all)
 
   .clear
 
