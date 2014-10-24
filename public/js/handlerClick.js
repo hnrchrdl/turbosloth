@@ -153,7 +153,7 @@ var initHandlers = function() {
     $('main').on('click', '.queue-remove', function() {
       var song = $(this).parents('.song');
       var songid = song.attr('data-id');
-      socket.emit('mpd', 'deleteid', [songid], function(){
+      socket.emit('mpd', 'deleteid', [songid], function(err, msg) {
         if (err) { showInfo("error: " + err, 2000); }
         else {
           showInfo("song removed from queue", 1500);
@@ -299,7 +299,7 @@ var initHandlers = function() {
       try {
         var artist = $(this).parents('.dir').find('.attr.artist').text();
         var album = $(this).parents('.dir').find('.attr.album').text();
-        socket.emit('mpd', 'findadd', ['Artist',artist,'Album',album], function(err, msg) {
+        socket.emit('mpd', 'searchadd', ['Artist',artist,'Album',album], function(err, msg) {
           if (err) { showInfo("error: " + err, 2000); }
           else { showInfo(album + "' by " + artist + " added", 1500); }
         });
@@ -310,7 +310,7 @@ var initHandlers = function() {
     $('main').on('click', '.search-add-from-artist', function() {
       try {
         var artist = $(this).parents('.dir').find('.attr.artist').text();
-        socket.emit('mpd', 'findadd', ['Artist', artist], function(err, msg) {
+        socket.emit('mpd', 'searchadd', ['Artist', artist], function(err, msg) {
           if (err) { showInfo("error: " + err, 2000); }
           else { showInfo("added all songs by '" + artist + "' to queue", 1500); }
         });
@@ -325,7 +325,8 @@ var initHandlers = function() {
         var searchString = $('#search').find('input.search-input').val();
         var searchType = $('#search').find('select.search-select').val();
         console.log(searchType);
-        socket.emit('mpd', 'findadd', [searchType, searchString], function(err, msg) {
+        console.log(searchString);
+        socket.emit('mpd', 'searchadd', [searchType, searchString], function(err, msg) {
           if (err) { showInfo("error: " + err, 2000); }
           else { showInfo("search results added to queue", 1500); }
         });
@@ -337,6 +338,8 @@ var initHandlers = function() {
 };
 
 var registerMpdInterface = function(status) {
+  console.log('registerMpdInterface');
+  console.log(status);
   if (status) {
     return function () {
         // unbind all elements to prevent multiple assignment
@@ -395,7 +398,7 @@ var registerMpdInterface = function(status) {
           if (err) { showInfo("error: " + err, 2000); }
           else { 
             var repeat = 1 - status.repeat === 1 ? "on" : "off";
-            showInfo("repeat: " + repeat, 1000); 
+            showInfo("repeat: " + repeat, 1000);
           }
         });
       });

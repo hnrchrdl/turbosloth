@@ -11,29 +11,33 @@ var secondsToTimeString = function (seconds) {
 //// get /
 router.get('/', function(req, res) {
   if (req.session.mpdhost && req.session.mpdport) {
-      var sessionID = req.sessionID,
-          port = req.session.mpdport,
-          host = req.session.mpdhost,
-          password = req.session.mpdpassword;
-    var komponistClientExists = komponist.init(sessionID,port,host,password);
-    if (password !== "") {
-      komponist.authenticate(sessionID, password);
-    }
-    if (!komponistClientExists) {
-      console.log('registering komponist changes');
-      komponist.registerChange(sessionID);
-    }
-    if (req.session.streamurl === "") {
-      req.session.streamurl = undefined;
-    }
+    var sessionID = req.sessionID,
+        port = req.session.mpdport,
+        host = req.session.mpdhost,
+        password = req.session.mpdpassword;
+    
+    var komponistInit = komponist.init(port, host, password, function(initSuccess) {
+      if (!initSuccess) {
+        console.log('komponist init failed');
+        req.session.destroy(); // logout
+        res.redirect('/');
+      }
+      else {
+        console.log('komponist init success!');
+        if (req.session.streamurl === "") {
+          req.session.streamurl = undefined;
+        }
 
-    //render skeleton
-    res.render('skeleton', {
-      title: 'turbosloth',
-      mpdhost: req.session.mpdhost,
-      mpdport: req.session.mpdport,
-      stream: req.session.streamurl
+        //render skeleton
+        res.render('skeleton', {
+          title: 'turbosloth',
+          mpdhost: req.session.mpdhost,
+          mpdport: req.session.mpdport,
+          stream: req.session.streamurl
+        });
+      }
     });
+    
   }
 
   else { // if no session is found
@@ -52,7 +56,8 @@ router.post('/', function(req, res) {
 
 //// get /queue
 router.get('/queue', function(req, res) {
-  var komponistClient = komponist.getClient(req.sessionID);
+  var mpdNamespace = req.session.mpdhost + ":" + req.session.mpdport;
+  var komponistClient = komponist.getClient(mpdNamespace);
   komponistClient.playlistinfo(function(err, data) {
     data = Object.keys(data[0]).length === 0 ? undefined : data;
     err ?
@@ -63,7 +68,8 @@ router.get('/queue', function(req, res) {
 
 // get /playlists
 router.get('/playlists', function(req, res) {
-  var komponistClient = komponist.getClient(req.sessionID);
+  var mpdNamespace = req.session.mpdhost + ":" + req.session.mpdport;
+  var komponistClient = komponist.getClient(mpdNamespace);
   komponistClient.listplaylists(function(err, data) {
     data = Object.keys(data[0]).length === 0 ? undefined : data;
     err ?
@@ -89,7 +95,8 @@ router.get('/browse/:url', function(req, res) {
     req.session.url = url.split('/');
   }
   
-  var komponistClient = komponist.getClient(req.sessionID);
+  var mpdNamespace = req.session.mpdhost + ":" + req.session.mpdport;
+  var komponistClient = komponist.getClient(mpdNamespace);
   komponistClient.lsinfo([url], function(err,contents) {
     if (err) { console.log(err); }
     else {
@@ -129,11 +136,14 @@ router.get('/search/:searchString/:type', function(req, res) {
   }
   if (searchString !== "#") { // active search
     
-    var komponistClient = komponist.getClient(req.sessionID);
+    var mpdNamespace = req.session.mpdhost + ":" + req.session.mpdport;
+    var komponistClient = komponist.getClient(mpdNamespace);
     komponistClient.search(type, searchString, function(err, contents) {
-      if (err) { console.log(err); }
+      if (err) { 
+        console.log(err);
+      }
       else if (Object.keys(contents[0]).length === 0) { // if object is empty
-        contents = null;
+        contents = false;
       }
       req.session.type = type;
       req.session.search = searchString;

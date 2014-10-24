@@ -28,7 +28,9 @@
       option Filename
   if contents
     |  found #{contents.length} songs 
-    a.add-all-from-search(href ="#") (add all)
+    a.add-all-from-search(href ="#") 
+      if contents.length > 0
+        |  (add all)
 
   .clear
 
@@ -41,7 +43,7 @@
             .attr.artist=item.Artist
             .attr.space
           else
-            item.file
+            .attr.artist= item.file
             .attr.space
           if item.Album
             span.muted  
