@@ -64,8 +64,13 @@ function searchRequest(searchString, searchType) {
   if (searchString === "" || searchString === " " ) {
     searchString = "#";
   }
-  var s = new Search(searchString, searchType, function(err, search) {
-    if (search) { search.render(); }
-    else if (err) { console.log(err); }
-  });
+  try {
+    var s = new Search(searchString, searchType, function(err, search) {
+      if (search) { search.render(); }
+      else if (err) { console.log(err); }
+    });
+  } 
+  catch (e) {
+    showInfo("search failed", 2500);
+  }
 }

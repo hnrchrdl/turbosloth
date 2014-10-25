@@ -49,7 +49,7 @@ html(lang='en')
           stream_url = $("#stream-url").val(),
           stream_port = $("#stream-port").val();
         console.log(stream_port);
-        post("/", {mpdhost:mpd_host,
+        post("/login", {mpdhost:mpd_host,
           mpdport:mpd_port,
           mpdpassword:mpd_password,
           streamurl:stream_url,
