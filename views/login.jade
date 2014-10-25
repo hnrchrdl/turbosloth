@@ -5,18 +5,17 @@ html(lang='en')
   
   body
     header
-      h1 turbosloth
-      #submenu
-        input#username.long(type="text", placeholder="username", value="")
-        input#password.long(type="password", placeholder="password", value="")
-        .button-wrapper
-          i.fa.fa-info
-          |  Login
-        |  |
-        .button-wrapper
-          i.fa.fa-info
-          |  New User
-        |  |
+      if config.appEnv === 'dev'
+        h1 turbosloth
+        #submenu
+          input#username.long(type="text", placeholder="username", value="")
+          input#password.long(type="password", placeholder="password", value="")
+          .button-wrapper
+            i.fa.fa-info
+            |  Login
+          .button-wrapper
+            i.fa.fa-info
+            |  New User
         
             
     #background-wrapper.login
