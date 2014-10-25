@@ -167,7 +167,7 @@ var initHandlers = function() {
     // save playlist
     $('main').on('keyup', '#save-playlist', function(e){
       if ( e.which === 13 ) {
-        var playlistName = $('#save-playlist').val(); 
+        var playlistName = $('#save-playlist').val();
         socket.emit('mpd', 'save', [playlistName], function(err, msg){
           if (err === {}) { showInfo("error: " + err, 2000); }
           else {
@@ -251,14 +251,18 @@ var initHandlers = function() {
       if ( e.which === 13 ) {
         var searchString = $('#search').find('input.search-input').val();
         var searchType = $('#search').find('select.search-select').val();
-        searchRequest(searchString, searchType);
+        searchString.length <= 2 ?
+          showInfo("please enter 3 chars as a minimum") :
+          searchRequest(searchString, searchType);
       }
     });
     // change of search category select
     $('main').on('change', 'select.search-select', function() {
       var searchString = $('#search').find('input.search-input').val();
       var searchType = $('#search').find('select.search-select').val();
-      searchRequest(searchString, searchType);
+      searchString.length <= 2 ?
+        showInfo("minimum: 3 characters", 2000) :
+        searchRequest(searchString, searchType);
     });
     // click append
     $('main').on('click', '.search-append', function(){

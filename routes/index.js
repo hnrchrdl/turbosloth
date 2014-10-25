@@ -2,11 +2,18 @@ var express = require('express'),
     router = express.Router(),
     komponist = require('../lib/komponist');
 
-var secondsToTimeString = function (seconds) {
-  var date = new Date(1970,0,1);
-  date.setSeconds(seconds);
-  return date.toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1");
-}
+//// get /login
+router.get('/login', function(req, res) {
+  res.render('login');
+});
+//// post to /login
+router.post('/login', function(req, res) {
+  req.session.mpdhost = req.body.mpdhost || undefined;
+  req.session.mpdport = req.body.mpdport || undefined;
+  req.session.mpdpassword = req.body.mpdpassword || undefined;
+  req.session.streamurl = req.body.streamurl || undefined;
+  res.redirect('/');
+});
 
 //// get /
 router.get('/', function(req, res) {
@@ -16,14 +23,16 @@ router.get('/', function(req, res) {
         host = req.session.mpdhost,
         password = req.session.mpdpassword;
     
-    var komponistInit = komponist.init(port, host, password, function(initSuccess) {
-      if (!initSuccess) {
+    var komponistInit = komponist.init(port, host, password, function(err, obj) {
+      if (err) {
         console.log('komponist init failed');
         req.session.destroy(); // logout
-        res.redirect('/');
+        console.log(err);
+        res.redirect('/login?err='+err);
       }
       else {
         console.log('komponist init success!');
+        
         if (req.session.streamurl === "") {
           req.session.streamurl = undefined;
         }
@@ -40,17 +49,8 @@ router.get('/', function(req, res) {
   }
 
   else { // if no session is found
-    res.render('login', { title: 'turbosloth :: login'});
+    res.redirect('/login?err=nosession');
   }
-});
-
-//// post to /
-router.post('/', function(req, res) {
-  req.session.mpdhost = req.body.mpdhost || undefined;
-  req.session.mpdport = req.body.mpdport || undefined;
-  req.session.mpdpassword = req.body.mpdpassword || undefined;
-  req.session.streamurl = req.body.streamurl || undefined;
-  res.redirect('/');
 });
 
 //// get /queue
@@ -61,8 +61,8 @@ router.get('/queue', function(req, res) {
 
     data = Object.keys(data[0]).length === 0 ? undefined : data;
     err ?
-        res.render('queue',{queue: err, secondsToTimeString:secondsToTimeString}) :
-        res.render('queue',{queue :data, secondsToTimeString:secondsToTimeString});
+        res.render('queue',{queue: err}) :
+        res.render('queue',{queue :data});
   }); 
 });
 
@@ -139,20 +139,29 @@ router.get('/search/:searchString/:type', function(req, res) {
     
     var mpdNamespace = req.session.mpdhost + ":" + req.session.mpdport;
     var komponistClient = komponist.getClient(mpdNamespace);
-    komponistClient.search(type, searchString, function(err, contents) {
-      if (err) { 
-        console.log(err);
-      }
-      else if (Object.keys(contents[0]).length === 0) { // if object is empty
-        contents = false;
-      }
-      req.session.type = type;
-      req.session.search = searchString;
-      res.render('search', {contents: contents, 
-          searchString:searchString, 
-          type: type, 
-          secondsToTimeString:secondsToTimeString});
-    });
+    try {
+      komponistClient.search(type, searchString, function(err, contents) {
+        if (err) { 
+          console.log(err);
+          res.render('search', {contents: false,           
+            searchString:'#', type: 'Any'
+          });
+        }
+        else if (Object.keys(contents[0]).length === 0) { // if object is empty
+          contents = false;
+        }
+        req.session.type = type;
+        req.session.search = searchString;
+        res.render('search', {contents: contents, 
+            searchString:searchString, 
+            type: type
+        });
+      });
+    } catch (e) {
+      res.render('search', {contents: false,           
+        searchString:'#', type: 'Any'
+      });
+    }
   }
 });
 
