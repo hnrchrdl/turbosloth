@@ -8,6 +8,5 @@ socket.on('error', function (reason){
 });
 socket.on('change', function(system) {
   console.log('subsystem changed: ' + system);
-  var init = false;
-  playerHasChanged(init);
+  subsystemChange(system);
 });

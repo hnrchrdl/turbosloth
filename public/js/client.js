@@ -11,9 +11,7 @@ $(document).ready(function() {
   });
 
   // init script
-  var init = true;
-  playerHasChanged(init);
-
+  initApp();
   // init the audio element on start
   initAudioElement(audio_element);
 
@@ -22,25 +20,40 @@ $(document).ready(function() {
   
 });
 
-function playerHasChanged(init) {
-  var a = new Aorta(function(a) {
-    a.renderCurrentSong();
-    a.renderProgressBar();
-    registerMpdInterface(a.status);
-    //console.log(a.status.consume);
-    if (init) {
-      queueRequest();
-    } else {
-      a.highlightSongInQueue(a.song);
+function initApp () {
+  currentSongRequest();
+  queueRequest();
+}
+
+function subsystemChange(system) {
+  switch (system) {
+    case 'player':
+      currentSongRequest();
+      break;
+    case 'options':
+      interfaceRegistration();
+  }
+}
+
+function currentSongRequest() {
+  new CurrentSong (function(err , song) {
+    if (err) { console.log(err); }
+    else { 
+      song.render();
+      interfaceRegistration();
     }
   });
 }
 
 function queueRequest() {
-  var q = new Queue(function(err, queue) {
-    if (queue) { queue.render(); }
-    else if (err) { console.log(err); }
-     
+  new Queue(function(queue) {
+    if (queue) { 
+      queue.render(function() {
+      }); 
+    }
+    else {
+      showInfo('error rendering queue', 2500);
+    }
   });
 }
 

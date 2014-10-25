@@ -1,6 +1,7 @@
-var express = require('express'),
-    router = express.Router(),
-    komponist = require('../lib/komponist');
+var express = require('express')
+  ,  router = express.Router()
+  ,  komponist = require('../lib/komponist')
+  ,  lastfm = require('lastfm');
 
 //// get /login
 router.get('/login', function(req, res) {
@@ -163,6 +164,12 @@ router.get('/search/:searchString/:type', function(req, res) {
       });
     }
   }
+});
+
+//get lastfm info
+router.get('/lastfm/:artist/:album', function(req,res) {
+  console.log(req.body);
+  res.send(false);
 });
 
 //// get /logout
