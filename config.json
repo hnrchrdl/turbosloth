@@ -27,7 +27,7 @@
     "errorHandlerOptions": {"dumpExceptions": true, "showStack": true}
   },
   "lastfm": {
-    "key": "my_key",
-    "secret": "my_secret"
+    "key": "0c4ba4ad0bbe1c54091ebdd584452707",
+    "secret": "f1b774cc04713c559eb2eda1e01bcc28"
   }
 }
