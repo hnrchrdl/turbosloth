@@ -7,66 +7,76 @@ var Aorta = function(callback) {
   socket.emit('mpd', 'currentsong', [], function(err, song) {
     if (err) { 
       console.log('error fetching current song: ' + err);
-      a.song = undefined;
+      a.song = false;
+    }
+    else if (isEmpty(song)) {
+      a.song = false;
     }
     else { a.song = song; }
     socket.emit('mpd', 'status', [], function(err, status) {
       if (err) { 
         console.log('error fetching status: ' + err);
-        a.status = undefined;
+        a.status = false;
+        console.log(a.status);
       }
       else { a.status = status; }
-      registerMpdInterface(a.status);
       callback(a);
+      registerMpdInterface(status);
     });
   });
+  //registerMpdInterface(a.status);
 };
 // Prototypes
 Aorta.prototype.renderCurrentSong = function() {
-  
   var song = this.song;
-  var status = this.status;
-  try {
+  //var status = this.status;
+  var currentsong = $('#currentsong');
+  if (song) {
     // display the currently playing song
-    var currentsong = $('#currentsong');
-    if (status.state === 'stop') { currentsong.text(""); }
-    else {
-      currentsong.html(song.Artist + '<br>' + 
+    currentsong.html(song.Artist + '<br>' + 
           song.Title + '<br>' + 
           '<span class="muted">' + song.Album + '</span>');
-    }
-  } catch(err) { console.log(err); }
-  
-  // fetch album cover
-  //fetch_album_cover(song.Artist, song.Album, function(url) {
-  //  console.log(url);
-  //});
-  if (this.song) {
     this.highlightSongInQueue();
-    this.renderProgressBar();
+    // fetch album cover
+    //fetch_album_cover(song.Artist, song.Album, function(url) {
+    //  console.log(url);
+    //});
   }
+  else {
+    currentsong.html('<span class="muted">end of queue</span>');
+  }
+  //this.renderProgressBar();
 };
 Aorta.prototype.highlightSongInQueue = function() {
+  var song = this.song;
   try {
-    var song = this.song;
     $('#queue').find('.song').removeClass('active');
     $('#queue').find('.song').find('.attr.songpos').removeClass('active');
+    $('#queue').find('.song').find('.queue-play').removeClass('active');
     $('#queue').find('.song.' + song.Id).addClass('active');
     $('#queue').find('.song.' + song.Id).find('.attr.songpos').addClass('active');
-  } catch (err) { console.log(err); }
+    $('#queue').find('.song.' + song.Id).find('.attr.songpos').addClass('active');
+    $('#queue').find('.song.' + song.Id).find('.queue-play').addClass('active');
+  } 
+  catch (err) {
+    console.log(err);
+  }
 };
 Aorta.prototype.scrollToCurrentSong = function() {
-  try {
-    if (this.song) {
+  var song = this.song;
+  if (song) {
+    try {
       var scrollable = $('#queue').find('.scrollable');
-      var scrolltop = $('.song.' + this.song.Id).offset().top +
-        scrollable.scrollTop() -
-        scrollable.offset().top;
-      scrollable.animate({
-        scrollTop: scrolltop
-      }, 0);
-    } 
-  } catch (err) { console.log('cannot scroll to song ' + song + '. reason: ' + err); }
+      var scrolltop = $('.song.' + song.Id).offset().top +
+          scrollable.scrollTop() -
+          scrollable.offset().top;
+      scrollable.animate({scrollTop: scrolltop}, 0);
+    }
+    catch (err) { 
+      console.log(err);
+      showInfo("error scrolling to current song", 5000);
+    }
+  }
 };
 Aorta.prototype.renderProgressBar = function() {
   var status = this.status;
@@ -98,7 +108,7 @@ Aorta.prototype.renderProgressBar = function() {
         stop();
         progressBar.css('width',0);
     }
-  } catch(err) { console.log(err) }
+  } catch(err) { console.log(err); }
 };
 
 //// Queue
@@ -125,8 +135,10 @@ Queue.prototype.render = function() {
     fixScrollHeight();
     // highlight current song in playlist
     new Aorta(function(a) {
-      a.highlightSongInQueue();
-      a.scrollToCurrentSong();
+      if (a.song) {
+        a.highlightSongInQueue();
+        a.scrollToCurrentSong();
+      }
     }); 
 };
 

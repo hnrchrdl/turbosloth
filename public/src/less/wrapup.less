@@ -1,15 +1,14 @@
-html,body,#background-wrapper {
+html, body {
 	height: 		100%;
 	width: 			100%;
-	padding: 		0;
-	margin: 		0;
-	font-family: 		'Open Sans', sans-serif;
+	padding:		0;
+	margin:			0;
+	font-family:		'Open Sans', sans-serif;
 	font-weight:		400;
-	color:				@fontPrimary;
+	color:			@fontPrimary;
 	font-size: 		@fontSize;
-}
+	background-color: 	@background;
 
-body {
 	// background patterns are taken from subtlepatterns.com. thank you!
 	//background: 	url("@{images}/congruent_outline.png");
 	//background: 	url("@{images}/classy_fabric.png");
@@ -27,104 +26,108 @@ body {
 }
 
 #background-wrapper {
-	position: 		relative;
-	background-color: 	@background;
-}
-
-#connection-info {
-		position: absolute;
-		bottom: 	@short;
-		right: 		@long;
-		color: 		@concrete;
+	//position: 		relative;
+	//background-color: 	@background;
 }
 
 h1 {
-	margin: 0;
-	padding: 0;
+	margin: 		0;
+	padding: 		0;
+}
+a {
+	color: 			@primary;
 }
 
 hr {
 	border:none;
-	//background-color: @transparentWhite;
 	background-color: @primary;
 	height: 1px;
 	margin: 0;
 }
 
 .clear {
-	clear:both;
+	clear: both;
 }
 
 .muted {
-	color: @muted;
+	color: 			@muted;
 }
 
 .button-wrapper {
-	height: 		@buttonHeight;
-	line-height: 	@buttonHeight;
-	text-align:		center;
+	height: 				@buttonHeight;
+	min-width:  		@buttonHeight;
+	line-height: 		@buttonHeight;
+	text-align:			center;
 	&.left {
-		float: 			left;
+		float: 					left;
 	}
 	&.right {
-		float: 			right;
+		float: 					right;
 	}
-}
-.loading {
-	height: 		@buttonHeight;
-	line-height: 	@buttonHeight;
-	text-align:		center;
-	display: none;
-	&.left {
-		float: 			left;
-	}
-	&.right {
-		float: 			right;
-	}
-}
 
-a {
-	color: @primary;
-}
-
-.button {
-	height: 		buttonHeight;
-	min-width:  @buttonHeight;
-	cursor: 		pointer;
-	display: 		inline-block;
-	&:hover {
-		color: 		@primary;
-	}
-	&.active {
-		color:	@primary;
-	}
-	&.disabled {
-		color: @muted;
-		&:hover {
-			background: none;
-			cursor: default;
+	.button {
+		height: 		@buttonHeight;
+		min-width:  @buttonHeight;
+		display: 		inline-block;
+		cursor: 		pointer;
+		&.text {
+	  	padding-left: 		@medium;
+	   	padding-right: 		@medium; 
+	  }
+	  &:hover {
+			color: 						@primary;
+		}
+		&.active {
+			color:						@primary;
+		}
+		&.disabled {
+			color: 						@muted;
+			&:hover {
+				cursor:					default;
+			}
 		}
 	}
-  &.text {
-  	padding-left: @medium;
-   	padding-right: @medium; 
-  }
+}
+
+.loading {
+	height: 				@buttonHeight;
+	line-height: 		@buttonHeight;
+	text-align:			center;
+	display: 				none;
+	&.left {
+		float: 					left;
+	}
+	&.right {
+		float: 					right;
+	}
 }
 
 input, select {
-	display: 					inline-block;
-	//background-color: @transparentGray;
-	background-color: @background;
-	color: 						@fontPrimary;
-	border: 					1px solid @muted;
-	height: 					@long;
-	padding: 					0 @medium;
-	margin-bottom: 		@short;
+	display: 						inline-block;
+	height: 						@long;
+	box-sizing: 				border-box;
+  -moz-box-sizing: 		border-box;
+  -webkit-box-sizing: border-box;
+	background-color: 	@background;
+	color: 							@fontPrimary;
+	border: 						1px solid @subtle;
+	padding: 						0 @medium;
+	margin-bottom: 			@short;
 	&:focus {
-		border: 					1px solid @primary;
+		border: 						1px solid @primary;
+		outline: 0;
 	}
 }
 
+#connection-info {
+	position: 	absolute;
+	bottom: 	@short;
+	right: 		@long;
+	color: 		@muted;
+}
+
+
+//pseudo-classes
 ::-webkit-input-placeholder {
    color: @muted;
 }
@@ -147,4 +150,5 @@ input, select {
 	background: @primary; 
 	color: 		#fff; 
 }
+
 

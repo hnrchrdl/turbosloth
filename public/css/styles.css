@@ -1,6 +1,5 @@
 html,
-body,
-#background-wrapper {
+body {
   height: 100%;
   width: 100%;
   padding: 0;
@@ -9,20 +8,14 @@ body,
   font-weight: 400;
   color: #2b3d4f;
   font-size: 11px;
-}
-#background-wrapper {
-  position: relative;
-  background-color: #edf1f2;
-}
-#connection-info {
-  position: absolute;
-  bottom: 5px;
-  right: 30px;
-  color: #95a6a7;
+  background-color: #f9fafb;
 }
 h1 {
   margin: 0;
   padding: 0;
+}
+a {
+  color: #e74d3c;
 }
 hr {
   border: none;
@@ -34,10 +27,11 @@ hr {
   clear: both;
 }
 .muted {
-  color: #95a6a7;
+  color: rgba(43, 61, 79, 0.7);
 }
 .button-wrapper {
   height: 30px;
+  min-width: 30px;
   line-height: 30px;
   text-align: center;
 }
@@ -46,6 +40,28 @@ hr {
 }
 .button-wrapper.right {
   float: right;
+}
+.button-wrapper .button {
+  height: 30px;
+  min-width: 30px;
+  display: inline-block;
+  cursor: pointer;
+}
+.button-wrapper .button.text {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+.button-wrapper .button:hover {
+  color: #e74d3c;
+}
+.button-wrapper .button.active {
+  color: #e74d3c;
+}
+.button-wrapper .button.disabled {
+  color: rgba(43, 61, 79, 0.7);
+}
+.button-wrapper .button.disabled:hover {
+  cursor: default;
 }
 .loading {
   height: 30px;
@@ -59,59 +75,43 @@ hr {
 .loading.right {
   float: right;
 }
-a {
-  color: #e74d3c;
-}
-.button {
-  height: buttonHeight;
-  min-width: 30px;
-  cursor: pointer;
-  display: inline-block;
-}
-.button:hover {
-  color: #e74d3c;
-}
-.button.active {
-  color: #e74d3c;
-}
-.button.disabled {
-  color: #95a6a7;
-}
-.button.disabled:hover {
-  background: none;
-  cursor: default;
-}
-.button.text {
-  padding-left: 15px;
-  padding-right: 15px;
-}
 input,
 select {
   display: inline-block;
-  background-color: #edf1f2;
-  color: #2b3d4f;
-  border: 1px solid #95a6a7;
   height: 30px;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  background-color: #f9fafb;
+  color: #2b3d4f;
+  border: 1px solid rgba(43, 61, 79, 0.1);
   padding: 0 15px;
   margin-bottom: 5px;
 }
 input:focus,
 select:focus {
   border: 1px solid #e74d3c;
+  outline: 0;
+}
+#connection-info {
+  position: absolute;
+  bottom: 5px;
+  right: 30px;
+  color: rgba(43, 61, 79, 0.7);
 }
 ::-webkit-input-placeholder {
-  color: #95a6a7;
+  color: rgba(43, 61, 79, 0.7);
 }
 :-moz-placeholder {
   /* Firefox 18- */
-  color: #95a6a7;
+  color: rgba(43, 61, 79, 0.7);
 }
 ::-moz-placeholder {
   /* Firefox 19+ */
-  color: #95a6a7;
+  color: rgba(43, 61, 79, 0.7);
 }
 :-ms-input-placeholder {
-  color: #95a6a7;
+  color: rgba(43, 61, 79, 0.7);
 }
 ::selection {
   background: #e74d3c;
@@ -130,7 +130,7 @@ select:focus {
   font-size: 56px;
   text-align: center;
   padding: 40px 0;
-  color: #95a6a7;
+  color: rgba(43, 61, 79, 0.7);
 }
 .login .form-wrapper {
   display: block;
@@ -159,8 +159,8 @@ header {
   padding-left: 30px;
   padding-right: 30px;
   height: 50px;
-  border-bottom: 1px solid #95a6a7;
-  background-color: #edf1f2;
+  line-height: 50px;
+  background-color: #f9fafb;
 }
 header #info-wrapper {
   display: none;
@@ -168,28 +168,26 @@ header #info-wrapper {
   top: 0;
   left: 50%;
   height: 30px;
+  text-align: center;
 }
 header #info-wrapper #info {
   position: relative;
   left: -50%;
-  height: 30px;
-  line-height: 30px;
   overflow: hidden;
-  color: #95a6a7;
+  color: rgba(43, 61, 79, 0.7);
   padding: 0 15px;
-  text-align: center;
-  border-bottom: 1px solid #95a6a7;
+  border-bottom: 1px solid rgba(43, 61, 79, 0.1);
 }
 header h1 {
-  color: #95a6a7;
   float: left;
-  line-height: 50px;
+  color: rgba(43, 61, 79, 0.7);
   font-family: 'Quicksand', Helvetica, sans-serif;
   font-weight: 300;
   font-size: 40px;
 }
 header #submenu {
   float: right;
+  line-height: 50px;
   margin-top: 10px;
 }
 #left {
@@ -199,53 +197,50 @@ header #submenu {
   left: 30px;
   width: 200px;
 }
-nav {
+#left nav {
   padding: 15px 0;
-  border-bottom: 1px solid #95a6a7;
+  border-bottom: 1px solid rgba(43, 61, 79, 0.7);
 }
-#player-options {
+#left #player-options {
   padding: 15px 0;
   font-size: 14px;
 }
-#control-menu {
-  position: absolute;
-  bottom: 10px;
-}
-#control-menu .button {
-  width: 40px;
-}
-#currentsong-wrapper {
+#left #currentsong-wrapper {
   position: absolute;
   bottom: 255px;
-  left: 0;
-  padding-left: 15px;
-  padding-top: 15px;
-  min-height: 55px;
-  border-left: 1px solid #95a6a7;
+  padding: 15px 0 15px 15px;
+  border-left: 1px solid rgba(43, 61, 79, 0.7);
 }
-#albumart {
+#left #albumart {
   position: absolute;
   bottom: 40px;
   height: 200px;
   width: 200px;
   background-color: #e74d3c;
 }
-#seek-bar-container {
+#left #control-menu {
+  position: absolute;
+  bottom: 10px;
+}
+#left #control-menu .button {
+  width: 40px;
+}
+#left #seek-bar-container {
   position: absolute;
   bottom: 0;
   width: 198px;
   cursor: pointer;
-  border-left: 1px solid #95a6a7;
-  border-right: 1px solid #95a6a7;
+  border-left: 1px solid rgba(43, 61, 79, 0.7);
+  border-right: 1px solid rgba(43, 61, 79, 0.7);
 }
-#seek-bar-container #seek-bar {
+#left #seek-bar-container #seek-bar {
   height: 8px;
   width: 0%;
   background-color: #e74d3c;
 }
 main {
   position: absolute;
-  top: 65px;
+  top: 50px;
   bottom: 30px;
   left: 260px;
   right: 30px;
@@ -254,22 +249,23 @@ main .song,
 main .dir,
 main .playlist {
   height: 30px;
-  overflow: hidden;
   line-height: 30px;
-  border-bottom: 1px solid #95a6a7;
+  overflow: hidden;
+  border-bottom: 1px solid rgba(43, 61, 79, 0.1);
 }
 main .song .attr,
 main .dir .attr,
 main .playlist .attr {
+  height: 30px;
   display: inline-block;
   margin-left: 15px;
 }
 main .song .attr.space,
 main .dir .attr.space,
 main .playlist .attr.space {
-  height: 5px;
-  margin-top: 12.5px -2;
-  border-right: 1px solid #95a6a7;
+  height: 10px;
+  margin-top: 10px;
+  border-right: 1px solid rgba(43, 61, 79, 0.1);
 }
 main .song .attr.songpos.active,
 main .dir .attr.songpos.active,
@@ -279,12 +275,12 @@ main .playlist .attr.songpos.active {
 main .song.active,
 main .dir.active,
 main .playlist.active {
-  border-bottom: 1px solid #95a6a7;
+  border-bottom: 1px solid #e74d3c;
 }
-.scrollable {
+main .scrollable {
   overflow-y: scroll;
 }
-.nav-main {
+main .nav-main {
   height: 30px;
 }
 ::-webkit-scrollbar {
@@ -302,9 +298,6 @@ main .playlist.active {
   position: relative;
   left: -40px;
 }
-#playlists .scrollable {
-  overflow-y: scroll;
-}
 #browse .dir-info {
   float: left;
   line-height: 30px;
@@ -316,7 +309,7 @@ main .playlist.active {
 #browse .attr.space {
   height: 15px;
   margin-top: 7.5px;
-  border-right: 1px solid #95a6a7;
+  border-right: 1px solid rgba(43, 61, 79, 0.1);
 }
 #search input,
 #search select {

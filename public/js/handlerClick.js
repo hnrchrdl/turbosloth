@@ -48,6 +48,7 @@ var initHandlers = function() {
             if (status === true) { // stop streaming
               audio_element.pause();
               audio_element.src = "";
+              showInfo("streaming: off" , 2000);
               socket.emit('set_streaming_status', false);
               $('#stream').removeClass('active');
             }
@@ -55,6 +56,7 @@ var initHandlers = function() {
               audio_element.src = stream;
               audio_element.load();
               audio_element.play();
+              showInfo("streaming: on" , 2000);
               socket.emit('set_streaming_status', true);
               $('#stream').addClass('active');
             }
@@ -72,8 +74,11 @@ var initHandlers = function() {
           var song = a.song;
           var seek_ratio = ( (e.clientX - 30 )/ 200);
           var seek_sec = String(Math.round(seek_ratio * song.Time));
-          socket.emit('mpd','seekcur',[seek_sec]);
-        } catch(e) { console.log(e); }
+          socket.emit('mpd','seekcur',[seek_sec], function(err, msg) {
+            if (err) {  }
+            else { showInfo("seek to: " + secondsToTimeString(seek_ratio * song.Time) , 2000); }
+          });
+        } catch(err) { showInfo("error: " + err , 2000); }
       }); 
     });
     
@@ -148,7 +153,7 @@ var initHandlers = function() {
     $('main').on('click', '.queue-remove', function() {
       var song = $(this).parents('.song');
       var songid = song.attr('data-id');
-      socket.emit('mpd', 'deleteid', [songid], function(){
+      socket.emit('mpd', 'deleteid', [songid], function(err, msg) {
         if (err) { showInfo("error: " + err, 2000); }
         else {
           showInfo("song removed from queue", 1500);
@@ -162,7 +167,7 @@ var initHandlers = function() {
     // save playlist
     $('main').on('keyup', '#save-playlist', function(e){
       if ( e.which === 13 ) {
-        var playlistName = $('#save-playlist').val(); 
+        var playlistName = $('#save-playlist').val();
         socket.emit('mpd', 'save', [playlistName], function(err, msg){
           if (err === {}) { showInfo("error: " + err, 2000); }
           else {
@@ -186,9 +191,7 @@ var initHandlers = function() {
       socket.emit('mpd', 'clear', [], function(err, msg) {
         socket.emit('mpd', 'load', [playlist], function(err, msg){
           if (err) { showInfo("error: " + err, 2000); }
-          else { 
-            showInfo("queue replaced with '" + playlist + "'", 1500); 
-          }
+          else { showInfo("queue replaced with '" + playlist + "'", 1500); }
         });
       });
     });
@@ -211,18 +214,18 @@ var initHandlers = function() {
     });
     
     //// browse
-    // dir a
+    // browse dir a
     $('main').on('click', 'a.browse-dir', function(e) {
       e.preventDefault();
       browseRequest($(this).attr('data-dir'));
     });
-    // dir-info a
+    // browse dir-info a
     $('main').on('click','a.browse-breadcrumb', function(e) {
       e.preventDefault();
       browseRequest("--" + $(this).attr('data-dir'));
     });
 
-    // register Buttons
+    // browse append
     $('main').on('click', '.browse-append', function() {
       var dir = $(this).parents('.dir').attr('data-directory');
       socket.emit('mpd', 'add', [dir], function(err, msg) {
@@ -230,7 +233,7 @@ var initHandlers = function() {
         else { showInfo("folder '" + dir + "' appended to queue", 1500); }
       });
     });
-
+    // browse load
     $('main').on('click', '.browse-load', function() {
       var dir = $(this).parents('.dir').attr('data-directory');
       socket.emit('mpd', 'clear', [], function(err,msg) {
@@ -248,19 +251,23 @@ var initHandlers = function() {
       if ( e.which === 13 ) {
         var searchString = $('#search').find('input.search-input').val();
         var searchType = $('#search').find('select.search-select').val();
-        searchRequest(searchString, searchType);
+        searchString.length <= 2 ?
+          showInfo("please enter 3 chars as a minimum") :
+          searchRequest(searchString, searchType);
       }
     });
     // change of search category select
     $('main').on('change', 'select.search-select', function() {
       var searchString = $('#search').find('input.search-input').val();
       var searchType = $('#search').find('select.search-select').val();
-      searchRequest(searchString, searchType);
+      searchString.length <= 2 ?
+        showInfo("minimum: 3 characters", 2000) :
+        searchRequest(searchString, searchType);
     });
     // click append
     $('main').on('click', '.search-append', function(){
       var dir = $(this).parents('.dir').attr('data-file');
-      socket.emit('mpd', 'add', [dir], function(err,msg){
+      socket.emit('mpd', 'add', [dir], function(err, msg) {
         if (err) { showInfo("error: " + err, 2000); }
         else { showInfo("song '" + dir + "' added to queue", 1500); }
       });
@@ -296,9 +303,7 @@ var initHandlers = function() {
       try {
         var artist = $(this).parents('.dir').find('.attr.artist').text();
         var album = $(this).parents('.dir').find('.attr.album').text();
-        console.log(artist);
-        console.log(album);
-        socket.emit('mpd', 'findadd', ['Artist',artist,'Album',album], function(err, msg) {
+        socket.emit('mpd', 'searchadd', ['Artist',artist,'Album',album], function(err, msg) {
           if (err) { showInfo("error: " + err, 2000); }
           else { showInfo(album + "' by " + artist + " added", 1500); }
         });
@@ -307,10 +312,9 @@ var initHandlers = function() {
     });
     // click add all from artist
     $('main').on('click', '.search-add-from-artist', function() {
-      console.log('check');
       try {
         var artist = $(this).parents('.dir').find('.attr.artist').text();
-        socket.emit('mpd', 'findadd', ['Artist', artist], function(err, msg) {
+        socket.emit('mpd', 'searchadd', ['Artist', artist], function(err, msg) {
           if (err) { showInfo("error: " + err, 2000); }
           else { showInfo("added all songs by '" + artist + "' to queue", 1500); }
         });
@@ -325,7 +329,8 @@ var initHandlers = function() {
         var searchString = $('#search').find('input.search-input').val();
         var searchType = $('#search').find('select.search-select').val();
         console.log(searchType);
-        socket.emit('mpd', 'findadd', [searchType, searchString], function(err, msg) {
+        console.log(searchString);
+        socket.emit('mpd', 'searchadd', [searchType, searchString], function(err, msg) {
           if (err) { showInfo("error: " + err, 2000); }
           else { showInfo("search results added to queue", 1500); }
         });
@@ -333,114 +338,113 @@ var initHandlers = function() {
       catch (err) { showInfo("error: " + err, 2000); }
     });
 
-
   }();
-
 };
 
-
 var registerMpdInterface = function(status) {
+  console.log('registerMpdInterface');
+  console.log(status);
+  if (status) {
+    return function () {
+        // unbind all elements to prevent multiple assignment
+      $('#control-menu').off('click'); 
+      $('#player-options').off('click');
   
-  return function () {
-
-    // unbind all elements to prevent multiple assignment
-    $('#control-menu').off('click'); 
-    $('#player-options').off('click');
-
-    $('#control-menu').on('click', '#previous', function() {
-      socket.emit('mpd', 'previous', [], function(err, msg) {
-        if (err) { showInfo("error: " + err, 2000); }
-        else { showInfo("previous"); }
+      $('#control-menu').on('click', '#previous', function() {
+        socket.emit('mpd', 'previous', [], function(err, msg) {
+          if (err) { showInfo("error: " + err, 2000); }
+          else { showInfo("previous"); }
+        });
       });
-    });
-
-    $('#control-menu').on('click', '#next', function() {
-      socket.emit('mpd', 'next', [], function(err, msg) {
-        if (err) { showInfo("error: " + err, 2000); }
-        else { showInfo("next"); }
+  
+      $('#control-menu').on('click', '#next', function() {
+        console.log('debug click');
+        socket.emit('mpd', 'next', [], function(err, msg) {
+          if (err) { showInfo("error: " + err, 2000); }
+          else { showInfo("next"); }
+        });
       });
-    });
-
-    $('#control-menu').on('click', '#play', function() {
-      socket.emit('mpd', 'play', [], function(err, msg) {
-        if (err) { showInfo("error: " + err, 2000); }
-        else { showInfo("play"); }
+  
+      $('#control-menu').on('click', '#play', function() {
+        socket.emit('mpd', 'play', [], function(err, msg) {
+          if (err) { showInfo("error: " + err, 2000); }
+          else { showInfo("play"); }
+        });
       });
-    });
-
-    $('#control-menu').on('click', '#pause', function() {
-      socket.emit('mpd', 'pause', [(status.state === 'pause' ? 0 : 1)], function(err, msg) {
-        if (err) { showInfo("error: " + err, 2000); }
-        else { showInfo("pause"); }
+  
+      $('#control-menu').on('click', '#pause', function() {
+        socket.emit('mpd', 'pause', [(status.state === 'pause' ? 0 : 1)], function(err, msg) {
+          if (err) { showInfo("error: " + err, 2000); }
+          else { showInfo("pause"); }
+        });
       });
-    });
-
-    $('#control-menu').on('click', '#stop', function() {
-      socket.emit('mpd', 'stop', [], function(err, msg) {
-        if (err) { showInfo("error: " + err, 2000); }
-        else { showInfo("stop"); }
+  
+      $('#control-menu').on('click', '#stop', function() {
+        socket.emit('mpd', 'stop', [], function(err, msg) {
+          if (err) { showInfo("error: " + err, 2000); }
+          else { showInfo("stop"); }
+        });
       });
-    });
-
-
-    $('#queue').on('click', '#random', function() {
-      socket.emit('mpd', 'random', [1 - status.random], function(err, msg) {
-        if (err) { showInfo("error: " + err, 2000); }
-        else {
-          var random = 1 - status.random === 1 ? "on" : "off";
-          showInfo("random: " + random, 1000); 
+  
+  
+      $('#queue').on('click', '#random', function() {
+        socket.emit('mpd', 'random', [1 - status.random], function(err, msg) {
+          if (err) { showInfo("error: " + err, 2000); }
+          else {
+            var random = 1 - status.random === 1 ? "on" : "off";
+            showInfo("random: " + random, 1000); 
+          }
+        });
+      });
+  
+      $('#queue').on('click', '#repeat', function() {
+        socket.emit('mpd', 'repeat', [1 - status.repeat], function(err, msg) {
+          if (err) { showInfo("error: " + err, 2000); }
+          else { 
+            var repeat = 1 - status.repeat === 1 ? "on" : "off";
+            showInfo("repeat: " + repeat, 1000);
+          }
+        });
+      });
+  
+      $('#queue').on('click', '#consume', function() {
+        socket.emit('mpd', 'consume', [1 - status.consume], function(err, msg) {
+          if (err) { showInfo("error: " + err, 2000); }
+          else {
+            var consume = 1 - status.consume === 1 ? "on" : "off";
+            showInfo("consume: " + consume, 1000);
+          }
+        });
+      });
+  
+      // indicate the status (play, pause, stop)
+      $('#control-menu').find('.button').removeClass('active');
+      $('#control-menu').find('#' + status.state).addClass('active');
+  
+      // indicate the status (repeat, random, comsume)
+      var random = $('#random');
+      if (status.random === '1') {
+        if (!random.hasClass('active')) {
+          random.addClass('active');
         }
-      });
-    });
-
-    $('#queue').on('click', '#repeat', function() {
-      socket.emit('mpd', 'repeat', [1 - status.repeat], function(err, msg) {
-        if (err) { showInfo("error: " + err, 2000); }
-        else { 
-          var repeat = 1 - status.repeat === 1 ? "on" : "off";
-          showInfo("repeat: " + repeat, 1000); 
+      } else { random.removeClass('active'); }
+  
+      var repeat = $('#repeat');
+      if (status.repeat === '1') {
+        if (!repeat.hasClass('active')) {
+          repeat.addClass('active');
         }
-      });
-    });
-
-    $('#queue').on('click', '#consume', function() {
-      socket.emit('mpd', 'consume', [1 - status.consume], function(err, msg) {
-        if (err) { showInfo("error: " + err, 2000); }
-        else {
-          var consume = 1 - status.consume === 1 ? "on" : "off";
-          showInfo("consume: " + consume, 1000); 
+      } else { repeat.removeClass('active'); }
+      
+      var consume = $('#consume');
+      if (status.consume === '1') {
+        if (!consume.hasClass('active')) {
+          consume.addClass('active');
         }
-      });
-    });
-
-    // indicate the status (play, pause, stop)
-    $('#control-menu').find('.button').removeClass('active');
-    $('#control-menu').find('#' + status.state).addClass('active');
-
-    // indicate the status (repeat, random, comsume)
-    var random = $('#random');
-    if (status.random === '1') {
-      if (!random.hasClass('active')) {
-        random.addClass('active');
-      }
-    } else { random.removeClass('active'); }
-
-    var repeat = $('#repeat');
-    if (status.repeat === '1') {
-      if (!repeat.hasClass('active')) {
-        repeat.addClass('active');
-      }
-    } else { repeat.removeClass('active'); }
-    
-    var consume = $('#consume');
-    if (status.consume === '1') {
-      if (!consume.hasClass('active')) {
-        consume.addClass('active');
-      }
-    } else { consume.removeClass('active'); }
-
-  }();
-    
+      } else { consume.removeClass('active'); }
+  
+    }();
+  }
 };
 
 

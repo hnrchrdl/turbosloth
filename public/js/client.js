@@ -24,11 +24,14 @@ $(document).ready(function() {
 
 function playerHasChanged(init) {
   var a = new Aorta(function(a) {
-    if (a) {
-      registerMpdInterface(a.status);
-      a.renderCurrentSong(a.status, a.song);
-      a.renderProgressBar(a.status);
-      init ? queueRequest() : a.highlightSongInQueue(a.song);
+    a.renderCurrentSong();
+    a.renderProgressBar();
+    registerMpdInterface(a.status);
+    //console.log(a.status.consume);
+    if (init) {
+      queueRequest();
+    } else {
+      a.highlightSongInQueue(a.song);
     }
   });
 }
@@ -61,8 +64,13 @@ function searchRequest(searchString, searchType) {
   if (searchString === "" || searchString === " " ) {
     searchString = "#";
   }
-  var s = new Search(searchString, searchType, function(err, search) {
-    if (search) { search.render(); }
-    else if (err) { console.log(err); }
-  });
+  try {
+    var s = new Search(searchString, searchType, function(err, search) {
+      if (search) { search.render(); }
+      else if (err) { console.log(err); }
+    });
+  } 
+  catch (e) {
+    showInfo("search failed", 2500);
+  }
 }
