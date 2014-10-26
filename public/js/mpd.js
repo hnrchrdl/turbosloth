@@ -10,6 +10,7 @@ var Status = function(callback) {
   });
 };
 Status.prototype.renderProgressBar = function() {
+  var status = this.obj;
   var progressBar = $('#seek-bar');
   // start
   var start = function startProgressbar (songTime, elapsed) {
@@ -18,15 +19,14 @@ Status.prototype.renderProgressBar = function() {
     progressBar
       .stop()
       .css('width',initial_width + '%')
-      .animate({'width': '100%'},duration * 1000, 'linear');
+      .animate({'width' : '100%'},duration * 1000, 'linear');
   };
   // stop
   var stop = function stopProgressBar () {
     progressBar.stop();
   };
-  var status = this.obj.status;
   if (status) {
-    switch (status) {
+    switch (status.state) {
       case 'play':
         var songTime = parseFloat(status.time.split(":")[1]);
         var elapsed = parseFloat(status.elapsed);
@@ -65,7 +65,10 @@ CurrentSong.prototype.render = function() {
       this.autoScroll();
     }
     // fetch album cover
-    //console.log(a.lastfm);
+    new LastAlbum(this.obj.Artist, this.obj.Album, function(Album) {
+      try { $('#albumart').css('background-image', 'url(' + Album.obj.album.image[3]['#text'] + ')'); }
+      catch(e) { $('#albumart').css('background-image', 'none !important') }
+    });
   }
   else {
     currentsong.html('<span class="muted">end of queue</span>');

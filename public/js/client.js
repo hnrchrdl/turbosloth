@@ -36,12 +36,15 @@ function subsystemChange(system) {
 }
 
 function currentSongRequest() {
-  new CurrentSong (function(err , song) {
+  new CurrentSong(function(err , Song) {
     if (err) { console.log(err); }
     else { 
-      song.render();
-      interfaceRegistration();
+      Song.render();
     }
+    interfaceRegistration();
+    new Status(function(err, Status) {
+      Status.renderProgressBar();
+    });
   });
 }
 

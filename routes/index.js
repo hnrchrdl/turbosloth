@@ -1,7 +1,7 @@
 var express = require('express')
   ,  router = express.Router()
   ,  komponist = require('../lib/komponist')
-  ,  lastfm = require('lastfm');
+  ,  lastfm = require('../app').lastfm;
 
 //// get /login
 router.get('/login', function(req, res) {
@@ -166,10 +166,31 @@ router.get('/search/:searchString/:type', function(req, res) {
   }
 });
 
-//get lastfm info
-router.get('/lastfm/:artist/:album', function(req,res) {
-  console.log(req.body);
+//get lastfm album
+router.get('/lastfmartist/:artist', function(req, res) {
+  console.log(req.params.artist);
+  var artist = decodeURIComponent(req.params.artist);
+  console.log(artist);
   res.send(false);
+});
+
+//get lastfm album
+router.get('/lastfmalbum/:artist/:album', function(req, res) {
+  console.log(req.params.artist);
+  console.log(req.params.album);
+  //lastfm.request(method, options);
+  var request = lastfm.request("album.getInfo", {
+    artist: req.params.artist,
+    album: req.params.album,
+    handlers: {
+      success: function(data) {
+        res.send(JSON.stringify(data));
+      },
+      error: function(error) {
+        res.send(JSON.stringify({album:false}));
+      }
+    }
+  });
 });
 
 //// get /logout

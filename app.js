@@ -8,16 +8,23 @@ var express = require('express')
   , bodyParser = require('body-parser')
   , session = require('express-session')
   , redis = require('redis')
-  , server = http.createServer(app);
+  , server = http.createServer(app)
+  , LastFmNode = require('lastfm').LastFmNode;
   //, passport = require("passport");
   
 if (app.get('env') !== 'production') {
   require('longjohn'); // for detailed error logging in dev
 }
-
+ 
 var config = require('./config.json')[app.get('env')];
 module.exports.config = config;
-console.log(config);
+
+module.exports.lastfm = new LastFmNode({
+  api_key: require('./config.json').lastfm.key,    // sign-up for a key at http://www.last.fm/api
+  secret: require('./config.json').lastfm.secret,
+  useragent: 'ts' // optional
+});
+
 //app.use(express.errorHandler(config.errorHandlerOptions));
 
 redisClient = redis.createClient(config.redisPort, config.redisHost);

@@ -69,14 +69,14 @@ var initHandlers = function() {
     $('#seek-bar-container').on('click', function(e) {
       // seek bar width is 200
       // subtract 30 for the left margin of x value
-      new Aorta(function(a) {
+      new CurrentSong(function(err, Song) {
         try {
-          var song = a.song;
+          var song = Song.obj;
           var seek_ratio = ( (e.clientX - 30 )/ 200);
           var seek_sec = String(Math.round(seek_ratio * song.Time));
           socket.emit('mpd','seekcur',[seek_sec], function(err, msg) {
             if (err) {  }
-            else { showInfo("seek to: " + secondsToTimeString(seek_ratio * song.Time) , 2000); }
+            else { showInfo("seek " + Math.round(seek_ratio * 100) + "% into song" , 2000); }
           });
         } catch(err) { showInfo("error: " + err , 2000); }
       }); 
@@ -341,7 +341,6 @@ var initHandlers = function() {
 };
 
 var interfaceRegistration = function() {
-
     new Status(function(err, status){
       if (err) { console.log(err); }
       else if (status.obj) {
