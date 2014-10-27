@@ -8,7 +8,7 @@
   "dependencies": {
     "express": "~4.2.0",
     "express-session": "~1.7.6",
-    "express-sessions": "~2.5.11",
+    "express-sessions": "~1.0.5",
     "cookie": "~0.1.2",
     "cookie-parser": "~1.0.1",
     "cookie-signature": "~1.0.5",
