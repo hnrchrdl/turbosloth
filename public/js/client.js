@@ -36,14 +36,14 @@ function subsystemChange(system) {
 }
 
 function currentSongRequest() {
-  new CurrentSong(function(err , Song) {
+  new CurrentSong(function(err , song) {
     if (err) { console.log(err); }
     else { 
-      Song.render();
+      song.render();
     }
     interfaceRegistration();
-    new Status(function(err, Status) {
-      Status.renderProgressBar();
+    new Status(function(err, status) {
+      status.renderProgressBar();
     });
   });
 }
@@ -51,8 +51,7 @@ function currentSongRequest() {
 function queueRequest() {
   new Queue(function(queue) {
     if (queue) { 
-      queue.render(function() {
-      }); 
+      queue.render();
     }
     else {
       showInfo('error rendering queue', 2500);

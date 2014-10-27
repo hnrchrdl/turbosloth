@@ -4,30 +4,48 @@ main {
   bottom:           @long;
   left:             @leftWidth + (@long * 2);
   right:            @long;
-  //padding:			    @medium 0 0;
-	.song, .dir, .playlist {
+  padding:			    @medium 0 0;
+	.item {
   	height: 	      @buttonHeight;
   	line-height: 	  @buttonHeight;
   	overflow: 	    hidden;
   	border-bottom: 	1px solid @subtle;
-  	.attr {
-      height:         @buttonHeight;
-  		display: 	      inline-block;
-  		margin-left: 	  @medium;
-  		&.space {
-  			height: 	      @buttonHeight / 3;
-  			margin-top: 	  (@buttonHeight / 2) - (@buttonHeight / 3 / 2);
-  			border-right: 	1px solid @subtle;
-  		}
-  		&.songpos.active {
-  			color: @primary;
-  		}
-  	}
+    padding-right:  @short;
+    // no text select
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    cursor: default; 
   	&.active {
   		border-bottom: 1px solid @primary;
   		//border-bottom: 1px solid @primary;
   		//background-color: @hoverBackground;
   	}
+    &.selected {
+      background-color: @extraSubtle;
+    }
+    .attr {
+      height:         @buttonHeight;
+      display:        inline-block;
+      margin-left:    @medium;
+      &.left {
+        float:        left;
+      }
+      &.right {
+        float:        right;
+      }
+      &.space {
+        height:         @buttonHeight / 3;
+        margin-top:     (@buttonHeight / 2) - (@buttonHeight / 3 / 2);
+        border-right:   1px solid @subtle;
+      }
+      &.songpos.active {
+        color: @primary;
+      }
+    }
   }
   
 	.scrollable {
@@ -38,6 +56,18 @@ main {
 		height: @buttonHeight;
 		//border-bottom: @lightBorder;
 	}
+}
+
+
+// contextmanu
+.contextmenu {
+    display: none;
+    z-index: 1000;
+    position: absolute;
+    overflow: hidden;
+    border: 1px solid @subtle;
+    background: @background;
+    padding: 0;
 }
 
 //pseudo classes for scrollbar

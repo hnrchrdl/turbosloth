@@ -1,17 +1,16 @@
 #browse {
-        .dir-info {
-                float:          left;
-                line-height:    @buttonHeight;
+    .breadcrumb {
+        float:          left;
+        line-height:    @buttonHeight;
+        .item {
+            float: left;
         }
-        
-        .attr {
-                display:        inline-block;
-                margin-left:    @medium;
-                
-                &.space {
-                        height:         @medium;
-                        margin-top:     (@buttonHeight / 2) - (@medium / 2);
-                        border-right:   1px solid @subtle;
-                }
+      }
+      .item {
+        cursor:     pointer;
+        &:hover {
+          color:      @primary;
         }
+    }
 }
+

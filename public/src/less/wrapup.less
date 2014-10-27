@@ -40,9 +40,12 @@ a {
 
 hr {
 	border:none;
-	background-color: @primary;
+	background-color: @subtle;
 	height: 1px;
 	margin: 0;
+	&.prime {
+		background-color: @primary;
+	}
 }
 
 .clear {
@@ -58,6 +61,13 @@ hr {
 	min-width:  		@buttonHeight;
 	line-height: 		@buttonHeight;
 	text-align:			center;
+  -webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	cursor: pointer; 
 	&.left {
 		float: 					left;
 	}
@@ -69,7 +79,6 @@ hr {
 		height: 		@buttonHeight;
 		min-width:  @buttonHeight;
 		display: 		inline-block;
-		cursor: 		pointer;
 		&.text {
 	  	padding-left: 		@medium;
 	   	padding-right: 		@medium; 
@@ -119,7 +128,7 @@ input, select {
 	}
 }
 
-#connection-info {
+#footer {
 	position: 	absolute;
 	bottom: 	@short;
 	right: 		@long;

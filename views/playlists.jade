@@ -2,24 +2,29 @@
   input#save-playlist.long(type='text',placeholder="save as new playlist")
   i.fa.fa-save
   .clear
-  hr
+  hr.prime
   .scrollable
     - each playlist in playlists
-      .playlist(data-playlist= playlist.playlist )
+      .item.leftclick(data-name= playlist.playlist)
         .attr= playlist.playlist
-        .attr.space
         span.muted
-          .attr
-            | songs: --num--
-          .attr.space
-          .attr
-            | last modified: --date--
-        .button-wrapper.right
-          .button.playlist-append(title="add to current playlist")
-            i.fa.fa-plus-square-o
-          .button.playlist-load(title="replace current playlist")
-            i.fa.fa-asterisk
-          //.space
-          //.attr.space
-          .button.playlist-delete
-            i.fa.fa-remove
+          .attr.right last modified: #{playlist.lastmodified}
+
+  ///contextmenu
+  .contextmenu.playlists
+    .button-wrapper.left
+      .button.left.text.add
+        i.fa.fa-plus-square-o
+        |  add to queue
+    .clear
+    .button-wrapper.left
+      .button.left.text.load
+        i.fa.fa-asterisk
+        |  replace queue
+    .clear
+    hr
+    .button-wrapper.left
+      .button.left.text.delete
+        i.fa.fa-remove
+        |  delete
+

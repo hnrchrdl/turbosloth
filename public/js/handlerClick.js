@@ -8,6 +8,9 @@ var initHandlers = function() {
     $('#logout').on('click', function(){
       window.location = '/logout';
     });
+    $('#settings').on('click', function(){
+      showInfo('hi dude!', 3000);
+    });
     
     //// nav main left
     // queue
@@ -71,7 +74,7 @@ var initHandlers = function() {
       // subtract 30 for the left margin of x value
       new CurrentSong(function(err, Song) {
         try {
-          var song = Song.obj;
+          var song = Song.data;
           var seek_ratio = ( (e.clientX - 30 )/ 200);
           var seek_sec = String(Math.round(seek_ratio * song.Time));
           socket.emit('mpd','seekcur',[seek_sec], function(err, msg) {
@@ -100,7 +103,7 @@ var initHandlers = function() {
       socket.emit('mpd', 'clear', [], function(err, msg) {
         if (err) { showInfo("error: " + err, 2000); }
         else {
-          showInfo("queue cleared", 1500);
+          showInfo("queue cleared", 2000);
           currentSongRequest();
           queueRequest();
         }
@@ -116,49 +119,66 @@ var initHandlers = function() {
         }
       });
     });
-    // click play
-    $('main').on('click', '.queue-play', function() {
-      var songid = $(this).parents('.song').attr('data-id');
-      socket.emit('mpd', 'playid', [songid]);
+    // click play with dblclick
+    $('main').on('dblclick', '#queue > .scrollable > .item', function() {
+      var songid = $(this).attr('data-id');
+      var pathToSong = $(this).attr('data-path');
+      socket.emit('mpd', 'playid', [songid], function() {
+        showInfo("play '" + pathToSong + "'", 2000);
+      });
     });
-    // click advanced
-    $('main').on('click','.queue-advanced', function() {
-      if ($(this).find('i').hasClass('fa-angle-down')) {
-        $(this).find('i').removeClass('fa-angle-down');
-        $(this).find('i').addClass('fa-angle-up');
-        $(this).parents('.song').height($(this).parents('.song').height()*2);
-      } else {
-        $(this).find('i').removeClass('fa-angle-up');
-        $(this).find('i').addClass('fa-angle-down');
-        $(this).parents('.song').height($(this).parents('.song').height()/2);
-      }
+    // click play from context
+    $('main').on('click', '#queue > .contextmenu > .button-wrapper > .play', function() {
+      var songid = $(this).closest('.contextmenu').attr('data-id');
+      var songpath = $(this).closest('.contextmenu').attr('data-path');
+      socket.emit('mpd', 'playid', [songid], function(err, msg) {
+        if (err) { showInfo(err, 2000); }
+        else { showInfo("play: '" + songpath + "'", 2000); }
+      });
+      $(".contextmenu").hide();
+      $('.leftclick').removeClass('selected');
     });
-    // click search artist
-    $('main').on('click', '.queue-search', function() {
-      var artist = $(this).parents('.song').find('.attr.artist').text();
+    // click move next from context
+    $('main').on('click', '#queue > .contextmenu > .button-wrapper > .movenext', function() {
+      var songid = $(this).closest('.contextmenu').attr('data-id');
+      socket.emit('mpd', 'moveid', [songid, -1], function(err, msg) {
+        if (err) { showInfo(err, 2000); }
+        else { showInfo("moved to next", 2000); }
+      });
+      $(".contextmenu").hide();
+      $('.leftclick').removeClass('selected');
+      queueRequest();
+    });
+    // click search artist from context
+    $('main').on('click', '#queue > .contextmenu> .button-wrapper > .search', function() {
+      var artist = $(this).closest('.contextmenu').attr('data-artist');
       searchRequest(artist, 'Artist');
     });
-    // click lookup
-    $('main').on('click', '.queue-lookup', function() {
+    // click lookup from context
+    $('main').on('click', '#queue > .contextmenu > .button-wrapper > .browse', function() {
       try {
-        var directory = ($(this).parents('.song').attr('data-file').split('/'));
+        var directory = ($(this).closest('.contextmenu').attr('data-path').split('/'));
         directory.pop();
         directory = directory.join('/');
         browseRequest(directory);
-      } catch (err) {
+      }
+      catch (err) {
         showInfo("error: " + err, 2000);
+        $(".contextmenu").hide();
+        $('.leftclick').removeClass('selected');
       }
     });
-    // click remove
-    $('main').on('click', '.queue-remove', function() {
-      var song = $(this).parents('.song');
-      var songid = song.attr('data-id');
+    // click remove from context
+    $('main').on('click', '#queue > .contextmenu > .button-wrapper > .remove', function() {
+      var songid = $(this).closest('.contextmenu').attr('data-id');
       socket.emit('mpd', 'deleteid', [songid], function(err, msg) {
         if (err) { showInfo("error: " + err, 2000); }
         else {
-          showInfo("song removed from queue", 1500);
-          song.remove();
+          showInfo("song removed from queue", 2000);
+          $('main').find('.queue > .item[data-id="' + songid + '"]').remove();
         } 
+        $(".contextmenu").hide();
+        $('.leftclick').removeClass('selected');
       });
     });
     
@@ -171,75 +191,91 @@ var initHandlers = function() {
         socket.emit('mpd', 'save', [playlistName], function(err, msg){
           if (err === {}) { showInfo("error: " + err, 2000); }
           else {
-            showInfo("playlist saved as: '" + playlistName + "'", 1500);
+            showInfo("playlist saved as: '" + playlistName + "'", 2000);
             playlistsRequest();
           }
         });
       }
     });
-    // append
-    $('main').on('click','.playlist-append', function() {
-      var playlist = $(this).parents('.playlist').attr('data-playlist');
-      socket.emit('mpd', 'load', [playlist], function(err,msg){
+    // append from context
+    $('main').on('click', '#playlists > .contextmenu > .button-wrapper > .add', function() {
+      var playlist = $(this).closest('.contextmenu').attr('data-name');
+      socket.emit('mpd', 'load', [playlist], function(err, msg) {
         if (err) { showInfo("error: " + err, 2000); }
-        else { showInfo("playlist '" + playlist + "' added to queue", 1500); }
+        else {  showInfo("playlist '" + playlist + "' added to queue", 2000); }
+        $(".contextmenu").hide();
+        $('.leftclick').removeClass('selected');
       });
     });
-    // load
-    $('main').on('click', '.playlist-load.button', function() {
-      var playlist = $(this).parents('.playlist').attr('data-playlist');
+    // load from context
+    // append from context
+    $('main').on('click', '#playlists > .contextmenu > .button-wrapper > .load', function() {
+      var playlist = $(this).closest('.contextmenu').attr('data-name');
       socket.emit('mpd', 'clear', [], function(err, msg) {
-        socket.emit('mpd', 'load', [playlist], function(err, msg){
+        socket.emit('mpd', 'load', [playlist], function(err, msg) {
           if (err) { showInfo("error: " + err, 2000); }
-          else { showInfo("queue replaced with '" + playlist + "'", 1500); }
+          else { showInfo("playlist '" + playlist + "' added to queue", 2000); }
+          $(".contextmenu").hide();
+          $('.leftclick').removeClass('selected');
         });
       });
     });
-    // delete
-    $('main').on('click','.playlist-delete',function() {
-      var playlist = $(this).parents('.playlist').attr('data-playlist');
-      var button = $("<a href='#' id='delete-playlist-confirm' data-playlist=" + playlist + ">ok</a>");
-      showInfo("delete playlist " + playlist + "? ", 10000);
+    // delete from context
+    $('main').on('click', '#playlists > .contextmenu > .button-wrapper > .delete', function() {
+      var name = $(this).closest('.contextmenu').attr('data-name');      
+      var button = $("<a href='#' id='delete-playlist-confirm' data-name=" + name + ">ok</a>");
+      showInfo("delete playlist " + name + "? ", 10000);
       $('#info').append(button);
     });
     $('#info').on('click', '#delete-playlist-confirm',function() {
-      var playlist = $(this).attr('data-playlist');
-      socket.emit('mpd', 'rm', [playlist], function(err, msg) {
-        if (err) { showInfo("error: " + err, 2000); }
+      var name = $(this).attr('data-name');
+      socket.emit('mpd', 'rm', [name], function(err, msg) {
+        if (err) { 
+          showInfo("error: " + err, 2000);
+          $(".contextmenu").hide();
+          $('.leftclick').removeClass('selected');
+        }
         else {
-          showInfo("playlist '" + playlist + "' deleted", 1500);
+          showInfo("playlist '" + name + "' deleted", 1500);
           playlistsRequest();
         }
       });  
     });
     
     //// browse
-    // browse dir a
-    $('main').on('click', 'a.browse-dir', function(e) {
-      e.preventDefault();
-      browseRequest($(this).attr('data-dir'));
-    });
-    // browse dir-info a
-    $('main').on('click','a.browse-breadcrumb', function(e) {
-      e.preventDefault();
-      browseRequest("--" + $(this).attr('data-dir'));
-    });
-
-    // browse append
-    $('main').on('click', '.browse-append', function() {
-      var dir = $(this).parents('.dir').attr('data-directory');
-      socket.emit('mpd', 'add', [dir], function(err, msg) {
+    // rescan
+    $('main').on('click', '#browse > .button-wrapper > .rescan', function() {
+      socket.emit('mpd', 'rescan', [], function(err, msg) {
         if (err) { showInfo("error: " + err, 2000); }
-        else { showInfo("folder '" + dir + "' appended to queue", 1500); }
+        else { showInfo('database rescan complete', 2000); }
       });
     });
-    // browse load
-    $('main').on('click', '.browse-load', function() {
-      var dir = $(this).parents('.dir').attr('data-directory');
+
+    // browse breadcrumb
+    $('main').on('click','#browse > .breadcrumb > .item', function() {
+      browseRequest('#' + $(this).attr('data-position'));
+    });
+    // browse item
+    $('main').on('click', '#browse > .scrollable > .item.folder', function() {
+      console.log($(this).attr('data-path'));
+      browseRequest($(this).attr('data-path'));
+    });
+
+    // browse append via context
+    $('main').on('click', '#browse > .contextmenu > .button-wrapper > .add', function() {
+      var dir = $(this).closest('.contextmenu').attr('data-path');
+      socket.emit('mpd', 'add', [dir], function(err, msg) {
+        if (err) { showInfo("error: " + err, 2000); }
+        else { showInfo('"' + dir + "' added to end of queue", 1500); }
+      });
+    });
+    // browse load via context
+    $('main').on('click', '.contextmenu.browse > .button-wrapper > .load', function() {
+      var dir = $(this).closest('.contextmenu').attr('data-path');
       socket.emit('mpd', 'clear', [], function(err,msg) {
         socket.emit('mpd', 'add', [dir], function(err,msg) {
           if (err) { showInfo("error: " + err, 2000); }
-          else { showInfo("folder '" + dir + "' loaded into queue", 1500); }
+          else { showInfo('queue replaced with "' + dir + '"', 1500); }
         });
       });
     });
@@ -264,46 +300,33 @@ var initHandlers = function() {
         showInfo("minimum: 3 characters", 2000) :
         searchRequest(searchString, searchType);
     });
+    // click add all from search
+    $('main').on('click', 'a.add-all-from-search', function(e) {
+      e.preventDefault();
+      try {
+        var searchString = $('#search').find('input.search-input').val();
+        var searchType = $('#search').find('select.search-select').val();
+        socket.emit('mpd', 'searchadd', [searchType, searchString], function(err, msg) {
+          if (err) { showInfo("error: " + err, 2000); }
+          else { showInfo("search results added to queue", 1500); }
+        });
+      }
+      catch (err) { showInfo("error: " + err, 2000); }
+    });
     // click append
-    $('main').on('click', '.search-append', function(){
-      var dir = $(this).parents('.dir').attr('data-file');
+    $('main').on('click', '#search > .contextmenu > .button-wrapper > .add', function(){
+      var dir = $(this).closest('.contextmenu').attr('data-path');
       socket.emit('mpd', 'add', [dir], function(err, msg) {
         if (err) { showInfo("error: " + err, 2000); }
         else { showInfo("song '" + dir + "' added to queue", 1500); }
       });
     });
-    // click advanced
-    $('main').on('click','.search-advanced', function() {
-      if ($(this).find('i').hasClass('fa-angle-down')) {
-        $(this).find('i').removeClass('fa-angle-down');
-        $(this).find('i').addClass('fa-angle-up');
-        $(this).parents('.dir').height($(this).parents('.dir').height()*2);
-      } else {
-        $(this).find('i').removeClass('fa-angle-up');
-        $(this).find('i').addClass('fa-angle-down');
-        $(this).parents('.dir').height($(this).parents('.dir').height()/2);
-      }
-    });
-    // click search artist
-    $('main').on('click', '.search-artist', function() {
-      var artist = $(this).parents('.dir').find('.attr.artist').text();
-      searchRequest(artist, 'Artist');
-    });
-    // click lookup
-    $('main').on('click', '.search-lookup', function() {
-      try {
-        var directory = ($(this).parents('.dir').attr('data-file').split('/'));
-        directory.pop();
-        directory = directory.join('/');
-        browseRequest(directory);
-      } catch (err) { showInfo("error: " + err, 2000); }
-    });
     // click add all from album
-    $('main').on('click', '.search-add-from-album', function() {
+    $('main').on('click', '#search > .contextmenu > .button-wrapper > .add-from-album', function() {
       try {
-        var artist = $(this).parents('.dir').find('.attr.artist').text();
-        var album = $(this).parents('.dir').find('.attr.album').text();
-        socket.emit('mpd', 'searchadd', ['Artist',artist,'Album',album], function(err, msg) {
+        var artist = $(this).closest('.contextmenu').attr('data-artist');
+        var album = $(this).closest('.contextmenu').attr('data-album');
+        socket.emit('mpd', 'searchadd', ['Artist', artist, 'Album', album], function(err, msg) {
           if (err) { showInfo("error: " + err, 2000); }
           else { showInfo(album + "' by " + artist + " added", 1500); }
         });
@@ -311,30 +334,85 @@ var initHandlers = function() {
       catch (err) { showInfo("error: " + err, 2000); }
     });
     // click add all from artist
-    $('main').on('click', '.search-add-from-artist', function() {
+    $('main').on('click', '#search > .contextmenu > .button-wrapper > .add-from-artist', function() {
       try {
-        var artist = $(this).parents('.dir').find('.attr.artist').text();
+        var artist = $(this).closest('.contextmenu').attr('data-artist');
         socket.emit('mpd', 'searchadd', ['Artist', artist], function(err, msg) {
           if (err) { showInfo("error: " + err, 2000); }
-          else { showInfo("added all songs by '" + artist + "' to queue", 1500); }
+          else { showInfo("all songs by '" + artist + "' added", 1500); }
         });
       }
       catch (err) { showInfo("error: " + err, 2000); }
     });
-    // click add all from search
-    $('main').on('click', 'a.add-all-from-search', function(e) {
-      e.preventDefault();
+    // click browse
+    $('main').on('click', '#search > .contextmenu > .button-wrapper > .browse', function() {
       try {
-        var searchString = $('#search').find('input.search-input').val();
-        var searchType = $('#search').find('select.search-select').val();
-        console.log(searchType);
-        console.log(searchString);
-        socket.emit('mpd', 'searchadd', [searchType, searchString], function(err, msg) {
-          if (err) { showInfo("error: " + err, 2000); }
-          else { showInfo("search results added to queue", 1500); }
-        });
+        var path  = ($(this).closest('.contextmenu').attr('data-path').split('/'));
+        path.pop();
+        path = path.join('/');
+        browseRequest(path);
+      } catch (err) { showInfo("error: " + err, 2000); }
+    });
+    // click search artist
+    $('main').on('click', '#search > .contextmenu > .button-wrapper > .search-artist', function() {
+      var artist = $(this).closest('.contextmenu').attr('data-artist');
+      searchRequest(artist, 'Artist');
+    });
+
+
+    // contextmenu 
+    //prevent Default for left click on whole document
+    $(document).on('contextmenu', function(e) {
+      e.preventDefault();
+    });
+    $('main').on('contextmenu', '.leftclick', function(e) {
+      $(this).addClass('selected');
+      
+      // set id on contextmenu
+      if ($(this).attr('data-id')) {
+        var id = $(this).attr('data-id');
+        $('.contextmenu').attr('data-id', id);
       }
-      catch (err) { showInfo("error: " + err, 2000); }
+      // set path on contextmenu
+      if ($(this).find('.data-path')) {
+        var path = $(this).attr('data-path');
+        $('.contextmenu').attr('data-path', path);
+      }
+      // set artist on contextmenu
+      if ($(this).find('.attr.artist')) {
+        var artist = $(this).find('.attr.artist').text();
+        $('.contextmenu').attr('data-artist', artist);
+      }
+      // set album on contextmenu
+      if ($(this).find('.attr.album')) {
+        var artist = $(this).find('.attr.album').text();
+        $('.contextmenu').attr('data-album', artist);
+      }
+      // set name on contextmenu
+      if ($(this).attr('data-name')) {
+        var playlist = $(this).attr('data-name');
+        $('.contextmenu').attr('data-name', playlist);
+      }
+
+      var y = e.clientY - $('main').position().top;
+      var x = e.clientX - $('main').position().left;
+      if ( ($(window).height() - e.clientY) < ($('main').height() / 2) ) {
+        // if click is beneath half of main container, switch position
+        y -= $('.contextmenu').height();
+      }
+      $('.contextmenu').finish().toggle(). // Show contextmenu
+      css({ // In the right position (the mouse) minus header and left side
+          top: y + 'px',
+          left: x + 'px'
+      });
+    });
+    // If the document is clicked somewhere
+    $(document).on("mousedown", function(e) {
+      // If the clicked element is not the menu
+      if (!$(e.target).parents(".contextmenu").length > 0) {    
+        $(".contextmenu").hide();
+        $('.leftclick').removeClass('selected');
+      }
     });
 
   }();
@@ -343,8 +421,8 @@ var initHandlers = function() {
 var interfaceRegistration = function() {
     new Status(function(err, status){
       if (err) { console.log(err); }
-      else if (status.obj) {
-        status = status.obj; 
+      else if (status.data) {
+        status = status.data; 
         // unbind all elements to prevent multiple assignment
         $('#control-menu').off('click'); 
         $('#player-options').off('click');
@@ -445,7 +523,4 @@ var interfaceRegistration = function() {
       }
     });
 };
-
-
-
 

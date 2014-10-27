@@ -106,3 +106,10 @@ function isEmpty(obj) {
 
     return true;
 }
+
+//This will sort your array
+function SortByLastModified(a, b) {
+  var aLastModified = a.lastmodified.toLowerCase();
+  var bLastModified = b.lastmodified.toLowerCase(); 
+  return ((aLastModified < bLastModified) ? -1 : ((aLastModified > bLastModified) ? 1 : 0));
+}

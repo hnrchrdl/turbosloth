@@ -1,40 +1,47 @@
 #browse
-  .dir-info
-    if url_array
-      .attr
-        a.browse-breadcrumb(href="#", data-dir="#") root
-      - each url, i in url_array
-        .attr /
-        .attr
-          a.browse-breadcrumb(href="#", data-dir= i)= url
-    else
-      .attr /
+  .breadcrumb
+    .item(data-position= 0)
+      .button-wrapper.left
+        .button.text
+          i.fa.fa-folder-open-o
+    if breadcrumbs
+      - each fragment, i in breadcrumbs
+        if fragment != ""
+          .item(data-position= i+1)
+            .button-wrapper.left  
+              .button.text
+                i.fa.fa-folder-open-o
+                |  #{fragment}
   .button-wrapper.right
-    .button.browse-update-database.text(title="update database")
+    .button.text.rescan
       i.fa.fa-refresh
-
+        |  rescan
   .clear
-  hr
+  hr.prime
   .scrollable
     if dirs != []
       - each item in dirs
-        .dir(data-directory= item.directory)
-          .attr 
-            a.browse-dir(href="#", data-dir= item.directory)
-              i.fa.fa-folder-o  
+        .item.folder.leftclick(data-path= item.directory)
+          .attr
+             i.fa.fa-folder-o
           .attr= item.name
-          .button-wrapper.right
-            .button.browse-append(title="add folder to current playlist")
-              i.fa.fa-plus-square
-            .button.browse-load(title="replace current playlist with folder")
-              i.fa.fa-asterisk
+
     if files != []
       - each item in files
-        .dir(data-directory= item.file)
+        .item.file.leftclick(data-path= item.file)
           .attr
             i.fa.fa-file-o  
-          .attr
-            span= item.name
-          .button-wrapper.right
-            .button.browse-append(title="add song to current playlist")
-              i.fa.fa-plus-square-o
+          .attr= item.name
+
+  //contextmenu
+  .contextmenu.browse
+    .button-wrapper.left
+      .button.text.add
+        i.fa.fa-plus-square
+          |  add to queue
+    .clear
+    .button-wrapper.left
+      .button.text.load
+        i.fa.fa-asterisk
+          |  replace queue
+

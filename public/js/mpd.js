@@ -1,16 +1,15 @@
 //// the Status
 var Status = function(callback) {
-  var status = this;
-  socket.emit('mpd', 'status', [], function(err, obj) {
-     if (obj && !isEmpty(obj)) {
-      status.obj = obj;
+  var s = this;
+  socket.emit('mpd', 'status', [], function(err, data) {
+     if (!err && data && !isEmpty(data)) {
+      s.data = data;
     }
-    else { status.obj = false; }
-    return callback(err, status);
-  });
+    else { s.data = false; }
+    return callback(err, s);
+  }); 
 };
 Status.prototype.renderProgressBar = function() {
-  var status = this.obj;
   var progressBar = $('#seek-bar');
   // start
   var start = function startProgressbar (songTime, elapsed) {
@@ -25,11 +24,11 @@ Status.prototype.renderProgressBar = function() {
   var stop = function stopProgressBar () {
     progressBar.stop();
   };
-  if (status) {
-    switch (status.state) {
+  if (this) {
+    switch (this.data.state) {
       case 'play':
-        var songTime = parseFloat(status.time.split(":")[1]);
-        var elapsed = parseFloat(status.elapsed);
+        var songTime = parseFloat(this.data.time.split(":")[1]);
+        var elapsed = parseFloat(this.data.elapsed);
         start(songTime, elapsed);
         break;
       case 'pause':
@@ -44,59 +43,65 @@ Status.prototype.renderProgressBar = function() {
 
 // CurrentSong
 var CurrentSong = function(callback) {
-  var cs = this;
-  socket.emit('mpd', 'currentsong', [], function(err, obj) {
-    if (obj && !isEmpty(obj)) {
-      cs.obj = obj;
+  var c = this;
+  socket.emit('mpd', 'currentsong', [], function(err, data) {
+    if (!err && data && !isEmpty(data)) {
+      c.data = data;
     }
-    else { cs.obj = false; }
-    return callback(err, cs);
+    else { c.data = false; }
+    return callback(err, c);
   });
 }
-CurrentSong.prototype.render = function() {
+CurrentSong.prototype.render = function(callback) {
   var currentsong = $('#currentsong');
-  if (this.obj && !isEmpty(this.obj)) {
-    currentsong.html(this.obj.Artist + '<br>' + 
-          this.obj.Title + '<br>' + 
-          '<span class="muted">' + this.obj.Album + '</span>');
+  if (this.data && !isEmpty(this.data)) {
+    currentsong.html(this.data.Artist + '<br>' + 
+          this.data.Title + '<br>' + 
+          '<span class="muted">' + this.data.Album + '</span>');
     var queue = $('main').find('#queue');
     if (queue && queue.length > 0) {
       this.showInQueue();
       this.autoScroll();
     }
     // fetch album cover
-    new LastAlbum(this.obj.Artist, this.obj.Album, function(Album) {
-      try { $('#albumart').css('background-image', 'url(' + Album.obj.album.image[3]['#text'] + ')'); }
-      catch(e) { $('#albumart').css('background-image', 'none !important') }
+    new LastAlbum(this.data.Artist, this.data.Album, function(err, album) {
+      if (err) {
+        console.log(err);
+      }
+      else {
+        var size = 3; // can be 0 to 5, from small to superlarge
+        var url = album.getAlbumArt(size);
+        if (url) { $('#albumart').css('background-image', 'url(' + url + ')'); }
+        else { $('#albumart').css('background-image', 'none') }
+      }
     });
   }
   else {
     currentsong.html('<span class="muted">end of queue</span>');
+    interfaceRegistration();
   }
-  //this.renderProgressBar();
 };
 CurrentSong.prototype.showInQueue = function() {
-  if (this.obj) {
-    var songs = $('#queue').find('.song');
+  if (this.data) {
+    var songs = $('#queue').find('.item');
     if (songs.length > 0) {
       songs.removeClass('active');
       songs.find('.attr.songpos').removeClass('active');
-      songs.find('.queue-play').removeClass('active');
     }
-    var current = $('#queue').find('.song.' + this.obj.Id);
+    var current = $('#queue').find('.item' + '[data-id="' + this.data.Id + '"]');
     if (current.length > 0) {
       current.addClass('active');
       current.find('.attr.songpos').addClass('active');
       current.find('.attr.songpos').addClass('active');
-      current.find('.queue-play').addClass('active');
     }
   }
 };
 CurrentSong.prototype.autoScroll = function() {
-  if (this.obj) {
+  if (this.data) {
     var scrollable = $('#queue').find('.scrollable');
-    if (scrollable && scrollable.length > 0) {
-      var scrolltop = $('.song.' + this.obj.Id).offset().top +
+    var song = $('.item' + '[data-id="' + this.data.Id + '"]');
+    if (scrollable && scrollable.length > 0 && song && song.length > 0) {
+      var scrolltop = song.offset().top +
           scrollable.scrollTop() -
           scrollable.offset().top;
       scrollable.animate({scrollTop: scrolltop}, 400);
@@ -129,11 +134,12 @@ Queue.prototype.render = function() {
   }
   fixScrollHeight();
   new CurrentSong(function(err, song) {
-    if (song.obj) {
+    if (song.data) {
       song.showInQueue();
       song.autoScroll();
     }
   });
+  interfaceRegistration();
 };
 
 //// Playlists

@@ -34,56 +34,64 @@
 
   .clear
 
-  hr
+  hr.prime
   .scrollable
     if contents
       -each item in contents
-        .dir(data-file= item.file)
+        .item.leftclick(data-path= item.file)
           if item.Artist
             .attr.artist=item.Artist
             .attr.space
           else
             .attr.artist= item.file
             .attr.space
+          if item.Track
+            span.muted
+              .attr=item.Track
           if item.Album
             span.muted  
               .attr.album=item.Album
               .attr.space
-          if item.Track
-            span.muted
-              .attr=item.Track
-              .attr.space
           if item.Title
             .attr=item.Title
             .attr.space
-          if item.Genre
-            span.muted
-              .attr= item.Genre
           if item.Time
             span.muted
               - var time = secondsToTimeString(item.Time)
-              .attr=time
-          .button-wrapper.right
-            .button.search-append(title="add to queue")
-              i.fa.fa-plus-square-o
-            .button.search-advanced(title="more options")
-              i.fa.fa-angle-down
-          .clear
-          .button-wrapper.right
-            .button.text.search-lookup
-              i.fa.fa-folder-o
-              |  go to folder
-            .button.text.search-artist
-              i.fa.fa-search
-              |  search for artist
-            .button.text.search-add-from-album
-              i.fa.fa-plus-square
-              |  add album
-            .button.text.search-add-from-artist
-              i.fa.fa-plus-square
-              |  add artist
-
-
+              .attr.right=time
+          if item.Genre
+            span.muted
+              .attr.right= item.Genre
+          
     else
       span.muted 
         .dir no results    
+
+  //contextmenu
+  .contextmenu
+    .button-wrapper.left
+      .button.text.add
+        i.fa.fa-plus-square-o
+        |  add to queue
+    .clear
+    .button-wrapper.left
+      .button.text.add-from-album
+        i.fa.fa-plus-square
+        |  add album
+    .clear
+    .button-wrapper.left
+      .button.text.add-from-artist
+        i.fa.fa-plus-square
+        |  add artist
+    .clear
+    hr
+    .button-wrapper.left
+      .button.text.browse
+        i.fa.fa-folder-o
+        |  browse folder
+    .clear
+    .button-wrapper.left
+      .button.text.search-artist
+        i.fa.fa-search
+          |  search artist
+

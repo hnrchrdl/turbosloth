@@ -3,72 +3,101 @@
     .button-wrapper.left
       .button.text.queue-refresh(title="refresh queue")
         i.fa.fa-refresh
+          |  refresh
       .button#random.right.text(title="toggle random ")
         i.fa.fa-question
+          |  random
       .button#repeat.right.text(title="toggle repeat")
         i.fa.fa-repeat
+          |  repeat
       .button#consume.right.text(title="toggle consume")
         i.fa.fa-long-arrow-down
+          |  consume
     .button-wrapper.right
       .button.text.queue-shuffle(title="shuffle queue")
         i.fa.fa-random
+          |  shuffle
       .button.text.queue-clear(title="clear queue")
         i.fa.fa-eraser
+          |  clear
 
-  hr
+  hr.prime
   .scrollable
     if !queue
-      .song.muted queue empty
+      .item.muted queue empty
     else
       - each song in queue
-        .song(class= song.Id, data-id= song.Id, data-file= song.file)
-          span.muted
-            .attr.songpos= (parseInt(song.Pos) + 1)
-            .attr.space
-          if song.Artist
-            .attr.artist=song.Artist
+        .item.leftclick(data-id= song.Id, data-path= song.file)
+          if song.Pos
             span.muted
-              .attr.space
+            .attr.left.songpos= (parseInt(song.Pos) + 1)
+            .attr.left.space
           else
-            .attr.Artist= song.file
-            span.muted
-              .attr.space
-          if song.Album
-            span.muted
-              .attr.album=song.Album
-          if song.Date
-            span.muted
-              .attr= '(' + song.Date + ')'
-          if song.Track
-            span.muted
-              .attr=song.Track
-              .attr.space
+            .attr.songpos #
+            .attr.space
           
-          if song.Title
-            .attr.title= song.Title || 'unknown'
-            span.muted
-              .attr.space
-          if song.Genre
-            span.muted
-              .attr.genre #{song.Genre}
-              .attr.space
+          if song.Artist
+            .attr.left.artist=song.Artist
+            if song.Title
+              span.muted
+                .attr.left -
+              .attr.left.title= song.Title
+          else
+            .attr.left.Artist= song.file
+          
+          
           if song.Time
             - var time = secondsToTimeString(song.Time)
             span.muted
-              .attr.time= time
-          .button-wrapper.right
-            .button.queue-play(title="play song")
-              i.fa.fa-play
-            .button.queue-advanced(title="more options")
-              i.fa.fa-angle-down
-          .clear
-          .button-wrapper.right
-            .button.text.queue-lookup
-              i.fa.fa-folder-o
-              |  go to folder
-            .button.text.queue-search
-              i.fa.fa-search
-              |  search for artist
-            .button.text.queue-remove
-              i.fa.fa-remove
-              |  remove from queue
+              .attr.right.time= time
+              .attr.right.space
+          
+          if song.Date
+           span.muted
+              .attr.right= '(' + song.Date + ')'
+              
+          if song.Album
+            .attr.right.album=song.Album
+          
+          if song.Track
+            span.muted
+              .attr.right=song.Track
+
+          if song.Genre
+            span.muted
+              .attr.right.space
+              .attr.right.genre #{song.Genre}
+              
+                            
+
+
+          
+  //contextmenu
+  .contextmenu.queue
+    .button-wrapper.left
+      .button.left.text.play
+        i.fa.fa-play
+        |  play song
+    .clear
+    .button-wrapper.left
+      .button.left.text.movenext
+        i.fa.fa-angle-double-right
+        |  move to next
+    .clear
+    hr
+    .button-wrapper.left
+      .button.left.text.browse
+        i.fa.fa-folder-o
+        |  browse folder
+    .clear
+    .button-wrapper.left
+      .button.left.text.search
+        i.fa.fa-search
+        |  search for artist
+    .clear
+    hr
+    .button-wrapper.left
+      .button.left.text.remove
+        i.fa.fa-remove
+        |  remove from queue
+
