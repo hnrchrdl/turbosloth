@@ -4,23 +4,20 @@
 	bottom: 		@long;
 	left: 			@long;
 	width: 			@leftWidth;
+	border-right:	1px solid @background2;
 
 	nav {
 			padding:			 	@medium 0;
-			border-bottom:	1px solid @muted;
+			//border-bottom:	1px solid @background2;
 	}
 	
-	#player-options {
-			padding:			@medium 0;
-			font-size: 		@bigger;
-	}
 	
 	#currentsong-wrapper {
 		position:				absolute;
 		bottom: 				@seekBarHeight + @buttonHeight + @leftWidth + @medium;
 		//left: 					0;
 		padding: 				@medium 0 @medium @medium;
-		border-left: 		1px solid @muted;
+		border-left: 		1px solid @primary;
 		//min-height: 		@controlBarHeight - @medium * 3;
 		//overflow-y:		hidden;
 	}
@@ -38,22 +35,22 @@
 	
 	#control-menu {
 		position: 			absolute;
-		bottom: 				@seekBarHeight;
+		bottom: 				0;
+		border-left: 		1px solid @subtle;
 		.button {
-			width:				@leftWidth / 5;
+			width:				@leftWidth / 5 - 1;
 		}
 	}
 	
 	#seek-bar-container {
 		position: 			absolute;
-		bottom: 				0;
-		//height:					@seekBarHeight;
-		width:					@leftWidth - 2;
+		bottom: 				@buttonHeight;
+		height:					@seekBarHeight;
+		width:					@leftWidth;
 		cursor: 				pointer;
-		border-left:		1px solid @muted;
-		border-right:		1px solid @muted;
+		//border-left: 		1px solid @subtle;
 		#seek-bar {
-			height:	 						@seekBarHeight - 2;
+			height:	 						@seekBarHeight;
 			width: 							0%;
 			background-color: 	@primary;
 		}

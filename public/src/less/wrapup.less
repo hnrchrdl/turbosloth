@@ -1,12 +1,12 @@
 html, body {
-	height: 		100%;
-	width: 			100%;
-	padding:		0;
-	margin:			0;
-	font-family:		'Open Sans', sans-serif;
-	font-weight:		400;
-	color:			@fontPrimary;
-	font-size: 		@fontSize;
+	height: 						100%;
+	width: 							100%;
+	padding:						0;
+	margin:							0;
+	font-family:				'Open Sans', sans-serif;
+	font-weight:				400;
+	color:							@fontPrimary;
+	font-size: 					@fontSize;
 	background-color: 	@background;
 
 	// background patterns are taken from subtlepatterns.com. thank you!
@@ -129,10 +129,17 @@ input, select {
 }
 
 #footer {
-	position: 	absolute;
-	bottom: 	@short;
-	right: 		@long;
-	color: 		@muted;
+	position: 			absolute;
+	bottom: 				0;
+	height:					@long;
+	right: 					0;
+	left: 					0;
+	color: 					@muted;
+	//background-color:	@extraSubtle;
+	border-top: 	1px solid @primary;
+	text-align:			center;
+	line-height: 		@long;
+	//background: 	url("@{images}/grey_wash_wall.png");
 }
 
 

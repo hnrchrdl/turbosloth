@@ -21,7 +21,7 @@ function setStreamingStatus(status) {
 function fixScrollHeight() {
   var scrollable = $('.scrollable');
   if (scrollable.length > 0) {
-      $('.scrollable').height($('main').height() - $('.scrollable').position().top);
+      scrollable.height($('main').height() - scrollable.position().top);
   }
 }
 

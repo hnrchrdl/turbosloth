@@ -28,46 +28,40 @@ html(lang='en')
               |  Logout
 
         #info-wrapper
+          .loading.queue.right
+              i.fa.fa-spinner.fa-spin
           #info
         
       #left
         nav
+          #player-options.button-wrapper.right
+            if !stream
+              #stream.left.button.text.disabled(title="no streaming source")
+                i.fa.fa-volume-up
+            else
+              #stream.left.button.text(title="streaming")
+                i.fa.fa-volume-up
+
           .button-wrapper.left
             .button.text.queue.active
               i.fa.fa-list
               |  Queue
-          .loading.queue.right
-              i.fa.fa-spinner.fa-spin
           .clear
           .button-wrapper.left
             .button.text.playlists 
               i.fa.fa-file-audio-o
               |  Playlists
-          .loading.playlists.right
-              i.fa.fa-spinner.fa-spin 
           .clear
           .button-wrapper.left
             .button.text.browse
               i.fa.fa-folder-o
               |  Browse
-          .loading.browse.right
-              i.fa.fa-spinner.fa-spin
           .clear
           .button-wrapper.left
             .button.text.search
               i.fa.fa-search
               |  Search
-          .loading.search.right
-              i.fa.fa-spinner.fa-spin
           .clear
-
-        #player-options.button-wrapper.left
-          if !stream
-            #stream.left.button.text.disabled(title="no streaming source")
-              i.fa.fa-volume-up
-          else
-            #stream.left.button.text(title="streaming")
-              i.fa.fa-volume-up
 
         #albumart
 
@@ -98,6 +92,7 @@ html(lang='en')
     //footer
     #footer 
       | turbosloth v.0.1 | connected to #{mpdhost}:#{mpdport}
+    
     audio(src= stream)
 
     include ./scripts.jade

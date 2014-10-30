@@ -7,8 +7,11 @@ header {
 	padding-right: 			@long;
 	height:							@headerHeight;
 	line-height: 				@headerHeight;
-	//border-bottom: 			1px solid @muted;
+	border-bottom: 			1px solid @subtle;
 	background-color: 	@background2;
+	color: 							@background;
+	background-color:		@background2;
+	
 	#info-wrapper {
 	display: 							none;
 		position: 					absolute;
@@ -22,18 +25,18 @@ header {
 			//height: 					@buttonHeight;
 			//line-height: 			@buttonHeight;
 			overflow: 					hidden;
-			color: 							@muted;
+			color: 							@silver;
 			padding: 						0 @medium;
-			border-bottom: 			1px solid @subtle;
+			border-bottom: 			1px solid @silver;
 		}
 	}
 
 	h1 {
 		float: left;
-		color: 				@muted; 
+		color: 				@background; 
 		font-family: 	'Quicksand', Helvetica, sans-serif;
 		font-weight: 	300;
-		font-size: 		40px;
+		font-size: 		30px;
 	}
 
 	#submenu {
