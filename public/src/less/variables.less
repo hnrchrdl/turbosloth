@@ -12,12 +12,13 @@
 @alizarin:      hsl(6, 78%, 57%); //alizarin
 @greenSea:      hsl(168, 76%, 36%); //green sea
 @wetAsphalt:    hsl(210, 29%, 24%); //wet asphalt
+@asbestos:      #7F8C8D;
 
 // color palette
-@primary:           @alizarin;
+@primary:           @greenSea;
 @background:        lighten(@clouds, 4%);
-@background2:       @wetAsphalt;
-@fontPrimary:       @wetAsphalt;
+@background2:       @asbestos;
+@fontPrimary:       darken(@asbestos, 30%);
 @muted:             fadeout(@fontPrimary, 30%);
 @subtle:            fadeout(@fontPrimary, 90%);
 @extraSubtle:       fadeout(@fontPrimary, 95%);
@@ -29,11 +30,11 @@
 
 
 // heights, margins and paddings
-@headerHeight:              50px;
+@headerHeight:              100px;
 //@seekBarContainerHeight:  10px;
-@leftWidth:                 200px;
+@leftWidth:                 150px;
 @buttonHeight:              30px;
-@seekBarHeight:             10px;
+@seekBarHeight:             @short;
 //@navHeight:               @buttonHeight;
 //@songHeight:              50px;
 @inputLong:                 300px;

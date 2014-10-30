@@ -1,16 +1,14 @@
 header {
 	position:						absolute;
 	left: 							0px;
-	right: 							0px;
+	width: 							@leftWidth;
 	top: 								0px;
-	padding-left:				@long;
-	padding-right: 			@long;
 	height:							@headerHeight;
 	line-height: 				@headerHeight;
-	border-bottom: 			1px solid @subtle;
+	//border-bottom: 			1px solid @subtle;
 	background-color: 	@background2;
 	color: 							@background;
-	background-color:		@background2;
+	//background-color:		@background2;
 	
 	#info-wrapper {
 	display: 							none;
@@ -32,11 +30,11 @@ header {
 	}
 
 	h1 {
-		float: left;
+		text-align:		center;
 		color: 				@background; 
 		font-family: 	'Quicksand', Helvetica, sans-serif;
 		font-weight: 	300;
-		font-size: 		30px;
+		font-size: 		20px;
 	}
 
 	#submenu {

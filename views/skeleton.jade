@@ -34,13 +34,6 @@ html(lang='en')
         
       #left
         nav
-          #player-options.button-wrapper.right
-            if !stream
-              #stream.left.button.text.disabled(title="no streaming source")
-                i.fa.fa-volume-up
-            else
-              #stream.left.button.text(title="streaming")
-                i.fa.fa-volume-up
 
           .button-wrapper.left
             .button.text.queue.active
@@ -62,15 +55,24 @@ html(lang='en')
               i.fa.fa-search
               |  Search
           .clear
+          //#player-options.button-wrapper.right
+            //if !stream
+              //#stream.left.button.text.disabled(title="no streaming source")
+                //i.fa.fa-volume-up
+            //else
+              //#stream.left.button.text(title="streaming")
+                //i.fa.fa-volume-up
 
-        #albumart
+      main
+        block content
 
-        #currentsong-wrapper
-          #currentsong
-            a(href="")
-            br
+    //footer
+    #footer
+      #albumart
+      #currentsong-wrapper
+        #currentsong
  
-        #control-menu.left
+      #control-menu.left
           .button-wrapper.left
             #previous.left.button(title="previous")
               i.fa.fa-backward
@@ -82,16 +84,21 @@ html(lang='en')
               i.fa.fa-stop
             #next.left.button(title="next")
               i.fa.fa-forward
+      #seek-current 00:00:00
+      #seek-bar-container  
+        #seek-bar
+      #seek-songtime 00:00:00
 
-        #seek-bar-container
-          #seek-bar
+      #control-menu2.right
+          .button-wrapper.left
+            #stream.left.button(title="stream")
+              i.fa.fa-volume-up
+            #random.left.button.active(title="play")
+              i.fa.fa-random
+            #repeat.left.button(title="pause")
+              i.fa.fa-repeat
 
-      main
-        block content
-
-    //footer
-    #footer 
-      | turbosloth v.0.1 | connected to #{mpdhost}:#{mpdport}
+      //| turbosloth v.0.1 | connected to #{mpdhost}:#{mpdport}
     
     audio(src= stream)
 

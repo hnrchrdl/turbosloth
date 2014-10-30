@@ -2,19 +2,25 @@
 	position: 	absolute;
 	top: 				@headerHeight;
 	bottom: 		@long;
-	left: 			@long;
+	left: 			0;
 	width: 			@leftWidth;
-	border-right:	1px solid @background2;
+	//border-right:	1px solid @background2;
+	background-color:	@background2;
+	color: @clouds;
 
 	nav {
-			padding:			 	@medium 0;
+			
 			//border-bottom:	1px solid @background2;
+			.button {
+				width: @leftWidth - (@medium * 2);
+				padding: 0 @medium;
+				text-align: left;
+			}
 	}
 	
 	
 	#currentsong-wrapper {
 		position:				absolute;
-		bottom: 				@seekBarHeight + @buttonHeight + @leftWidth + @medium;
 		//left: 					0;
 		padding: 				@medium 0 @medium @medium;
 		border-left: 		1px solid @primary;
@@ -22,25 +28,7 @@
 		//overflow-y:		hidden;
 	}
 	
-	#albumart {
-		position: 				absolute;
-		bottom: 					@seekBarHeight + @buttonHeight;
-		height: 					@leftWidth;
-		width: 						@leftWidth;      
-		background-color: @primary;
-		background-repeat:no-repeat;
-    background-position: center center;
-    background-size: 200px 200px;
-	}
 	
-	#control-menu {
-		position: 			absolute;
-		bottom: 				0;
-		border-left: 		1px solid @subtle;
-		.button {
-			width:				@leftWidth / 5 - 1;
-		}
-	}
 	
 	#seek-bar-container {
 		position: 			absolute;

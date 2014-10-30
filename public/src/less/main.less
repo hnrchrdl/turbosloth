@@ -1,9 +1,9 @@
 main {
   position:         absolute;
-  top:              @headerHeight;
-  bottom:           @long;
-  left:             @leftWidth + (@long * 2);
-  right:            @long;
+  top:              0;
+  bottom:           @leftWidth / 2;
+  left:             @leftWidth + @short;
+  right:            @short;
   //border-bottom:  1px solid @subtle;
   //padding:			    @medium 0 0;
   margin:          @medium 0 0;
@@ -74,7 +74,7 @@ main {
 
 //pseudo classes for scrollbar
 ::-webkit-scrollbar {
-	width:	@short;
+	width:	8px;
 	background-color: @clouds;
 }
 ::-webkit-scrollbar-thumb {
