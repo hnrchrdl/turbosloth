@@ -11,31 +11,48 @@ var Status = function(callback) {
 };
 Status.prototype.renderProgressBar = function() {
   var progressBar = $('#seek-bar');
+  var seekCurrent = $('#seek-current');
+  var seekSongtime = $('#seek-songtime');
+
   // start
-  var start = function startProgressbar (songTime, elapsed) {
+  setProgress = function(songTime, elapsed) {
     var initial_width = elapsed / songTime * 100; 
     var duration = songTime - elapsed;
     progressBar
       .stop()
-      .css('width',initial_width + '%')
-      .animate({'width' : '100%'},duration * 1000, 'linear');
+      .css('width', initial_width + '%')
+      //.animate({'width' : '100%'},duration * 1000, 'linear');
+    seekSongtime.text(secondsToTimeString(songTime));
+    seekCurrent.text(secondsToTimeString(elapsed));
   };
   // stop
-  var stop = function stopProgressBar () {
-    progressBar.stop();
+  var stopProgress = function() {
+    clearInterval(progressBar.data('progressIntervalID'));
+    progressBar.removeData('progressIntervalID')
   };
+
   if (this) {
+    if (this.data.time && this.data.elapsed) {
+      var songTime = parseFloat(this.data.time.split(":")[1]);
+      var elapsed = parseFloat(this.data.elapsed);
+    }   
     switch (this.data.state) {
       case 'play':
-        var songTime = parseFloat(this.data.time.split(":")[1]);
-        var elapsed = parseFloat(this.data.elapsed);
-        start(songTime, elapsed);
+        //stop();
+        setProgress(songTime, elapsed);
+        clearInterval(progressBar.data('progressIntervalID'));
+        progressBar.data('progressIntervalID', setInterval(function() {
+          elapsed += 1;
+          setProgress(songTime, elapsed);
+        }, 1000));
         break;
       case 'pause':
-        stop();
+        stopProgress();
+        setProgress(songTime, elapsed);
         break;
       case 'stop':
-        stop();
+        stopProgress();
+        setProgress(0, 0);
         progressBar.css('width',0);
     }
   }

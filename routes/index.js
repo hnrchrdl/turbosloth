@@ -85,7 +85,11 @@ router.get('/playlists', function(req, res) {
       for (i in data) {
         data[i]['lastmodified'] = data[i]['Last-Modified'];
       }
-      data.sort(SortByLastModified);
+      try {
+        data.sort(SortByLastModified);
+      } catch(e) {
+        console.log(e);
+      }
       res.render('playlists', {playlists: data});
     }
   });

@@ -6,7 +6,7 @@ body {
   margin: 0;
   font-family: 'Open Sans', sans-serif;
   font-weight: 400;
-  color: #2b3d4f;
+  color: #363c3d;
   font-size: 11px;
   background-color: #f9fafb;
 }
@@ -19,7 +19,7 @@ a {
 }
 hr {
   border: none;
-  background-color: rgba(43, 61, 79, 0.1);
+  background-color: rgba(54, 60, 61, 0.1);
   height: 1px;
   margin: 0;
 }
@@ -30,7 +30,7 @@ hr.prime {
   clear: both;
 }
 .muted {
-  color: rgba(43, 61, 79, 0.7);
+  color: rgba(54, 60, 61, 0.7);
 }
 .button-wrapper {
   height: 30px;
@@ -61,13 +61,15 @@ hr.prime {
   padding-right: 15px;
 }
 .button-wrapper .button:hover {
-  color: #e74d3c;
+  background-color: #95a6a7;
+  color: #edf1f2;
 }
 .button-wrapper .button.active {
-  color: #e74d3c;
+  background-color: #e74d3c;
+  color: #edf1f2;
 }
 .button-wrapper .button.disabled {
-  color: rgba(43, 61, 79, 0.7);
+  color: rgba(54, 60, 61, 0.7);
 }
 .button-wrapper .button.disabled:hover {
   cursor: default;
@@ -92,8 +94,8 @@ select {
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
   background-color: #f9fafb;
-  color: #2b3d4f;
-  border: 1px solid rgba(43, 61, 79, 0.1);
+  color: #363c3d;
+  border: 1px solid rgba(54, 60, 61, 0.1);
   padding: 0 15px;
   margin-bottom: 5px;
 }
@@ -102,30 +104,32 @@ select:focus {
   border: 1px solid #e74d3c;
   outline: 0;
 }
-#footer {
+#info-wrapper {
+  display: none;
   position: absolute;
   bottom: 0;
-  height: 30px;
-  right: 0;
   left: 0;
-  color: rgba(43, 61, 79, 0.7);
-  border-top: 1px solid #e74d3c;
+  right: 0;
+  height: 45px;
+  line-height: 45px;
+  background-color: #16a286;
+  color: #edf1f2;
+  padding: 15px;
   text-align: center;
-  line-height: 30px;
 }
 ::-webkit-input-placeholder {
-  color: rgba(43, 61, 79, 0.7);
+  color: rgba(54, 60, 61, 0.7);
 }
 :-moz-placeholder {
   /* Firefox 18- */
-  color: rgba(43, 61, 79, 0.7);
+  color: rgba(54, 60, 61, 0.7);
 }
 ::-moz-placeholder {
   /* Firefox 19+ */
-  color: rgba(43, 61, 79, 0.7);
+  color: rgba(54, 60, 61, 0.7);
 }
 :-ms-input-placeholder {
-  color: rgba(43, 61, 79, 0.7);
+  color: rgba(54, 60, 61, 0.7);
 }
 ::selection {
   background: #e74d3c;
@@ -144,7 +148,7 @@ select:focus {
   font-size: 56px;
   text-align: center;
   padding: 40px 0;
-  color: rgba(43, 61, 79, 0.7);
+  color: rgba(54, 60, 61, 0.7);
 }
 .login .form-wrapper {
   display: block;
@@ -168,104 +172,52 @@ select:focus {
 header {
   position: absolute;
   left: 0px;
-  right: 0px;
+  width: 150px;
   top: 0px;
-  padding-left: 30px;
-  padding-right: 30px;
-  height: 50px;
-  line-height: 50px;
-  border-bottom: 1px solid rgba(43, 61, 79, 0.1);
+  height: 100px;
+  line-height: 100px;
+  background-color: #7f8c8d;
   color: #f9fafb;
-  background-color: #2b3d4f;
-}
-header #info-wrapper {
-  display: none;
-  position: absolute;
-  top: 0;
-  left: 50%;
-  height: 30px;
-  text-align: center;
-}
-header #info-wrapper #info {
-  position: relative;
-  left: -50%;
-  overflow: hidden;
-  color: #bdc3c7;
-  padding: 0 15px;
-  border-bottom: 1px solid #bdc3c7;
 }
 header h1 {
-  float: left;
+  text-align: center;
   color: #f9fafb;
   font-family: 'Quicksand', Helvetica, sans-serif;
   font-weight: 300;
-  font-size: 30px;
+  font-size: 20px;
 }
 header #submenu {
   float: right;
-  line-height: 50px;
-  margin-top: 10px;
+  line-height: 100px;
+  margin-top: 35px;
 }
 #left {
   position: absolute;
-  top: 50px;
+  top: 100px;
   bottom: 30px;
-  left: 30px;
-  width: 200px;
-  border-right: 1px solid #2b3d4f;
+  left: 0;
+  width: 150px;
+  background-color: #7f8c8d;
+  color: #edf1f2;
 }
-#left nav {
-  padding: 15px 0;
-}
-#left #currentsong-wrapper {
-  position: absolute;
-  bottom: 255px;
-  padding: 15px 0 15px 15px;
-  border-left: 1px solid #e74d3c;
-}
-#left #albumart {
-  position: absolute;
-  bottom: 40px;
-  height: 200px;
-  width: 200px;
-  background-color: #e74d3c;
-  background-repeat: no-repeat;
-  background-position: center center;
-  background-size: 200px 200px;
-}
-#left #control-menu {
-  position: absolute;
-  bottom: 0;
-  border-left: 1px solid rgba(43, 61, 79, 0.1);
-}
-#left #control-menu .button {
-  width: 39px;
-}
-#left #seek-bar-container {
-  position: absolute;
-  bottom: 30px;
-  height: 10px;
-  width: 200px;
-  cursor: pointer;
-}
-#left #seek-bar-container #seek-bar {
-  height: 10px;
-  width: 0%;
-  background-color: #e74d3c;
+#left nav .button {
+  width: 120px;
+  padding: 0 15px;
+  text-align: left;
 }
 main {
   position: absolute;
-  top: 50px;
-  bottom: 30px;
-  left: 260px;
-  right: 30px;
+  top: 0;
+  bottom: 75px;
+  left: 155px;
+  right: 5px;
   margin: 15px 0 0;
 }
 main .item {
   height: 30px;
   line-height: 30px;
   overflow: hidden;
-  border-bottom: 1px solid rgba(43, 61, 79, 0.1);
+  border-bottom: 1px solid rgba(54, 60, 61, 0.1);
   padding-right: 5px;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
@@ -279,7 +231,7 @@ main .item.active {
   border-bottom: 1px solid #e74d3c;
 }
 main .item.selected {
-  background-color: rgba(43, 61, 79, 0.05);
+  background-color: rgba(54, 60, 61, 0.05);
 }
 main .item .attr {
   height: 30px;
@@ -295,7 +247,7 @@ main .item .attr.right {
 main .item .attr.space {
   height: 10px;
   margin-top: 10px;
-  border-right: 1px solid rgba(43, 61, 79, 0.1);
+  border-right: 1px solid rgba(54, 60, 61, 0.1);
 }
 main .item .attr.songpos.active {
   color: #e74d3c;
@@ -311,16 +263,110 @@ main .nav-main {
   z-index: 1000;
   position: absolute;
   overflow: hidden;
-  border: 1px solid rgba(43, 61, 79, 0.1);
+  border: 1px solid rgba(54, 60, 61, 0.1);
   background: #f9fafb;
   padding: 0;
 }
 ::-webkit-scrollbar {
-  width: 5px;
+  width: 8px;
   background-color: #edf1f2;
 }
 ::-webkit-scrollbar-thumb {
   background-color: #e74d3c;
+}
+#footer {
+  position: absolute;
+  bottom: 0;
+  height: 45px;
+  right: 0;
+  left: 0;
+  color: #edf1f2;
+  text-align: center;
+  background: #4e5758;
+  padding: 15px;
+  overflow: hidden;
+}
+#footer #control-menu {
+  line-height: 30px;
+  position: absolute;
+  left: 255px;
+}
+#footer #control-menu .button {
+  height: 45px;
+  width: 45px;
+  line-height: 45px;
+  font-size: 19px;
+}
+#footer #control-menu .button.active {
+  color: #e74d3c;
+  background-color: #4e5758;
+}
+#footer #control-menu .button:hover {
+  background-color: #4e5758;
+}
+#footer #albumart {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 75px;
+  width: 75px;
+  background-color: #e74d3c;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: 75px 75px;
+}
+#footer #currentsong-wrapper {
+  position: absolute;
+  left: 75px;
+  width: 180px;
+  text-align: left;
+  padding: 0 15px;
+}
+#footer #seek-current {
+  position: absolute;
+  bottom: 0;
+  left: 490px;
+  line-height: 75px;
+  text-align: right;
+}
+#footer #seek-bar-container {
+  position: absolute;
+  bottom: 35px;
+  height: 5px;
+  left: 540px;
+  right: 190px;
+  cursor: pointer;
+  background-color: #95a6a7;
+}
+#footer #seek-bar-container #seek-bar {
+  height: 5px;
+  width: 0;
+  background-color: #e74d3c;
+}
+#footer #seek-songtime {
+  position: absolute;
+  bottom: 0;
+  right: 135px;
+  line-height: 75px;
+  text-align: left;
+}
+#footer #control-menu2 {
+  line-height: 30px;
+  position: absolute;
+  right: 0;
+}
+#footer #control-menu2 .button {
+  height: 45px;
+  width: 45px;
+  line-height: 45px;
+  font-size: 19px;
+}
+#footer #control-menu2 .button.active {
+  color: #e74d3c;
+  background-color: #4e5758;
+}
+#footer #control-menu2 .button:hover {
+  background-color: #4e5758;
 }
 #playlists input {
   width: 30%;
