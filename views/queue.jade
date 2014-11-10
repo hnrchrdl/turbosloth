@@ -17,8 +17,8 @@
         .item.leftclick(data-id= song.Id, data-path= song.file)
           if song.Pos
             span.muted
-            .attr.left.songpos= (parseInt(song.Pos) + 1)
-            .attr.left.space
+              .attr.left.songpos= (parseInt(song.Pos) + 1)
+              .attr.left.space
           else
             .attr.songpos #
             .attr.space
@@ -64,12 +64,12 @@
     .button-wrapper.left
       .button.left.text.play
         i.fa.fa-play
-        |  play song
+        |  play
     .clear
     .button-wrapper.left
       .button.left.text.movenext
         i.fa.fa-angle-double-right
-        |  move to next
+        |  play next
     .clear
     hr
     .button-wrapper.left

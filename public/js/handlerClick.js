@@ -70,18 +70,18 @@ var initHandlers = function() {
     
     //// seek
     $('#seek-bar-container').on('click', function(e) {
-      // seek bar width is 200
       // subtract 30 for the left margin of x value
       new CurrentSong(function(err, Song) {
-        try {
-          var song = Song.data;
-          var seek_ratio = ( (e.clientX - 30 )/ 200);
-          var seek_sec = String(Math.round(seek_ratio * song.Time));
-          socket.emit('mpd','seekcur',[seek_sec], function(err, msg) {
-            if (err) {  }
-            else { showInfo("seek " + Math.round(seek_ratio * 100) + "% into song" , 2000); }
-          });
-        } catch(err) { showInfo("error: " + err , 2000); }
+        var seekBarContainer = $('#seek-bar-container');
+        console.log(seekBarContainer.position().left);
+        console.log(seekBarContainer.width());
+        var song = Song.data;
+        var seek_ratio = ( (e.clientX - seekBarContainer.position().left ) / seekBarContainer.width());
+        var seek_sec = String(Math.round(seek_ratio * song.Time));
+        socket.emit('mpd','seekcur',[seek_sec], function(err, msg) {
+          if (err) {  }
+          else { showInfo("seek " + Math.round(seek_ratio * 100) + "% into song" , 2000); }
+        });
       }); 
     });
     
@@ -411,6 +411,10 @@ var initHandlers = function() {
       // If the clicked element is not the menu
       if (!$(e.target).parents(".contextmenu").length > 0) {    
         $(".contextmenu").hide();
+        $('.leftclick').removeClass('selected');
+      }
+      else {
+        $(".contextmenu").fadeOut();
         $('.leftclick').removeClass('selected');
       }
     });
