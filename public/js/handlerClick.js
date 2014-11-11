@@ -469,33 +469,21 @@ var interfaceRegistration = function() {
         });
     
     
-        $('#queue').on('click', '#random', function() {
+        $('#footer').on('click', '#random', function() {
           socket.emit('mpd', 'random', [1 - status.random], function(err, msg) {
             if (err) { showInfo("error: " + err, 2000); }
-            else {
-              var random = 1 - status.random === 1 ? "on" : "off";
-              showInfo("random: " + random, 1000); 
-            }
           });
         });
     
-        $('#queue').on('click', '#repeat', function() {
+        $('#footer').on('click', '#repeat', function() {
           socket.emit('mpd', 'repeat', [1 - status.repeat], function(err, msg) {
             if (err) { showInfo("error: " + err, 2000); }
-            else { 
-              var repeat = 1 - status.repeat === 1 ? "on" : "off";
-              showInfo("repeat: " + repeat, 1000);
-            }
           });
         });
     
         $('#queue').on('click', '#consume', function() {
           socket.emit('mpd', 'consume', [1 - status.consume], function(err, msg) {
             if (err) { showInfo("error: " + err, 2000); }
-            else {
-              var consume = 1 - status.consume === 1 ? "on" : "off";
-              showInfo("consume: " + consume, 1000);
-            }
           });
         });
     

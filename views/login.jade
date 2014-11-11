@@ -37,7 +37,12 @@ html(lang='en')
         .button-wrapper
           #enter.button.text.active S T A R T
 
-    include ./scripts.jade
+    if config.appEnv === 'production'
+      script(src='/js/jquery-2.1.1.min.js')
+    else
+      script(src='/js/jquery-2.1.1.js')
+      script(src='/js/less.js', type='text/javascript') // use in development only!
+
 
     // script for custom form posting
     script(type="text/javascript").
