@@ -6,7 +6,7 @@ var express = require('express')
 //This will sort your array
 function SortByLastModified(a, b) {
   var aLastModified = a.lastmodified.toLowerCase();
-  var bLastModified = b.lastmodified.toLowerCase(); 
+  var bLastModified = b.lastmodified.toLowerCase();
   return ((aLastModified < bLastModified) ? -1 : ((aLastModified > bLastModified) ? 1 : 0));
 }
 
@@ -64,35 +64,46 @@ router.get('/', function(req, res) {
 router.get('/queue', function(req, res) {
   var mpdNamespace = req.session.mpdhost + ":" + req.session.mpdport;
   var komponistClient = komponist.getClient(mpdNamespace);
-  komponistClient.playlistinfo(function(err, data) {
-
-    data = Object.keys(data[0]).length === 0 ? undefined : data;
-    err ?
+  if (komponistClient) {
+    komponistClient.playlistinfo(function(err, data) {
+      data = Object.keys(data[0]).length === 0 ? undefined : data;
+      err ?
         res.render('queue',{queue: err}) :
         res.render('queue',{queue :data});
-  }); 
+    });
+  }
+  else {
+    req.session.destroy();
+    res.redirect('/login?err=sessionLost');
+  } 
 });
 
 // get /playlists
 router.get('/playlists', function(req, res) {
   var mpdNamespace = req.session.mpdhost + ":" + req.session.mpdport;
   var komponistClient = komponist.getClient(mpdNamespace);
-  komponistClient.listplaylists(function(err, data) {
-    if (err || Object.keys(data[0]).length === 0) {
-      res.render('playlists', {playlists:false})
-    }
-    else {
-      for (i in data) {
-        data[i]['lastmodified'] = data[i]['Last-Modified'];
+  if (komponistClient) {
+    komponistClient.listplaylists(function(err, data) {
+      if (err || Object.keys(data[0]).length === 0) {
+        res.render('playlists', {playlists:false})
       }
-      try {
-        data.sort(SortByLastModified);
-      } catch(e) {
-        console.log(e);
+      else {
+        for (i in data) {
+          data[i]['lastmodified'] = data[i]['Last-Modified'];
+        }
+        try {
+          data.sort(SortByLastModified);
+        } catch(e) {
+          console.log(e);
+        }
+        res.render('playlists', {playlists: data});
       }
-      res.render('playlists', {playlists: data});
-    }
-  });
+    });
+  }
+  else {
+    req.session.destroy();
+    res.redirect('/login?err=sessionLost');
+  }
 });
 
 //// route get /browse
@@ -108,33 +119,53 @@ router.get('/browse/:browsepath', function(req, res) {
   }
   var mpdNamespace = req.session.mpdhost + ":" + req.session.mpdport;
   var komponistClient = komponist.getClient(mpdNamespace);
-  komponistClient.lsinfo([browsepath], function(err,contents) {
-    if (err) { 
-      console.log(err); 
-      res.render('browse', {dirs:[], files:[], breadcrumbs:false});
-    }
-    else {
-      var dirs = [], files = [];
-      // if contents contains only 1 item, mpd returns Object instead of Array
-      contents = (contents instanceof Array) ? contents : [contents];
-      
-      for (i in contents) {
-        var item = contents[i];
-        if ('directory' in item) { // handle directory element
-          var dir_split = item.directory.split('/');
-          item.name = dir_split[dir_split.length-1];
-          dirs.push(item); //push item into dirs array
-        } else if ('file' in item) { // handle file element
-          var dir_split = item.file.split('/');
-          item.name = dir_split[dir_split.length-1];
-          files.push(item); //push item into files array
-        }
+  if (komponistClient) {
+    komponistClient.lsinfo([browsepath], function(err,contents) {
+      if (err) { 
+        console.log(err); 
+        res.render('browse', {dirs:[], files:[], breadcrumbs:false});
       }
-      var breadcrumbs = browsepath.split('/');
-      req.session.breadcrumbs = breadcrumbs;
-      res.render('browse', {dirs:dirs, files:files, breadcrumbs:breadcrumbs});
-    }
-  });
+      else {
+        var dirs = [], files = [];
+        // if contents contains only 1 item, mpd returns Object instead of Array
+        contents = (contents instanceof Array) ? contents : [contents];
+        
+        for (i in contents) {
+          var item = contents[i];
+          if ('directory' in item) { // handle directory element
+            try {
+              var dir_split = item.directory.split('/');
+              item.name = dir_split[dir_split.length-1];
+              if (item.name !== "") {
+                dirs.push(item); //push item into dirs array
+              }
+            }
+            catch(e) {
+              console.log(e);              
+            }
+          } else if ('file' in item) { // handle file element
+            try {
+              var dir_split = item.file.split('/');
+              item.name = dir_split[dir_split.length-1];
+              if (item.name !== "") {
+                files.push(item); //push item into files array
+              }
+            }
+            catch(e) {
+              console.log(e);              
+            }
+          }
+        }
+        var breadcrumbs = browsepath.split('/');
+        req.session.breadcrumbs = breadcrumbs;
+        res.render('browse', {dirs:dirs, files:files, breadcrumbs:breadcrumbs});
+      }
+    });
+  }
+  else {
+    req.session.destroy();
+    res.redirect('/login?err=sessionLost');
+  }
 });
 
 //// get search
@@ -153,28 +184,34 @@ router.get('/search/:searchString/:type', function(req, res) {
     
     var mpdNamespace = req.session.mpdhost + ":" + req.session.mpdport;
     var komponistClient = komponist.getClient(mpdNamespace);
-    try {
-      komponistClient.search(type, searchString, function(err, contents) {
-        if (err) { 
-          console.log(err);
-          res.render('search', {contents: false,           
-            searchString:'#', type: 'Any'
+    if (komponistClient) {
+      try {
+        komponistClient.search(type, searchString, function(err, contents) {
+          if (err) { 
+            console.log(err);
+            res.render('search', {contents: false,           
+              searchString:'#', type: 'Any'
+            });
+          }
+          else if (Object.keys(contents[0]).length === 0) { // if object is empty
+            contents = false;
+          }
+          req.session.type = type;
+          req.session.search = searchString;
+          res.render('search', {contents: contents, 
+              searchString:searchString, 
+              type: type
           });
-        }
-        else if (Object.keys(contents[0]).length === 0) { // if object is empty
-          contents = false;
-        }
-        req.session.type = type;
-        req.session.search = searchString;
-        res.render('search', {contents: contents, 
-            searchString:searchString, 
-            type: type
         });
-      });
-    } catch (e) {
-      res.render('search', {contents: false,           
-        searchString:'#', type: 'Any'
-      });
+      } catch (e) {
+        res.render('search', {contents: false,           
+          searchString:'#', type: 'Any'
+        });
+      }
+    }
+    else {
+      req.session.destroy();
+      res.redirect('/login?err=sessionLost');
     }
   }
 });

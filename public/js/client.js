@@ -1,4 +1,4 @@
-var socket = io();
+//var socket = io();
 var audio_element = document.getElementsByTagName("audio")[0];
 
 //jQuery.fx.interval = 100;

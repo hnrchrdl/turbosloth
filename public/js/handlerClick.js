@@ -435,36 +435,30 @@ var interfaceRegistration = function() {
         $('#control-menu').on('click', '#previous', function() {
           socket.emit('mpd', 'previous', [], function(err, msg) {
             if (err) { showInfo("error: " + err, 2000); }
-            else { showInfo("previous"); }
           });
         });
     
         $('#control-menu').on('click', '#next', function() {
-          console.log('debug click');
           socket.emit('mpd', 'next', [], function(err, msg) {
             if (err) { showInfo("error: " + err, 2000); }
-            else { showInfo("next"); }
           });
         });
     
         $('#control-menu').on('click', '#play', function() {
           socket.emit('mpd', 'play', [], function(err, msg) {
             if (err) { showInfo("error: " + err, 2000); }
-            else { showInfo("play"); }
           });
         });
     
         $('#control-menu').on('click', '#pause', function() {
           socket.emit('mpd', 'pause', [(status.state === 'pause' ? 0 : 1)], function(err, msg) {
             if (err) { showInfo("error: " + err, 2000); }
-            else { showInfo("pause"); }
           });
         });
     
         $('#control-menu').on('click', '#stop', function() {
           socket.emit('mpd', 'stop', [], function(err, msg) {
             if (err) { showInfo("error: " + err, 2000); }
-            else { showInfo("stop"); }
           });
         });
     
