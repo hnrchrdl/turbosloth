@@ -129,6 +129,7 @@ CurrentSong.prototype.autoScroll = function() {
 //// Queue
 // Constructor
 var Queue = function(callback) {
+  $('main').html('<div class="loading-wrapper"><i class="fa fa-circle-o-notch fa-spin loading"></i></div>');
   var q = this;
   $('nav').find('.loading.queue').show();
   $.ajax({
@@ -161,19 +162,18 @@ Queue.prototype.render = function() {
 
 //// Playlists
 // Constructor
-var Playlists = function(callback) {
+var Playlists = function(order, callback) {
+  $('main').html('<div class="loading-wrapper"><i class="fa fa-circle-o-notch fa-spin loading"></i></div>');
   var p = this;
   $('nav').find('.loading.playlists').show();
   $.ajax({
-    url: '/playlists'
+    url: '/playlists/' + order,
   }).done(function(html){
     p.html = html;
     callback({}, p);
   }).fail(function(jqXHR, err){ 
     console.log(err);
     callback(err, {});
-  }).always(function() {
-    $('nav').find('.loading.playlists').hide();
   });
 };
 // Prototypes
@@ -186,18 +186,17 @@ Playlists.prototype.render = function() {
 
 //// Browse
 // Constructor
-var Browse = function(folder, callback) {
+var Browse = function(folder, order, callback) {
+  $('main').html('<div class="loading-wrapper"><i class="fa fa-circle-o-notch fa-spin loading"></i></div>');
   var b = this;
   $('nav').find('.loading.browse').show();
   $.ajax({
-    url: 'browse/' + encodeURIComponent(folder)
+    url: 'browse/' + encodeURIComponent(folder) + '/' + order
   }).done(function(html) {
     b.html = html;
     callback({}, b);  
   }).fail(function(jqXHR, err) {
     callback(err, {});
-  }).always(function() {
-    $('nav').find('.loading.browse').hide();
   });
 };
 // Prototypes
@@ -211,6 +210,7 @@ Browse.prototype.render = function(html) {
 //// Search
 // Constructor
 var Search = function(searchString, searchType, callback) {
+  $('main').html('<div class="loading-wrapper"><i class="fa fa-circle-o-notch fa-spin loading"></i></div>');
   var s = this;
   $('nav').find('.loading.search').show();
   $.ajax({
@@ -220,8 +220,6 @@ var Search = function(searchString, searchType, callback) {
     callback({}, s);  
   }).fail(function(jqXHR, err) {
     callback(err, {});
-  }).always(function() {
-    $('nav').find('.loading.search').hide();
   });
 };
 // Prototypes

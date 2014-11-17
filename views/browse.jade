@@ -12,10 +12,18 @@
               .button.text
                 i.fa.fa-folder-open-o
                 |  #{fragment}
-  .button-wrapper.right
-    .button.text.rescan
-      i.fa.fa-refresh
-        |  rescan
+  .nav-main
+    .button-wrapper.right
+      if order === 'lastmodified'
+        .button.sort-by-name
+          i.fa.fa-sort-alpha-asc
+        .button.sort-by-date.active
+          i.fa.fa-sort-amount-desc
+      else
+        .button.sort-by-name.active
+          i.fa.fa-sort-alpha-asc
+        .button.sort-by-date
+          i.fa.fa-sort-amount-desc
   .clear
   hr.prime
   .scrollable
@@ -25,7 +33,8 @@
           .attr
              i.fa.fa-folder-o
           .attr= item.name
-
+          span.muted
+            .attr.right last modified: #{item.lastmodified}
     if files != []
       - each item in files
         .item.file.leftclick(data-path= item.file)
@@ -38,10 +47,10 @@
     .button-wrapper.left
       .button.text.add
         i.fa.fa-plus-square
-          |  add to queue
+        |  add to queue
     .clear
     .button-wrapper.left
       .button.text.load
         i.fa.fa-asterisk
-          |  replace queue
+        |  replace queue
 

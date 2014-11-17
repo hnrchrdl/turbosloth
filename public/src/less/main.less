@@ -12,7 +12,6 @@ main {
   	line-height: 	  @buttonHeight;
   	overflow: 	    hidden;
   	border-bottom: 	1px solid @subtle;
-    padding-right:  @short;
     // no text select
     -webkit-touch-callout: none;
     -webkit-user-select: none;
@@ -32,17 +31,13 @@ main {
     .attr {
       height:         @buttonHeight;
       display:        inline-block;
-      margin-left:    @medium;
+      overflow:       hidden;
+      padding:        0 1% 0;
       &.left {
         float:        left;
       }
       &.right {
         float:        right;
-      }
-      &.space {
-        height:         @buttonHeight / 3;
-        margin-top:     (@buttonHeight / 2) - (@buttonHeight / 3 / 2);
-        border-right:   1px solid @subtle;
       }
       &.songpos.active {
         color: @primary;
@@ -52,12 +47,23 @@ main {
   
 	.scrollable {
 	  overflow-y: scroll;
-	}
+  }
 
 	.nav-main {
 		height: @buttonHeight;
 		//border-bottom: @lightBorder;
 	}
+
+  .loading-wrapper {
+    height: 500px;
+    text-align: center;
+    line-height:  500px;
+    font-size: 1000%;
+    i.loading {
+      //margin-left: 50%;
+      color: @clouds;
+    }
+  }
 }
 
 
@@ -70,6 +76,14 @@ main {
     border: 1px solid @subtle;
     background: @background;
     padding: 0;
+    .button-wrapper {
+      text-align:  left;
+      .button {
+        margin: 0;
+        background: @background;
+        width:  100%;
+      }
+    }
 }
 
 //pseudo classes for scrollbar

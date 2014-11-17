@@ -58,7 +58,8 @@ app.use(session({
     host: 'localhost', // optional
     port: 6379, // optional
     collection: 'sessions', // optional
-    expire: 86400 // optional
+    //expire in 1h
+    //expire: 41666667 // optional
   }),
   resave: true,
   saveUninitialized: true
@@ -84,7 +85,7 @@ app.use(function (req, res, next) {
 //   login page.
 function ensureAuthenticated(req, res, next) {
   if (req.isAuthenticated()) { return next(); }
-  res.redirect('/login')
+  res.redirect('/login?err=notauthenticated')
 }
 
 app.use('/', routes);

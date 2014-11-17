@@ -17,27 +17,27 @@ var initHandlers = function() {
     $('.button.queue').on('click', function(){
       $('nav').find('.button').removeClass('active');
       $('nav').find('.button.queue').addClass('active');
-      $('nav').find('.loading.queue').show();
+      $('main').html('<i class="fa fa-circle-o-notch fa-spin loading"></i>');
       queueRequest();
     });
     // playlists
     $('.button.playlists').on('click', function(){
       $('nav').find('.button').removeClass('active');
       $('nav').find('.button.playlists').addClass('active');
-      $('nav').find('.loading.playlists').show();
-      playlistsRequest();
+      $('main').html('<i class="fa fa-circle-o-notch fa-spin loading"></i>');
+      playlistsRequest('none');
     });
     // browse
     $('.button.browse').on('click', function(){
       $('nav').find('.button').removeClass('active');
       $('nav').find('.button.browse').addClass('active');
+      $('main').html('<i class="fa fa-circle-o-notch fa-spin loading"></i>');
       browseRequest("#");
     });
     // search
     $('.button.search').on('click', function(){
       $('nav').find('.button').removeClass('active');
       $('nav').find('.button.search').addClass('active');
-      $('nav').find('.loading.search').show();
       searchRequest("#", "any");
     });
     
@@ -192,10 +192,17 @@ var initHandlers = function() {
           if (err === {}) { showInfo("error: " + err, 2000); }
           else {
             showInfo("playlist saved as: '" + playlistName + "'", 2000);
-            playlistsRequest();
+            playlistsRequest(undefined);
           }
         });
       }
+    });
+    // sort playlists
+    $('main').on('click', '#playlists > .nav-main > .button-wrapper > .button.sort-by-name', function() {
+      playlistsRequest('name');
+    });
+    $('main').on('click', '#playlists > .nav-main > .button-wrapper > .button.sort-by-date', function() {
+      playlistsRequest('lastmodified');
     });
     // append from context
     $('main').on('click', '#playlists > .contextmenu > .button-wrapper > .add', function() {
@@ -249,6 +256,13 @@ var initHandlers = function() {
         if (err) { showInfo("error: " + err, 2000); }
         else { showInfo('database rescan complete', 2000); }
       });
+    });
+    // sort browse results
+    $('main').on('click', '#browse > .nav-main > .button-wrapper > .button.sort-by-name', function() {
+      browseRequest('#', 'name');
+    });
+    $('main').on('click', '#browse > .nav-main > .button-wrapper > .button.sort-by-date', function() {
+      browseRequest('#', 'lastmodified');
     });
 
     // browse breadcrumb

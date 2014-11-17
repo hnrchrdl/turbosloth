@@ -59,16 +59,19 @@ function queueRequest() {
   });
 }
 
-function playlistsRequest() {
-  var p = new Playlists(function(err, playlists) {
+function playlistsRequest(order) {
+  var p = new Playlists(order, function(err, playlists) {
     if (playlists) { playlists.render(); }
     else if (err) { console.log(err); }
      
   });
 }
 
-function browseRequest(folder) {
-  var b = new Browse(folder, function(err, browse) {
+function browseRequest(folder, order) {
+  if (!order) {
+    order = 'none';
+  }
+  var b = new Browse(folder, order, function(err, browse) {
     if (browse) { browse.render(); }
     else if (err) { console.log(err); }
      

@@ -15,45 +15,34 @@
     else
       - each song in queue
         .item.leftclick(data-id= song.Id, data-path= song.file)
-          if song.Pos
-            span.muted
-              .attr.left.songpos= (parseInt(song.Pos) + 1)
-              .attr.left.space
-          else
-            .attr.songpos #
-            .attr.space
-          
-          if song.Artist
-            .attr.left.artist=song.Artist
+          .attr.songpos
+            if song.Pos
+              span.muted= (parseInt(song.Pos) + 1)
+            else
+              span.muted #
+          .attr.artist
+            if song.Artist
+              span= song.Artist
+          .attr.title  
             if song.Title
-              span.muted
-                .attr.left -
-              .attr.left.title= song.Title
-          else
-            .attr.left.Artist= song.file
-          
-          
-          if song.Time
-            - var time = secondsToTimeString(song.Time)
-            span.muted
-              .attr.right.time= time
-              .attr.right.space
-          
-          if song.Date
-           span.muted
-              .attr.right= '(' + song.Date + ')'
-              
-          if song.Album
-            .attr.right.album=song.Album
-          
-          if song.Track
-            span.muted
-              .attr.right=song.Track
-
-          if song.Genre
-            span.muted
-              .attr.right.space
-              .attr.right.genre #{song.Genre}
+              span= song.Title
+            else
+              span= song.file
+          .attr.track
+            if song.Track
+              span.muted= song.Track    
+          .attr.album
+            if song.Album
+              span= song.Album
+            if song.Date
+              span.muted= ' (' + song.Date + ')'
+          .attr.genre
+            if song.Genre
+              span.muted= song.Genre
+          .attr.time
+            if song.Time
+              - song.time = secondsToTimeString(song.Time)
+              span.muted= song.time     
               
                             
 

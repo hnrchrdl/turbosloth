@@ -79,24 +79,38 @@ router.get('/queue', function(req, res) {
 });
 
 // get /playlists
-router.get('/playlists', function(req, res) {
+router.get('/playlists/:order', function(req, res) {
+  var order = req.params.order;
+  if (order === 'none' && req.session.playlistOrder) {
+    order = req.session.playlistOrder;
+  }
+  else if (order === 'lastmodified') {
+    req.session.playlistOrder = 'lastmodified';
+  }
+  else {
+    order = 'name';
+    req.session.playlistOrder = undefined;
+  }
   var mpdNamespace = req.session.mpdhost + ":" + req.session.mpdport;
   var komponistClient = komponist.getClient(mpdNamespace);
   if (komponistClient) {
     komponistClient.listplaylists(function(err, data) {
       if (err || Object.keys(data[0]).length === 0) {
-        res.render('playlists', {playlists:false})
+        res.render('playlists', {playlists: undefined})
       }
       else {
         for (i in data) {
-          data[i]['lastmodified'] = data[i]['Last-Modified'];
+          if (data[i]['Last-Modified']) {
+            data[i]['lastmodified'] = data[i]['Last-Modified'];
+          }
+          else {
+              data[i]['lastmodified'] = '0000-00-00T00:00:00Z'; 
+            }
         }
-        try {
-          data.sort(SortByLastModified);
-        } catch(e) {
-          console.log(e);
+        if (order === 'lastmodified') {
+          data.sort(SortByLastModified).reverse();
         }
-        res.render('playlists', {playlists: data});
+        res.render('playlists', {playlists: data, order: order});
       }
     });
   }
@@ -107,20 +121,38 @@ router.get('/playlists', function(req, res) {
 });
 
 //// route get /browse
-router.get('/browse/:browsepath', function(req, res) {
+router.get('/browse/:browsepath/:order', function(req, res) {
   var browsepath = decodeURIComponent(req.params.browsepath);
-  if (browsepath === "#") {
+  if (browsepath === "#" && req.session.browsepath) {
+    browsepath = req.session.browsepath;
+  }
+  else if (browsepath === '#') {
     browsepath = "";
-  } else {
-    if (browsepath[0] === '#') {
-      req.session.breadcrumbs = req.session.breadcrumbs.splice(0,browsepath[1])
-      browsepath = req.session.breadcrumbs.join('/');
-    }
+  }
+  else if (browsepath[0] === '#') {
+    req.session.browsepath = browsepath;
+    req.session.breadcrumbs = req.session.breadcrumbs.splice(0,browsepath[1])
+    browsepath = req.session.breadcrumbs.join('/');
+  }
+  else {
+    req.session.browsepath = browsepath;
+  }
+  //sorting
+  var order = req.params.order;
+  if (order === 'none' && req.session.browseOrder) {
+    order = req.session.browseOrder;
+  }
+  else if (order === 'lastmodified') {
+    req.session.browseOrder = 'lastmodified';
+  }
+  else {
+    order = 'name';
+    req.session.browseOrder = undefined;
   }
   var mpdNamespace = req.session.mpdhost + ":" + req.session.mpdport;
   var komponistClient = komponist.getClient(mpdNamespace);
   if (komponistClient) {
-    komponistClient.lsinfo([browsepath], function(err,contents) {
+    komponistClient.lsinfo([browsepath], function(err, contents) {
       if (err) { 
         console.log(err); 
         res.render('browse', {dirs:[], files:[], breadcrumbs:false});
@@ -129,7 +161,23 @@ router.get('/browse/:browsepath', function(req, res) {
         var dirs = [], files = [];
         // if contents contains only 1 item, mpd returns Object instead of Array
         contents = (contents instanceof Array) ? contents : [contents];
-        
+        if (contents.length > 1) {
+          for (i in contents) {
+            if (contents[i]['Last-Modified']) { 
+              contents[i]['lastmodified'] = contents[i]['Last-Modified'];
+            }
+            else {
+              contents[i]['lastmodified'] = '0000-00-00T00:00:00Z'; 
+            }
+          }
+          if (order === 'lastmodified') {
+            try {
+              contents.sort(SortByLastModified).reverse();
+            } catch(e) {
+              console.log(e);
+            }
+          }
+        }
         for (i in contents) {
           var item = contents[i];
           if ('directory' in item) { // handle directory element
@@ -158,7 +206,7 @@ router.get('/browse/:browsepath', function(req, res) {
         }
         var breadcrumbs = browsepath.split('/');
         req.session.breadcrumbs = breadcrumbs;
-        res.render('browse', {dirs:dirs, files:files, breadcrumbs:breadcrumbs});
+        res.render('browse', {dirs:dirs, files:files, breadcrumbs:breadcrumbs, order: order});
       }
     });
   }

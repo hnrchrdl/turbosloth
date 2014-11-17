@@ -1,6 +1,18 @@
 #playlists
   input#save-playlist.long(type='text',placeholder="save as new playlist")
   i.fa.fa-save
+  .nav-main
+    .button-wrapper.right
+      if order === 'lastmodified'
+        .button.sort-by-name
+          i.fa.fa-sort-alpha-asc
+        .button.sort-by-date.active
+          i.fa.fa-sort-amount-desc
+      else
+        .button.sort-by-name.active
+          i.fa.fa-sort-alpha-asc
+        .button.sort-by-date
+          i.fa.fa-sort-amount-desc
   .clear
   hr.prime
   .scrollable
