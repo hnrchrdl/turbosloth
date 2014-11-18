@@ -122,17 +122,20 @@ router.get('/playlists/:order', function(req, res) {
 
 //// route get /browse
 router.get('/browse/:browsepath/:order', function(req, res) {
+  console.log(decodeURIComponent(req.params.browsepath));
+  console.log(req.params.order);
   var browsepath = decodeURIComponent(req.params.browsepath);
   if (browsepath === "#" && req.session.browsepath) {
     browsepath = req.session.browsepath;
   }
   else if (browsepath === '#') {
     browsepath = "";
+    req.session.browsepath = "";
   }
   else if (browsepath[0] === '#') {
-    req.session.browsepath = browsepath;
     req.session.breadcrumbs = req.session.breadcrumbs.splice(0,browsepath[1])
     browsepath = req.session.breadcrumbs.join('/');
+    req.session.browsepath = browsepath;
   }
   else {
     req.session.browsepath = browsepath;
@@ -152,6 +155,7 @@ router.get('/browse/:browsepath/:order', function(req, res) {
   var mpdNamespace = req.session.mpdhost + ":" + req.session.mpdport;
   var komponistClient = komponist.getClient(mpdNamespace);
   if (komponistClient) {
+    console.log(browsepath);
     komponistClient.lsinfo([browsepath], function(err, contents) {
       if (err) { 
         console.log(err); 
