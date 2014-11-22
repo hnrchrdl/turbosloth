@@ -58,8 +58,8 @@ app.use(session({
     host: 'localhost', // optional
     port: 6379, // optional
     collection: 'sessions', // optional
-    //expire in 1h
-    //expire: 41666667 // optional
+    //expire in ~2h
+    expire: 86400 // optional
   }),
   resave: true,
   saveUninitialized: true

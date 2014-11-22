@@ -12,5 +12,5 @@ socket.on('change', function(system) {
 });
 socket.on('clientError', function() {
   console.log('error reading session');
-  showInfo('error reading session. please reload page.', 100000);
+  showInfo('connection lost. please reload page.', 100000);
 });

@@ -1,0 +1,21 @@
+
+.results
+  if !contents
+    span.muted 
+      .item sorry, no match for '#{searchString}' as '#{type}'
+  else if contents.length > 0
+    span.muted
+      .item found #{contents.length} artist(s)
+  else  
+    span.muted
+      .item please enter 3 or more characters
+.clear
+        
+.fuzzy-container
+  if contents
+    -each item in contents
+      .fuzzy-item(data-artist= item.artist)
+        .artist= item.artist
+        span.muted
+          .songcount= item.songcount + ' songs (' + item.genres + ')'
+          .albums= item.albumcount + ' albums (' + item.albums + ')'

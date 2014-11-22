@@ -81,17 +81,23 @@ CurrentSong.prototype.render = function(callback) {
       this.autoScroll();
     }
     // fetch album cover
-    new LastAlbum(this.data.Artist, this.data.Album, function(err, album) {
-      if (err) {
-        console.log(err);
-      }
-      else {
-        var size = 3; // can be 0 to 5, from small to superlarge
-        var url = album.getAlbumArt(size);
-        if (url) { $('#albumart').css('background-image', 'url(' + url + ')'); }
-        else { $('#albumart').css('background-image', 'none') }
-      }
-    });
+    if (this.data && ('Artist' in this.data) && this.data.Artist !== "" && 
+          ('Album' in this.data) && this.data.Album !== "") {
+      new LastAlbum(this.data.Artist, this.data.Album, function(err, album) {
+        if (album && album.data) {
+          var size = 2; // can be 0 to 5, from small to superlarge
+          var url = album.getArtURL(size);
+          if (url) { 
+            $('#albumart').css('background-image', 'url(' + url + ')'); }
+          else {
+            $('#albumart').css('background-image', 'none');
+          }
+        }
+      });
+    }
+    else {
+      $('#albumart').css('background-image', 'none');
+    }
   }
   else {
     currentsong.html('<span class="muted">end of queue</span>');
@@ -131,16 +137,14 @@ CurrentSong.prototype.autoScroll = function() {
 var Queue = function(callback) {
   $('main').html('<div class="loading-wrapper"><i class="fa fa-circle-o-notch fa-spin loading"></i></div>');
   var q = this;
-  $('nav').find('.loading.queue').show();
   $.ajax({
     url:'/queue'
   }).done(function(html) {
     q.html = html;
+    callback(null, q);
   }).fail(function(jqXHR, err) {
     q.html = false;
-  }).always(function() {
-    $('nav').find('.loading.queue').hide();
-    callback(q)
+    callback(jqXHR, {})
   });
 };
 // Prototypes
@@ -165,12 +169,11 @@ Queue.prototype.render = function() {
 var Playlists = function(order, callback) {
   $('main').html('<div class="loading-wrapper"><i class="fa fa-circle-o-notch fa-spin loading"></i></div>');
   var p = this;
-  $('nav').find('.loading.playlists').show();
   $.ajax({
     url: '/playlists/' + order,
   }).done(function(html){
     p.html = html;
-    callback({}, p);
+    callback(null, p);
   }).fail(function(jqXHR, err){ 
     console.log(err);
     callback(err, {});
@@ -189,12 +192,11 @@ Playlists.prototype.render = function() {
 var Browse = function(folder, order, callback) {
   $('main').html('<div class="loading-wrapper"><i class="fa fa-circle-o-notch fa-spin loading"></i></div>');
   var b = this;
-  $('nav').find('.loading.browse').show();
   $.ajax({
     url: 'browse/' + encodeURIComponent(folder) + '/' + order
   }).done(function(html) {
     b.html = html;
-    callback({}, b);  
+    callback(null, b);  
   }).fail(function(jqXHR, err) {
     callback(err, {});
   });
@@ -210,14 +212,13 @@ Browse.prototype.render = function(html) {
 //// Search
 // Constructor
 var Search = function(searchString, searchType, callback) {
-  $('main').html('<div class="loading-wrapper"><i class="fa fa-circle-o-notch fa-spin loading"></i></div>');
+  //$('main').html('<div class="loading-wrapper"><i class="fa fa-circle-o-notch fa-spin loading"></i></div>');
   var s = this;
-  $('nav').find('.loading.search').show();
   $.ajax({
-    url: 'search/' + encodeURIComponent(searchString) + "/" + searchType
+    url: 'search'
   }).done(function(html) {
     s.html = html;
-    callback({}, s);  
+    callback(null, s);  
   }).fail(function(jqXHR, err) {
     callback(err, {});
   });
@@ -228,4 +229,152 @@ Search.prototype.render = function(html) {
   $('nav').find('.button.search').addClass('active');
   $('main').html(this.html);
   fixScrollHeight();
+  var searchString = $('#search').find('input.search-input').val();
+  $('#search').find('input.search-input').val("");
+  $('#search').find('input.search-input').focus();
+  var val = $('#search').find('input.search-input').val(searchString);
+  var e = jQuery.Event("keyup"); // trigger keyup event on input field
+  $('#search').find('input.search-input').trigger(e);
+};
+var FuzzySearch = function(searchString, searchType, callback) {
+  $('.scrollable').html('<div class="loading-wrapper"><i class="fa fa-circle-o-notch fa-spin loading"></i></div>');
+  var s = this;
+  $.ajax({
+    url: 'fuzzysearch/' + encodeURIComponent(searchString) + "/" + searchType
+  }).done(function(html) {
+    s.html = html;  
+    callback(null, s);
+  }).fail(function(jqXHR, err) {
+    callback(err, {});
+  });
+};
+// Prototypes
+FuzzySearch.prototype.render = function(html) {
+  searchScrollable = $('#search > .scrollable');
+  if (searchScrollable.length > 0) {
+    searchScrollable.html(this.html);
+    fixScrollHeight();
+  }
+};
+var ArtistDetails = function(artist, callback) {
+  $('main').html('<div class="loading-wrapper"><i class="fa fa-circle-o-notch fa-spin loading"></i></div>');
+  var a = this;
+  $.ajax({
+    url: 'artistdetails/' + encodeURIComponent(artist)
+  }).done(function(html) {
+    a.html = html;
+    a.name = artist;
+    return callback(null, a);  
+  }).fail(function(jqXHR, err) {
+    console.log(jqXHR);
+    return callback(err, {});
+  });
+};
+// Prototypes
+ArtistDetails.prototype.render = function() {
+  // render
+  var artist_name = this.name;
+  $('main').html('<div class="loading-wrapper"><i class="fa fa-circle-o-notch fa-spin loading"></i></div>');
+  $('nav').find('.button').removeClass('active');
+  $('nav').find('.button.search').addClass('active');
+  $('main').html(this.html);
+  fixScrollHeight();
+  return true;
+};
+
+ArtistDetails.prototype.lastArtist = function() {
+  // get Artist Info
+  new LastArtist(this.name, function(err, artist) {
+    if (artist && artist.data) {
+      var artistImageUrl = artist.getImageURL(3);
+      $('main > #artistdetails > .scrollable > .artist-image').css('background-image', 'url(' + artistImageUrl + ')');
+      $('main > #artistdetails > .scrollable > .artist-image').show();
+      var genre = artist.getGenre();
+      $('main > #artistdetails > .scrollable > .artist-info > .genre').html(genre);
+      var bio = artist.getBio();
+      $('main > #artistdetails > .scrollable > .artist-info > .bio').html(bio);
+      $('main > #artistdetails > .scrollable > .artist-info').show();
+    }
+    fixScrollHeight();
+  });
+  return true;
+};
+// Last Album
+ArtistDetails.prototype.lastAlbum = function() {
+  // get the Album Covers
+  var artist = this;
+  $('main > #artistdetails > .scrollable > .albums > .album-container').each(function(index, value) {
+    var albumContainer = $(this);
+    var album_name = albumContainer.attr('data-name');
+    new LastAlbum(artist.name, album_name, function(err, album) {
+      if (album && album.data) {
+        var url = album.getArtURL(2) || "";
+        albumContainer.css('background-image', 'url(' + url + ')');
+        var url = album.getArtURL(3) || "";
+        $('main').find('#artistdetails > #cover > .album-container[data-name="' + album_name + '"] > .leftside > .album-art')
+            .css('background-image', 'url(' + url + ')');
+      }
+      if (err) {
+        console.log(err);
+      }
+    });
+  });
+  return true;
+};
+// Last Similar
+ArtistDetails.prototype.lastSimilar = function() {
+  // get similar artists
+  new LastSimilar(this.name, 20, function(err, similar) {
+    if (similar && similar.data) {
+      var artists = similar.get();
+      $.each(artists, function(index, artist) {
+        var artistImageUrl = artist.image[2]['#text'];
+        var el_container = $('<div></div>')
+            .attr('data-artist', artist.name)
+            .addClass('artist-container')
+            .css('background-image', 'url(' + artistImageUrl + ')');
+        var el = $('<div></div>')
+            .html(artist.name)
+            .addClass('artist')
+            .appendTo(el_container);
+        $('main > #artistdetails > .scrollable > .similar').append(el_container);
+        fixScrollHeight();
+      });
+    }
+    else {
+      $('main > #artistdetails > .scrollable > .similar').hide();
+    }
+  });
+  return true;  
+};
+//Last Top Albums
+ArtistDetails.prototype.lastTopAlbums = function() {
+  // Top Albums
+  new LastTopAlbums(this.name, function(err, topAlbums) {
+    var albums = topAlbums.get();
+    if (albums) {
+      $.each(albums, function(index, album) {
+        try {
+          var albumImageUrl = album.image[2]['#text'];
+        }
+        catch(e) {
+          var albumImageUrl = ""; 
+        }
+        //var albumYear = album.
+        var el_container = $('<div></div>')
+            .addClass('album-container')
+            .css('background-image', 'url(' + albumImageUrl + ')');
+        var el = $('<div></div>')
+            .html(album.name.length < 30 ? album.name : album.name.slice(0,29) + "...")
+            .addClass('album')
+            .appendTo(el_container);
+        $('main > #artistdetails > .scrollable > .albums-other').append(el_container);
+        fixScrollHeight();
+      });
+    }
+    else {
+      $('main > #artistdetails > .scrollable > .albums-other > .head').html('Top Albums not found');
+    }
+  });
+  return true;
 };

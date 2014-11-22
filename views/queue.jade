@@ -22,7 +22,7 @@
               span.muted #
           .attr.artist
             if song.Artist
-              span= song.Artist
+              a(href="#", data-artist= song.Artist)= song.Artist
           .attr.title  
             if song.Title
               span= song.Title
@@ -65,11 +65,6 @@
       .button.left.text.browse
         i.fa.fa-folder-o
         |  browse folder
-    .clear
-    .button-wrapper.left
-      .button.left.text.search
-        i.fa.fa-search
-        |  search for artist
     .clear
     hr
     .button-wrapper.left

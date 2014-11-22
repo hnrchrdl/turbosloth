@@ -15,25 +15,21 @@ html(lang='en')
 
   body
     #background-wrapper
-      
-      header
-        h1 turbosloth
-        #submenu
-          .button-wrapper
-            #settings.button.text
-              i.fa.fa-cog
-              |  Settings
-            #logout.button.text
-              i.fa.fa-sign-out
-              |  Logout
         
       #left
+        header
+          //.logo
+          | turbosloth
         nav
-
           .button-wrapper.left
             .button.text.queue.active
               i.fa.fa-list
               |  Queue
+          .clear
+          .button-wrapper.left
+            .button.text.search
+              i.fa.fa-search
+              |  Search
           .clear
           .button-wrapper.left
             .button.text.playlists 
@@ -45,18 +41,18 @@ html(lang='en')
               i.fa.fa-folder-o
               |  Browse
           .clear
-          .button-wrapper.left
-            .button.text.search
-              i.fa.fa-search
-              |  Search
+          .sub
+            .button-wrapper.left
+              #settings.button.text
+                i.fa.fa-cog
+                |  Settings
+            .clear
+            .button-wrapper.left
+              #logout.button.text
+                i.fa.fa-sign-out
+                |  Logout
+            .clear
           .clear
-          //#player-options.button-wrapper.right
-            //if !stream
-              //#stream.left.button.text.disabled(title="no streaming source")
-                //i.fa.fa-volume-up
-            //else
-              //#stream.left.button.text(title="streaming")
-                //i.fa.fa-volume-up
 
       main
 
@@ -66,7 +62,7 @@ html(lang='en')
       #currentsong-wrapper
         #currentsong
  
-      #control-menu.left
+      #control-menu.control-menu
           .button-wrapper.left
             #previous.left.button(title="previous")
               i.fa.fa-backward
@@ -78,12 +74,12 @@ html(lang='en')
               i.fa.fa-stop
             #next.left.button(title="next")
               i.fa.fa-forward
-      #seek-current 00:00:00
+      #seek-current.seek-time 00:00:00
       #seek-bar-container  
         #seek-bar
-      #seek-songtime 00:00:00
+      #seek-songtime.seek-time 00:00:00
 
-      #control-menu2.right
+      #control-menu2.control-menu
           .button-wrapper.left
             #stream.left.button(title="stream")
               i.fa.fa-volume-up

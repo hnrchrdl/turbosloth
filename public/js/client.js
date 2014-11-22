@@ -49,20 +49,20 @@ function currentSongRequest() {
 }
 
 function queueRequest() {
-  new Queue(function(queue) {
-    if (queue) { 
-      queue.render();
-    }
-    else {
+  new Queue(function(err, queue) {
+    if (err) {
       showInfo('error rendering queue', 2500);
+    }
+    else { 
+      queue.render();
     }
   });
 }
 
 function playlistsRequest(order) {
   var p = new Playlists(order, function(err, playlists) {
-    if (playlists) { playlists.render(); }
-    else if (err) { console.log(err); }
+    if (err) { console.log(err); }
+    else { playlists.render(); }
      
   });
 }
@@ -72,22 +72,59 @@ function browseRequest(folder, order) {
     order = 'none';
   }
   var b = new Browse(folder, order, function(err, browse) {
-    if (browse) { browse.render(); }
-    else if (err) { console.log(err); }
+    if (err) { console.log(err); }
+    else { browse.render(); }
      
   });
 }
 
-function searchRequest(searchString, searchType) {
-  if (searchString === "" || searchString === " " ) {
+function searchRequest (searchString, searchType) {
+  if (!searchString) {
     searchString = "#";
   }
+  if (!searchType) {
+    searchType = 'Artist';
+  }
+
   try {
-    var s = new Search(searchString, searchType, function(err, search) {
-      if (search) { search.render(); }
-      else if (err) { console.log(err); }
+    new Search(searchString, searchType, function(err, search) {
+      if (err) { console.log(err); }
+      else { search.render(); }
     });
   } 
+  catch (e) {
+    showInfo("search failed", 2500);
+  }
+}
+
+function artistDetailsRequest (artist) {
+  new ArtistDetails(artist, function(err, artistDetails) {
+    if (err) {
+      console.log(err);
+    }
+    else {
+      artistDetails.render();
+      artistDetails.lastArtist();
+      artistDetails.lastAlbum();
+      artistDetails.lastSimilar();
+      artistDetails.lastTopAlbums();
+    }
+  });
+}
+
+function searchRequestFuzzy (searchString, searchType) {
+  if (!searchString || searchString === "") {
+    searchString = "#";
+  }
+  if (!searchType) {
+    searchType = 'none';
+  }
+  try {
+    new FuzzySearch(searchString, searchType, function(err, fuzzySearch) {
+      if (err) { console.log(err); }
+      else { fuzzySearch.render(); }
+    });
+  }
   catch (e) {
     showInfo("search failed", 2500);
   }

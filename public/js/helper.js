@@ -44,21 +44,6 @@ function showInfo(text, duration) {
   }, duration);
 }
 
-function fetch_album_cover(artist, album) {
-  $.ajax({
-    url: 'http://www.musicbrainz.org/ws/2/recording/?query=artist:' + artist +
-        '+recording:' + album
-  }).done(function(data) {
-    console.log(data);
-    data = xmlToJson(data);
-    console.log(data);
-    console.log(data['metadata']['recording-list']['recording'][0]['release-list']['release']['@attributes']['id']);
-    console.log(data['metadata']['recording-list']['recording'][0]['release-list']['release']['title']);
-    url = null;
-    return url;
-  });
-}
-
 function xmlToJson(xml) {
     var obj = {};
     if (xml.nodeType == 1) {                

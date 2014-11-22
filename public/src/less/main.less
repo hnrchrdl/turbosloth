@@ -19,12 +19,22 @@ main {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-    cursor: default; 
+    cursor: default;
+    a {
+      color: @fontPrimary;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
   	&.active {
-  		border-bottom: 1px solid @primary;
-  		//border-bottom: 1px solid @primary;
-  		//background-color: @hoverBackground;
-  	}
+      color:  @primary;
+      .muted {
+        color:  @primary;
+      }
+      a {
+        color: @primary;
+      }
+    }
     &.selected {
       background-color: @extraSubtle;
     }
@@ -55,7 +65,7 @@ main {
 	}
 
   .loading-wrapper {
-    font-size: 1500%;
+    font-size: 1000%;
     line-height: 400px;
     text-align: center;
     i.loading {
@@ -64,24 +74,22 @@ main {
   }
 }
 
-
-// contextmanu
 .contextmenu {
-    display: none;
-    z-index: 1000;
-    position: absolute;
-    overflow: hidden;
-    border: 1px solid @subtle;
-    background: @background;
-    padding: 0;
-    .button-wrapper {
-      text-align:  left;
-      .button {
-        margin: 0;
-        background: @background;
-        width:  100%;
-      }
+  display: none;
+  z-index: 1000;
+  position: absolute;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid @subtle;
+  background-color: @background;
+  .button-wrapper {
+    width:  100%;
+    text-align:  left;
+    .button {
+      border: none;
+      width:  100%;
     }
+  }
 }
 
 //pseudo classes for scrollbar

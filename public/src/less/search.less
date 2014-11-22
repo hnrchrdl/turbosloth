@@ -11,22 +11,18 @@
     i.fa-search.input-fa {
         position:   relative;
         left:       -40px;
+        line-height:  @buttonHeight;
     }
-    .contextmenu {
-    .button-wrapper {
-      width:  100%;
-      text-align:  left;
+    .nav-main {
+      margin:   0 0 @medium 0;
+      float: right;
       .button {
-        background-color: @background;
-        color: @fontPrimary;
-        margin: 0;
-        //background: @background;
-        width:  100%;
-        &:hover {
-          background-color: @primary;
-          color:            @clouds;
-        }   
+          margin:             0 0 0 @short;
+          &.active {
+              background-color: @primary;
+              color: @clouds;
+          }
       }
     }
-  }
 }
+

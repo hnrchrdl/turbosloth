@@ -8,6 +8,7 @@ html, body {
 	color:							@fontPrimary;
 	font-size: 					@fontSize;
 	background-color: 	@background;
+	overflow:						hidden;
 
 	// background patterns are taken from subtlepatterns.com. thank you!
 	//background: 	url("@{images}/congruent_outline.png");
@@ -25,17 +26,12 @@ html, body {
 	
 }
 
-#background-wrapper {
-	//position: 		relative;
-	//background-color: 	@background;
-}
-
-h1 {
-	margin: 		0;
-	padding: 		0;
-}
 a {
-	color: 			@primary;
+	color: @primary;
+	text-decoration: none;
+	&:hover {
+		text-decoration: underline;
+	}
 }
 
 hr {
@@ -57,7 +53,7 @@ hr {
 }
 
 .button-wrapper {
-	height: 				@buttonHeight;
+	//height: 				@buttonHeight;
 	min-width:  		@buttonHeight;
 	line-height: 		@buttonHeight;
 	text-align:			center;
@@ -79,12 +75,13 @@ hr {
 		height: 		@buttonHeight;
 		min-width:  @buttonHeight;
 		display: 		inline-block;
+		border:			1px solid @primary;
 		&.text {
 	  	padding-left: 		@medium;
 	   	padding-right: 		@medium; 
 	  }
 	  &:hover {
-			background-color:	@concrete;
+			background-color:	@primary;
 			color: 						@clouds;
 			
 		}

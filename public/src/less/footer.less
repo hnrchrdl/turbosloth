@@ -1,107 +1,95 @@
 #footer {
-  position:       absolute;
-  bottom:         0;
-  height:         @leftWidth / 2 - @long;
-  right:          0;
-  left:           0;
-  color:          @clouds;
-  //background-color: @extraSubtle;
-  //border-top:   1px solid @primary;
-  text-align:     center;
-  background:     darken(@background2,20%);
-  padding:        @long / 2;
-  overflow:       hidden;
+  position:             absolute;
+  bottom:               0;
+  height:               @footerHeight;
+  right:                0;
+  left:                 0;
+  color:                @clouds;
+  text-align:           center;
+  background-color:     darken(@background2,30%);
+  padding:              @medium;
+  overflow:             hidden;
 
-  #control-menu {
+  .control-menu {
+    position:       absolute;
     line-height:    @long;
-      position: absolute;
-      left:   @leftWidth / 2 + (@long * 6); 
-      .button {
-        height:       @leftWidth / 2 - @long;
-        width:      @leftWidth / 2 - @long;
-        line-height: @leftWidth / 2 - @long;
-        font-size:  @bigger + @short;
+    .button {
+        border:       none;
+        height:       @footerHeight;
+        width:        @footerHeight;
+        line-height:  @footerHeight;
+        font-size:    @bigger + @short;
         &.active {
-          color:    @primary;
-          background-color: darken(@background2,20%);
+          color:              @primary;
+          background: none;
         }
         &:hover {
           background-color:   darken(@background2,20%);
         }
       }
-
+  }
+  #control-menu {
+      left:         @footerHeight + (@long * 6) + (@medium * 4); 
+    }
+    #control-menu2 {
+      right:    0;  
     }
   #albumart {
     position:         absolute;
     bottom:           0;
     left:             0;
-    height:           @leftWidth / 2;
-    width:            @leftWidth / 2;      
-    background-color: @primary;
-    background-repeat:no-repeat;
-    background-position: center center;
-    background-size: (@leftWidth / 2) (@leftWidth / 2);
+    height:           @footerHeight + @medium * 2;
+    width:            @footerHeight  + @medium * 2;      
+    background: no-repeat center center; 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    i {
+      line-height: @footerHeight + @medium * 2;
+    }
   }
 
   #currentsong-wrapper {
-    position:       absolute;
-    left:         @leftWidth / 2;
-    width:          @long * 6;
+    position:         absolute;
+    left:             @footerHeight + @medium * 2;
+    width:            @long * 6;
     text-align:       left;
     padding:          0 @medium;
-    //border-left:    1px solid @primary;
-    //min-height:     @controlBarHeight - @medium * 3;
-    //overflow-y:   hidden;
+    .muted {
+      color: @concrete;
+    }
   }
-  #seek-current {
+  .seek-time {
     position:     absolute;
     bottom:       0;
-    left:         (@leftWidth / 2) + (@long * 6) + ((@leftWidth / 2 - @long) * 5) + @medium - @short;
-    line-height:  @leftWidth / 2;
+    width:        @long * 2;
+    line-height:  @footerHeight + @medium * 2;
+  }
+  #seek-current {
+    left:         @footerHeight + (@long * 6) + (@medium * 4) + (@footerHeight * 5);
     text-align:   right;
+  }
+  #seek-songtime {
+    right:        @footerHeight * 3; 
+    text-align:   left;
   }
   #seek-bar-container {
     position:       absolute;
-    bottom:         ((@leftWidth / 2) / 2) - @seekBarHeight / 2;
+    bottom:         ((@footerHeight + @medium * 2) / 2) - @seekBarHeight / 2;
     height:         @seekBarHeight;
-    left:           (@leftWidth / 2) + (@long * 6) + ((@leftWidth / 2 - @long) * 5) + @long * 2; 
-    right:          (@leftWidth / 2 - @long) * 3 + @long * 2 - @short;
+    left:           @footerHeight * 6 + (@long * 8) + @medium * 4 + @short; 
+    right:          @footerHeight * 3 + @long * 2 + @short;
     cursor:         pointer;
     overflow:       hidden;
-    
     background-color:   @concrete;
-    //border-left:    1px solid @subtle;
     #seek-bar {
       height:             @seekBarHeight;
       width:              0;
       background-color:   @primary;
     }
   }
-  #seek-songtime {
-    position:   absolute;
-    bottom:     0;
-    right:      ((@leftWidth / 2) - @long) * 3; 
-    line-height:  @leftWidth / 2;
-    text-align:   left;
-  }
-  #control-menu2 {
-    line-height:    @long;
-      position: absolute;
-      right:    0;  
-      .button {
-        height:       @leftWidth / 2 - @long;
-        width:      @leftWidth / 2 - @long;
-        line-height: @leftWidth / 2 - @long;
-        font-size:  @bigger + @short;
-        &.active {
-          color:    @primary;
-          background-color: darken(@background2,20%);
-        }
-        &:hover {
-          background-color:   darken(@background2,20%);
-        }
-      }
-    }
+  
 
 
 }

@@ -1,0 +1,146 @@
+#artistdetails {
+  .button {
+    margin:          0 0 0 @short;
+  }
+  .artist-name {
+    line-height: @buttonHeight;
+    margin: 0 @medium @medium @medium;
+    font-weight: bold;
+  }
+  .scrollable {
+    .artist-info {
+      display: none;
+      .genre, .text, .bio {
+        margin: @medium;
+      }
+    }
+    .artist-image {
+      display: none;
+      float: right;
+      width: 225px;
+      height: 150px;
+      margin: @medium;
+      background: no-repeat center center; 
+      -webkit-background-size: cover;
+      -moz-background-size: cover;
+      -o-background-size: cover;
+      background-size: cover;
+      background-color: @primary;
+    }
+    .albums, .albums-other, .similar {
+      margin : @medium;
+      .button {
+        margin:             0 0 0 @short;
+      }
+      .head {
+        line-height: @buttonHeight;
+        margin: 0 @medium @medium 0;
+        //font-weight: bold;
+      }
+      .album-container, .artist-container {
+        margin: 0 @medium @medium 0;
+        border: 1px solid @background2;
+        width: 150px;
+        height: 150px;
+        float: left;
+        color: @clouds;
+        background: no-repeat center center; 
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;
+        background-color: @trans;
+        overflow:   hidden;
+        &:hover {
+          cursor: pointer; 
+          border: 1px solid @primary;
+        }
+        .album, .artist {
+          padding: @short;
+          background-color: @trans;
+        }
+      }
+    }
+    .albums-other {
+      //display: none;
+      .album-container {
+        width: 90px;
+        height: 90px;
+      }
+    }
+    .similar {
+      .head {
+        font-weight: bold;
+      }
+      .artist-container {
+        width: 90px;
+        height: 90px;
+        .artist {
+        }
+      }
+    }
+  }
+  #cover {
+    display: none;
+    position: absolute;
+    top: 0 - @medium;
+    bottom: 0;
+    left: 0 - @short;
+    right: 0 - @short;
+    background-color: @transDark;
+    color: @clouds;
+    overflow-y: auto;
+    .album-container {
+      display: none;
+      .leftside {
+        padding: @long;
+        width: 40%;
+        float: left;
+        .album-art {
+          float: right;
+          height: 300px;
+          width: 300px;
+        }
+      }
+      .rightside {
+        padding: @long 0;
+        overflow: hidden;
+        float: left;
+        .header {
+          padding: @medium 0;
+          .album {
+            font-weight: bold;
+          }
+        }
+        .button-wrapper {
+          .button {
+            margin: 0 @short 0 0;
+            color: @clouds;
+          }
+        }
+        .songs {
+          margin-top: @medium;
+          .song {
+            margin-top: 0;
+            line-height: @buttonHeight;
+            .button {
+              border: none;
+            }
+            .attr {
+              float: left;
+              padding: 0 0 0 @medium;
+              &.track {
+                text-align: right;
+                width: @long;
+                padding: 0;
+              }
+              &.muted {
+                color: @concrete;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

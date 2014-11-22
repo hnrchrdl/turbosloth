@@ -1,9 +1,17 @@
 #browse {
     .breadcrumb {
+        .button {
+          border: none;
+          &:hover {
+            color: @primary;
+            background-color: @background;
+          }
+        }
         float:          left;
         line-height:    @buttonHeight;
         .item {
             float: left;
+            margin: 0 @medium 0 0;
         }
       }
       .item {
@@ -14,35 +22,10 @@
     }
     .nav-main {
       margin:   0 0 @medium 0;
-    }
-    .button {
-        margin:             0 0 0 @short;
-        background-color:   @background2;
-        color:              @clouds;
-        &:hover {
-          background-color: @primary;
-        }
-        &.active {
-            background-color: @primary;
-            color: @clouds;
-        }
-    }
-    .contextmenu {
-    .button-wrapper {
-      width:  100%;
-      text-align:  left;
       .button {
-        background-color: @background;
-        color: @fontPrimary;
-        margin: 0;
-        //background: @background;
-        width:  100%;
-        &:hover {
-          background-color: @primary;
-          color:            @clouds;
-        }   
+          margin:   0 0 0 @short;
       }
     }
-  }
 }
+
 

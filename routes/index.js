@@ -122,8 +122,6 @@ router.get('/playlists/:order', function(req, res) {
 
 //// route get /browse
 router.get('/browse/:browsepath/:order', function(req, res) {
-  console.log(decodeURIComponent(req.params.browsepath));
-  console.log(req.params.order);
   var browsepath = decodeURIComponent(req.params.browsepath);
   if (browsepath === "#" && req.session.browsepath) {
     browsepath = req.session.browsepath;
@@ -155,7 +153,6 @@ router.get('/browse/:browsepath/:order', function(req, res) {
   var mpdNamespace = req.session.mpdhost + ":" + req.session.mpdport;
   var komponistClient = komponist.getClient(mpdNamespace);
   if (komponistClient) {
-    console.log(browsepath);
     komponistClient.lsinfo([browsepath], function(err, contents) {
       if (err) { 
         console.log(err); 
@@ -221,71 +218,233 @@ router.get('/browse/:browsepath/:order', function(req, res) {
 });
 
 //// get search
-router.get('/search/:searchString/:type', function(req, res) {
+// fuzzy
+router.get('/fuzzysearch/:searchString/:type', function(req, res) {
+  // searchString
   var searchString = decodeURIComponent(req.params.searchString);
+  if (searchString === '#' && req.session.SearchString) {
+    searchString = req.session.searchString;
+  }
+  else if (searchString !== '##') {
+    req.session.searchString = searchString;
+  }
+  // searchType
   var type = req.params.type;
-  
-  if (!req.session.search && searchString === "#") { // empty search
-    res.render('search', {contents: [], searchString:"", type: "Any"});
+  if (type === 'none' && req.session.searchType) {
+    type = req.session.searchType;
   }
-  else if (req.session.search && searchString === "#") { // session search
-    searchString = req.session.search;
-    type = req.session.type; 
+  else if (type === 'none') {
+    type = 'Artist';
   }
-  if (searchString !== "#") { // active search
-    
+  else {
+    req.session.searchType = type;
+  }
+
+  if (searchString === '#' || searchString === '##') { // empty Search
+    res.render('fuzzysearch', {
+      contents: {},
+      searchString:searchString, 
+      type: type
+    });
+  }
+  else { // loaded Search
     var mpdNamespace = req.session.mpdhost + ":" + req.session.mpdport;
     var komponistClient = komponist.getClient(mpdNamespace);
+
     if (komponistClient) {
-      try {
-        komponistClient.search(type, searchString, function(err, contents) {
-          if (err) { 
-            console.log(err);
-            res.render('search', {contents: false,           
-              searchString:'#', type: 'Any'
-            });
-          }
-          else if (Object.keys(contents[0]).length === 0) { // if object is empty
-            contents = false;
-          }
-          req.session.type = type;
-          req.session.search = searchString;
-          res.render('search', {contents: contents, 
+      komponistClient.search(type, searchString, function(err, contents) {
+        //console.log(contents);
+        if (err || Object.keys(contents[0]).length === 0) { // if object is empty
+          res.render('fuzzysearch', {
+            contents: undefined, 
+            searchString: searchString, 
+            type: type
+          });
+        }
+        else {
+          if (type === 'Artist' || type === 'Album' || type === 'Title' || type === 'Genre') {  // group Results by Artist
+            var artists = [];
+            var results = [];
+            for (i in contents) {
+              var item = contents[i];
+              if ('Artist' in item) {
+                var artist_name = item.Artist;
+                if (artists.indexOf(artist_name) === -1) {
+                  artists.push(artist_name);
+                  // get songs, albums and genres from the artist
+                  var songcount = 0;
+                  var albums = [];
+                  var genres = [];
+                  for (a in contents) {
+                    var test_item = contents[a];
+                    if ('Artist' in test_item) {
+                      if (artist_name === test_item.Artist) {
+                        songcount += 1;
+                        if ('Album' in test_item) {
+                          var album = test_item.Album;
+                          if (albums.indexOf(album) === -1) {
+                            albums.push(album);
+                          } 
+                        }
+                        if ('Genre' in test_item) {
+                          var genre = test_item.Genre;
+                          if (genres.indexOf(genre) === -1) {
+                            genres.push(genre);
+                          }
+                        }
+                      }
+                    }
+                  }
+                  results.push(
+                    { artist : artist_name, 
+                      songcount : songcount,
+                      albumcount : albums.length,
+                      albums : albums.join(', '),
+                      genres : genres.join(', ') }
+                  );
+                  results.sort(function(a, b) {
+                    return a.songcount-b.songcount;
+                  }).reverse();
+                }
+              }
+            }
+            res.render('fuzzysearch', {
+              contents: results,
               searchString:searchString, 
               type: type
-          });
-        });
-      } catch (e) {
-        res.render('search', {contents: false,           
-          searchString:'#', type: 'Any'
-        });
-      }
-    }
-    else {
-      req.session.destroy();
-      res.redirect('/login?err=sessionLost');
+            });
+          } 
+        }
+      });
     }
   }
+});
+
+// exact search
+router.get('/artistdetails/:artist', function(req, res){
+  var artist = decodeURIComponent(req.params.artist);
+  var mpdNamespace = req.session.mpdhost + ":" + req.session.mpdport;
+  var komponistClient = komponist.getClient(mpdNamespace);
+
+  if (komponistClient) {
+    komponistClient.find('Artist', artist, function(err, contents) {
+      if (err) {
+      console.log(err);
+      }
+      else {
+        var album_names = [];
+        albums = [];
+        var others = [];
+        for (i in contents) {
+          var item = contents[i]; 
+          if ('Album' in item) {
+            var album_name = item.Album;
+            if (album_names.indexOf(album_name) === -1) {
+              album_names.push(album_name);
+              albums.push({name: album_name, songs: [item]});
+            }
+            else {
+              for (i in albums) {
+                var album = albums[i];
+                if (album_name === album.name) {
+                  album.songs.push(item);
+                } 
+              }
+            }
+          }
+          else {
+            others.push(item);
+          }
+        }
+        res.render('artistdetails', {
+          songs: contents,
+          albums: albums, 
+          artist:artist
+        });
+      }
+    });
+  }
+});
+
+// the search container for the fuzzy search
+router.get('/search', function(req, res) {
+  search = "";
+  type = 'Artist';
+  if (req.session.searchString) {
+    search = req.session.searchString;
+  }
+  if (req.session.searchType) {
+    type = req.session.searchType
+  }
+  res.render('search', {search: search, type: type});
 });
 
 //get lastfm album
 router.get('/lastfmartist/:artist', function(req, res) {
   var artist = decodeURIComponent(req.params.artist);
-  res.send(false);
+  var request = lastfm.request('artist.getInfo', {
+    artist: artist,
+    autocorrect: 1,
+    handlers: {
+      success: function(data) {
+        res.json(data);
+      },
+      error: function(err) {
+        res.json(null);
+      }
+    }
+  });
 });
 
 //get lastfm album
 router.get('/lastfmalbum/:artist/:album', function(req, res) {
-  //lastfm.request(method, options);
+  var artist = decodeURIComponent(req.params.artist);
+  var album = decodeURIComponent(req.params.album);
   var request = lastfm.request("album.getInfo", {
-    artist: req.params.artist,
-    album: req.params.album,
+    artist: artist,
+    album: album,
+    autocorrect: 1,
     handlers: {
       success: function(data) {
-        res.send(JSON.stringify(data));
+        res.json(data);
       },
-      error: function(error) {
-        res.send(JSON.stringify({album:false}));
+      error: function(err) {
+        res.json(null);
+      }
+    }
+  });
+});
+//get lastfm album
+router.get('/lastfmtopalbums/:artist', function(req, res) {
+  var artist = decodeURIComponent(req.params.artist);
+  var request = lastfm.request("artist.getTopAlbums", {
+    artist: artist,
+    autocorrect: 1,
+    limit: 12,
+    handlers: {
+      success: function(data) {
+        res.json(data);
+      },
+      error: function(err) {
+        res.json(null);
+      }
+    }
+  });
+});
+
+//get lastfm album
+router.get('/lastfmsimilar/:artist/:quantity', function(req, res) {
+  var artist = decodeURIComponent(req.params.artist);
+  var request = lastfm.request("artist.getSimilar", {
+    artist: artist,
+    limit: parseInt(req.params.quantity),
+    autocorrect: 1, 
+    handlers: {
+      success: function(data) {
+        res.json(data);
+      },
+      error: function(err) {
+        res.json(null);
       }
     }
   });

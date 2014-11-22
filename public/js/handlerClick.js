@@ -38,7 +38,13 @@ var initHandlers = function() {
     $('.button.search').on('click', function(){
       $('nav').find('.button').removeClass('active');
       $('nav').find('.button.search').addClass('active');
-      searchRequest("#", "any");
+      searchRequest();
+    });
+    // search_old
+    $('.button.search-old').on('click', function(){
+      $('nav').find('.button').removeClass('active');
+      $('nav').find('.button.search-old').addClass('active');
+      oldSearchRequest("#", "any");
     });
     
     
@@ -73,14 +79,14 @@ var initHandlers = function() {
       // subtract 30 for the left margin of x value
       new CurrentSong(function(err, Song) {
         var seekBarContainer = $('#seek-bar-container');
-        console.log(seekBarContainer.position().left);
-        console.log(seekBarContainer.width());
+        //console.log(seekBarContainer.position().left);
+        //console.log(seekBarContainer.width());
         var song = Song.data;
         var seek_ratio = ( (e.clientX - seekBarContainer.position().left ) / seekBarContainer.width());
         var seek_sec = String(Math.round(seek_ratio * song.Time));
         socket.emit('mpd','seekcur',[seek_sec], function(err, msg) {
           if (err) {  }
-          else { showInfo("seek " + Math.round(seek_ratio * 100) + "% into song" , 2000); }
+          //else { showInfo("seek " + Math.round(seek_ratio * 100) + "% into song" , 2000); }
         });
       }); 
     });
@@ -114,7 +120,7 @@ var initHandlers = function() {
       socket.emit('mpd', 'shuffle', [], function(err, msg) {
         if (err) { showInfo("error: " + err, 2000); }         
         else { 
-          showInfo("queue shuffled", 2000);
+          //showInfo("queue shuffled", 2000);
           queueRequest(); 
         }
       });
@@ -124,8 +130,15 @@ var initHandlers = function() {
       var songid = $(this).attr('data-id');
       var pathToSong = $(this).attr('data-path');
       socket.emit('mpd', 'playid', [songid], function() {
-        showInfo("play '" + pathToSong + "'", 2000);
+        //showInfo("play '" + pathToSong + "'", 2000);
       });
+    });
+    // click on artist
+    $('main').on('click', '#queue > .scrollable > .item > .artist > a', function(e) {
+      e.preventDefault();
+      var artist = $(this).attr('data-artist');
+      //console.log(artist);
+      artistDetailsRequest(artist);
     });
     // click play from context
     $('main').on('click', '#queue > .contextmenu > .button-wrapper > .play', function() {
@@ -149,11 +162,6 @@ var initHandlers = function() {
       $('.leftclick').removeClass('selected');
       queueRequest();
     });
-    // click search artist from context
-    $('main').on('click', '#queue > .contextmenu> .button-wrapper > .search', function() {
-      var artist = $(this).closest('.contextmenu').attr('data-artist');
-      searchRequest(artist, 'Artist');
-    });
     // click lookup from context
     $('main').on('click', '#queue > .contextmenu > .button-wrapper > .browse', function() {
       try {
@@ -174,7 +182,7 @@ var initHandlers = function() {
       socket.emit('mpd', 'deleteid', [songid], function(err, msg) {
         if (err) { showInfo("error: " + err, 2000); }
         else {
-          showInfo("song removed from queue", 2000);
+          showInfo("song removed", 2000);
           $('main').find('.queue > .item[data-id="' + songid + '"]').remove();
         } 
         $(".contextmenu").hide();
@@ -271,7 +279,7 @@ var initHandlers = function() {
     });
     // browse item
     $('main').on('click', '#browse > .scrollable > .item.folder', function() {
-      console.log($(this).attr('data-path'));
+      //console.log($(this).attr('data-path'));
       browseRequest($(this).attr('data-path'));
     });
 
@@ -280,7 +288,7 @@ var initHandlers = function() {
       var dir = $(this).closest('.contextmenu').attr('data-path');
       socket.emit('mpd', 'add', [dir], function(err, msg) {
         if (err) { showInfo("error: " + err, 2000); }
-        else { showInfo('"' + dir + "' added to end of queue", 1500); }
+        else { showInfo('songs added', 1500); }
       });
     });
     // browse load via context
@@ -289,53 +297,152 @@ var initHandlers = function() {
       socket.emit('mpd', 'clear', [], function(err,msg) {
         socket.emit('mpd', 'add', [dir], function(err,msg) {
           if (err) { showInfo("error: " + err, 2000); }
-          else { showInfo('queue replaced with "' + dir + '"', 1500); }
+          else { showInfo('queue replaced', 1500); }
         });
       });
     });
     
     
     //// search
-    // enter on search field
+    // keyup on search field
     $('main').on('keyup', 'input.search-input', function(e) {
-      if ( e.which === 13 ) {
-        var searchString = $('#search').find('input.search-input').val();
-        var searchType = $('#search').find('select.search-select').val();
-        searchString.length <= 2 ?
-          showInfo("please enter 3 chars as a minimum") :
-          searchRequest(searchString, searchType);
-      }
-    });
-    // change of search category select
-    $('main').on('change', 'select.search-select', function() {
       var searchString = $('#search').find('input.search-input').val();
-      var searchType = $('#search').find('select.search-select').val();
-      searchString.length <= 2 ?
-        showInfo("minimum: 3 characters", 2000) :
-        searchRequest(searchString, searchType);
-    });
-    // click add all from search
-    $('main').on('click', 'a.add-all-from-search', function(e) {
-      e.preventDefault();
-      try {
-        var searchString = $('#search').find('input.search-input').val();
-        var searchType = $('#search').find('select.search-select').val();
-        socket.emit('mpd', 'searchadd', [searchType, searchString], function(err, msg) {
-          if (err) { showInfo("error: " + err, 2000); }
-          else { showInfo("search results added to queue", 1500); }
-        });
+      if (e.which === 13) {
+        // go to first result on enter
+        if ($('main').find('.fuzzy-item').length > 0) {
+          var artist = $('main').find('.fuzzy-item').first().attr('data-artist');
+          artistDetailsRequest(artist);
+        }
       }
-      catch (err) { showInfo("error: " + err, 2000); }
+      else if (searchString.length > 2) {
+        searchRequestFuzzy(searchString);
+      }
+      else {
+        searchRequestFuzzy('##');
+      }
     });
-    // click append
-    $('main').on('click', '#search > .contextmenu > .button-wrapper > .add', function(){
-      var dir = $(this).closest('.contextmenu').attr('data-path');
-      socket.emit('mpd', 'add', [dir], function(err, msg) {
+    // click on searchType button
+    $('main').on('click', '#search > .nav-main > .button-wrapper > .button.search-type', function() {
+      $('#search > .nav-main > .button-wrapper > .button.search-type').removeClass('active');
+      $(this).addClass('active');
+      var searchString = $('#search > input.search-input').val();
+      var searchType = $(this).attr('data-type');
+      searchRequestFuzzy(searchString, searchType);
+    });
+    // artist details
+    $('main').on('click', '#search > .scrollable > .fuzzy-container > .fuzzy-item', function() {
+      var artist = $(this).attr('data-artist');
+      artistDetailsRequest(artist);
+    });
+    // click on similar artist
+    $('main').on('click', '.similar > .artist-container', function() {
+      artistDetailsRequest(($(this).attr('data-artist')));
+    });
+    // add all from artist details
+    $('main').on('click', '#artistdetails > .button-wrapper > .addall', function(e) {
+      var artist = $(this).attr('data-artist');
+      socket.emit('mpd', 'findadd', ['Artist', artist], function(err, msg) {
         if (err) { showInfo("error: " + err, 2000); }
-        else { showInfo("song '" + dir + "' added to queue", 1500); }
+        else { showInfo("songs added", 1500); }
       });
     });
-    // click add all from album
+    // play all from artist details
+    $('main').on('click', '#artistdetails > .button-wrapper > .playall', function(e) {
+      var artist = $(this).attr('data-artist');
+      socket.emit('mpd', 'clear', [], function(err, msg) {
+        if (err) { showInfo("error: " + err, 2000); }
+        else {
+          socket.emit('mpd', 'findadd', ['Artist', artist], function(err, msg) {
+            if (err) { showInfo("error: " + err, 2000); }
+            else { 
+              showInfo("songs added", 1500); }
+              socket.emit('mpd', 'play', []); 
+          });
+        }
+      });
+    });
+    // add all from similar artists
+    $('main').on('click', '#artistdetails > .scrollable > .similar > .button-wrapper > .addall', function(e) {
+      var artists = $('main').find('.similar > .artist-container');
+      if (artists) {
+        $.each(artists, function(index, value) {
+          var artist = $(this).attr('data-artist');
+          socket.emit('mpd', 'findadd', ['Artist', artist], function(err, msg) {
+            showInfo("songs added", 1500);
+          });
+        });
+      }
+    });
+    // add play all from similar artists
+    $('main').on('click', '#artistdetails > .scrollable > .similar > .button-wrapper > .playall', function(e) {
+      var artists = $('main').find('.similar > .artist-container');
+      console.log(artists);
+      if (artists) {
+        socket.emit('mpd', 'clear', [], function(err, msg) {
+          if (err) { showInfo("error: " + err, 2000); }
+          else {
+            var len = artists.length;
+            $.each(artists, function(index, value) {
+              var artist = $(this).attr('data-artist');
+              socket.emit('mpd', 'findadd', ['Artist', artist], function(err, msg) {
+                console.log(msg);
+                if (index === len - 1) {
+                  socket.emit('mpd', 'play', []);
+                  showInfo("songs added", 1500);
+                }
+              });
+            });
+          }
+        });
+      }
+    });
+    // show album details 
+    $('main').on('click', '#artistdetails > .scrollable > .albums > .album-container', function() {
+      var album = $(this).attr('data-name');
+      $('main').find('#artistdetails > #cover').fadeIn();
+      $('main').find('#artistdetails > #cover > .album-container[data-name="' + album + '"]').fadeIn();
+    });
+    $('main').on('click', '#artistdetails > #cover', function(e) {
+      if (!$(e.target).parents('.button-wrapper').length > 0) {
+        $('main').find('#artistdetails > #cover').fadeOut();
+        $('main').find('#artistdetails > #cover > .album-container').hide();
+      }
+    });
+    // album add
+    $('main').on('click', '#artistdetails #cover .album-container .addall', function(){
+      var album = $(this).closest('.button-wrapper').attr('data-album');
+      var artist = $(this).closest('.button-wrapper').attr('data-artist');
+      socket.emit('mpd', 'findadd', ['Artist',artist,'Album',album], function(err, msg) {
+        if (err) { showInfo("error: " + err, 2000); }
+        else { showInfo("songs added", 2000); }
+      });
+    });
+    // album play
+    $('main').on('click', '#artistdetails #cover .album-container .playall', function() {
+      var album = $(this).closest('.button-wrapper').attr('data-album');
+      var artist = $(this).closest('.button-wrapper').attr('data-artist');
+      socket.emit('mpd', 'clear', [], function(err, msg) {
+        if (err) { showInfo("error: " + err, 2000); }
+        else {
+          socket.emit('mpd', 'findadd', ['Artist',artist,'Album',album], function(err, msg) {
+            if (err) { showInfo("error: " + err, 2000); }
+            else { 
+              socket.emit('mpd', 'play', []);
+              showInfo("songs added", 2000);
+            }
+          });
+        }
+      });
+    });
+    // song append
+    $('main').on('click', '#artistdetails #cover .song .add', function(){
+      var file = $(this).attr('data-file');
+      socket.emit('mpd', 'add', [file], function(err, msg) {
+        if (err) { showInfo("error: " + err, 2000); }
+        else { showInfo("song added", 2000); }
+      });
+    });
+    // click add all from album old
     $('main').on('click', '#search > .contextmenu > .button-wrapper > .add-from-album', function() {
       try {
         var artist = $(this).closest('.contextmenu').attr('data-artist');
@@ -347,32 +454,6 @@ var initHandlers = function() {
       }
       catch (err) { showInfo("error: " + err, 2000); }
     });
-    // click add all from artist
-    $('main').on('click', '#search > .contextmenu > .button-wrapper > .add-from-artist', function() {
-      try {
-        var artist = $(this).closest('.contextmenu').attr('data-artist');
-        socket.emit('mpd', 'searchadd', ['Artist', artist], function(err, msg) {
-          if (err) { showInfo("error: " + err, 2000); }
-          else { showInfo("all songs by '" + artist + "' added", 1500); }
-        });
-      }
-      catch (err) { showInfo("error: " + err, 2000); }
-    });
-    // click browse
-    $('main').on('click', '#search > .contextmenu > .button-wrapper > .browse', function() {
-      try {
-        var path  = ($(this).closest('.contextmenu').attr('data-path').split('/'));
-        path.pop();
-        path = path.join('/');
-        browseRequest(path);
-      } catch (err) { showInfo("error: " + err, 2000); }
-    });
-    // click search artist
-    $('main').on('click', '#search > .contextmenu > .button-wrapper > .search-artist', function() {
-      var artist = $(this).closest('.contextmenu').attr('data-artist');
-      searchRequest(artist, 'Artist');
-    });
-
 
     // contextmenu 
     //prevent Default for left click on whole document
