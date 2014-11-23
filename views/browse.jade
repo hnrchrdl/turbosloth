@@ -15,15 +15,19 @@
   .nav-main
     .button-wrapper.right
       if order === 'lastmodified'
-        .button.sort-by-name
+        .button.text.sort-by-name
           i.fa.fa-sort-alpha-asc
-        .button.sort-by-date.active
+          |  name
+        .button.text.sort-by-date.active
           i.fa.fa-sort-amount-desc
+          |  last modification
       else
-        .button.sort-by-name.active
+        .button.text.sort-by-name.active
           i.fa.fa-sort-alpha-asc
-        .button.sort-by-date
+          |  name
+        .button.text.sort-by-date
           i.fa.fa-sort-amount-desc
+          |  last modification
   .clear
   hr.prime
   .scrollable

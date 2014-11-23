@@ -80,7 +80,7 @@
       }
     }
   }
-  #cover {
+  .cover {
     display: none;
     position: absolute;
     top: 0 - @medium;
@@ -125,6 +125,10 @@
             line-height: @buttonHeight;
             .button {
               border: none;
+              &:hover {
+                background: none;
+                color: @primary;
+              }
             }
             .attr {
               float: left;

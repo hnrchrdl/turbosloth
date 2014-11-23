@@ -78,6 +78,8 @@ router.get('/queue', function(req, res) {
   } 
 });
 
+
+
 // get /playlists
 router.get('/playlists/:order', function(req, res) {
   var order = req.params.order;
@@ -119,6 +121,25 @@ router.get('/playlists/:order', function(req, res) {
     res.redirect('/login?err=sessionLost');
   }
 });
+
+router.get('/playlistdetails/:playlist', function(req, res) {
+  var playlist = decodeURIComponent(req.params.playlist);
+  console.log(playlist);
+  var mpdNamespace = req.session.mpdhost + ":" + req.session.mpdport;
+  var komponistClient = komponist.getClient(mpdNamespace);
+  komponistClient.listplaylistinfo([playlist], function(err, contents) {
+    if (err) {
+      console.log(err);
+      res.render('playlistdetails', {playlist: playlist, contents: null});
+    }
+    else {
+      console.log(contents);
+      res.render('playlistdetails', {playlist: playlist, contents: contents}); 
+    }
+  })
+});
+
+
 
 //// route get /browse
 router.get('/browse/:browsepath/:order', function(req, res) {

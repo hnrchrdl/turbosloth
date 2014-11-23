@@ -32,15 +32,22 @@ function secondsToTimeString(seconds) {
 };
 
 var timer;
-function showInfo(text, duration) { 
-  $('#info-wrapper').stop(true,true).fadeOut(1500);
-  $('#info').html(text);
-  $('#info-wrapper').show();
+function showInfo(text, duration) {
+  $('#info-box').html(text);
+  $('#info-box').hide(0, function() {
+    $('#info-box').slideDown('fast');  
+  });
   clearTimeout(timer);
-  //$('#info-wrapper').stop().fadeOut();
   timer = setTimeout(function() {
-    //$('#info-wrapper').fadeOut(1500);
-    $('#info-wrapper').fadeOut(800);
+    $('#info-box').slideUp('fast');
+  }, duration);
+}
+function showError(text, duration) {
+  $('#error-box').html(text);
+  $('#error-box').slideDown('fast');
+  clearTimeout(timer);
+  timer = setTimeout(function() {
+    $('#error-box').slideUp('fast');
   }, duration);
 }
 

@@ -78,7 +78,7 @@ CurrentSong.prototype.render = function(callback) {
     var queue = $('main').find('#queue');
     if (queue && queue.length > 0) {
       this.showInQueue();
-      this.autoScroll();
+      //this.autoScroll();
     }
     // fetch album cover
     if (this.data && ('Artist' in this.data) && this.data.Artist !== "" && 
@@ -127,7 +127,7 @@ CurrentSong.prototype.autoScroll = function() {
       var scrolltop = song.offset().top +
           scrollable.scrollTop() -
           scrollable.offset().top;
-      scrollable.animate({scrollTop: scrolltop}, 400);
+      scrollable.animate({scrollTop: scrolltop}, 0);
     }
   }
 };
@@ -164,7 +164,9 @@ Queue.prototype.render = function() {
   interfaceRegistration();
 };
 
+
 //// Playlists
+
 // Constructor
 var Playlists = function(order, callback) {
   $('main').html('<div class="loading-wrapper"><i class="fa fa-circle-o-notch fa-spin loading"></i></div>');
@@ -187,7 +189,37 @@ Playlists.prototype.render = function() {
   fixScrollHeight();
 };
 
+
+//// PlaylistDetails
+
+// Constructor
+var PlaylistDetails = function(playlist, callback) {
+  var playlistDetails = this;
+  $.ajax({
+    url: '/playlistdetails/' + encodeURIComponent(playlist),
+  }).done(function(html){
+    playlistDetails.html = html;
+    callback(null, playlistDetails);
+  }).fail(function(jqXHR, err){ 
+    console.log(jqXHR);
+    callback(jqXHR, null);
+  });
+};
+// Prototypes
+PlaylistDetails.prototype.render = function() {
+  //$('nav').find('.button').removeClass('active');
+  //$('nav').find('.button.playlists').addClass('active');
+  $('main').find('#playlists .cover').html('');
+  $('main').find('#playlists .cover').append(this.html);
+  $('main').find('#playlists .cover').fadeIn();
+  //fixScrollHeight();
+};
+
+
+
+
 //// Browse
+
 // Constructor
 var Browse = function(folder, order, callback) {
   $('main').html('<div class="loading-wrapper"><i class="fa fa-circle-o-notch fa-spin loading"></i></div>');
@@ -209,7 +241,11 @@ Browse.prototype.render = function(html) {
   fixScrollHeight();
 };
 
+
+
 //// Search
+
+
 // Constructor
 var Search = function(searchString, searchType, callback) {
   //$('main').html('<div class="loading-wrapper"><i class="fa fa-circle-o-notch fa-spin loading"></i></div>');
@@ -223,6 +259,7 @@ var Search = function(searchString, searchType, callback) {
     callback(err, {});
   });
 };
+
 // Prototypes
 Search.prototype.render = function(html) {
   $('nav').find('.button').removeClass('active');
@@ -236,6 +273,11 @@ Search.prototype.render = function(html) {
   var e = jQuery.Event("keyup"); // trigger keyup event on input field
   $('#search').find('input.search-input').trigger(e);
 };
+
+
+//// FuzzySearch
+
+// Constructor
 var FuzzySearch = function(searchString, searchType, callback) {
   $('.scrollable').html('<div class="loading-wrapper"><i class="fa fa-circle-o-notch fa-spin loading"></i></div>');
   var s = this;
@@ -256,6 +298,11 @@ FuzzySearch.prototype.render = function(html) {
     fixScrollHeight();
   }
 };
+
+
+//// ArtistDetails
+
+//Constructor
 var ArtistDetails = function(artist, callback) {
   $('main').html('<div class="loading-wrapper"><i class="fa fa-circle-o-notch fa-spin loading"></i></div>');
   var a = this;
@@ -299,6 +346,7 @@ ArtistDetails.prototype.lastArtist = function() {
   });
   return true;
 };
+
 // Last Album
 ArtistDetails.prototype.lastAlbum = function() {
   // get the Album Covers
@@ -311,7 +359,7 @@ ArtistDetails.prototype.lastAlbum = function() {
         var url = album.getArtURL(2) || "";
         albumContainer.css('background-image', 'url(' + url + ')');
         var url = album.getArtURL(3) || "";
-        $('main').find('#artistdetails > #cover > .album-container[data-name="' + album_name + '"] > .leftside > .album-art')
+        $('main').find('#artistdetails > .cover > .album-container[data-name="' + album_name + '"] > .leftside > .album-art')
             .css('background-image', 'url(' + url + ')');
       }
       if (err) {
@@ -321,6 +369,7 @@ ArtistDetails.prototype.lastAlbum = function() {
   });
   return true;
 };
+
 // Last Similar
 ArtistDetails.prototype.lastSimilar = function() {
   // get similar artists
@@ -358,6 +407,7 @@ ArtistDetails.prototype.lastTopAlbums = function() {
           var albumImageUrl = album.image[2]['#text'];
         }
         catch(e) {
+          console.log(e);
           var albumImageUrl = ""; 
         }
         //var albumYear = album.
@@ -378,3 +428,55 @@ ArtistDetails.prototype.lastTopAlbums = function() {
   });
   return true;
 };
+
+
+
+
+//// mixed functions
+
+function removeSongFromQueue(songId, callback) 
+{
+  var deleted = 0; 
+  var i = 0;
+
+  socket.emit('mpd', 'deleteid', [songId], function(err, msg) {
+    if (err) {
+      i += 1;
+      if (i < 3) { // try 3 times, then give up
+        setTimeout(function() {
+          removeSongFromQueue(songId);
+        }, 200);
+      }
+      else {
+        return callback(false);
+      }
+    }
+    else {
+      return callback(true);
+    }
+  });
+}
+
+function playNext(songPos,callback) 
+{
+  // move to -1 to move it to the current song 
+  socket.emit('mpd', 'move', [songPos, -1], function(err, msg) {
+    if (err) {
+      return callback(false);
+    }
+    else {
+      return callback(true);
+    }
+  });
+}
+
+function addSongToPlaylist(songPath, playlist, callback) {
+  socket.emit('mpd', 'playlistadd', [playlist, songPath], function(err, msg) {
+  if (err) {
+      return callback(false);
+    }
+    else {
+      return callback(true);
+    }
+  });
+}

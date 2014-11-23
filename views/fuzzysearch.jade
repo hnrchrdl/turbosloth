@@ -1,4 +1,4 @@
-
+// this is dynamically inserted into the search page
 .results
   if !contents
     span.muted 
@@ -15,7 +15,8 @@
   if contents
     -each item in contents
       .fuzzy-item(data-artist= item.artist)
-        .artist= item.artist
-        span.muted
-          .songcount= item.songcount + ' songs (' + item.genres + ')'
-          .albums= item.albumcount + ' albums (' + item.albums + ')'
+        .artistname= item.artist 
+        .genres
+          span.muted= item.genres
+        .info
+          span.muted= item.albumcount + ' album(s), ' + item.songcount + ' song(s)'

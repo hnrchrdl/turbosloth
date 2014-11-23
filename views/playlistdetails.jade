@@ -1,0 +1,39 @@
+.playlist-container(data-name= playlist)
+  .options
+    .button-wrapper.right
+      .button.text.rename
+        i.fa.fa-pencil
+        |  rename
+      .button.text.delete
+        i.fa.fa-remove
+        |  delete
+  .leftside
+
+  .rightside
+    .header
+      .playlistname= playlist
+    .button-wrapper.left(data-name= playlist)
+      .button.text.addall
+        i.fa.fa-plus
+        |  add all
+      .button.text.playall
+        i.fa.fa-play
+        |  play all
+    .clear
+
+    .songs
+      if contents
+        for song, i in contents
+          .song
+            .button-wrapper.left
+              .button.add(data-file= song.file, title='add to queue')
+                i.fa.fa-plus
+            .attr= song.Artist
+            .attr= song.Title
+            .attr.muted= secondsToTimeString(song.Time)
+            .button-wrapper.left
+              .button.remove(data-pos= i, title="remove from playlist")
+                i.fa.fa-remove
+          .clear
+      else
+        |  failed to get playlist

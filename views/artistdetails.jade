@@ -18,12 +18,14 @@
     hr
     .albums
       if albums.length > 0
-        .head= albums.length + ' Albums in Database'
+        .head= albums.length + ' Album(s) in Database'
         .clear
         for album in albums
           .album-container(data-name= album.name)
             .album= album.name + ' (' + album.songs.length + ')'
         .clear
+      else
+        .head no Albums in Database found
     hr
     .albums-other
       .head Top Albums
@@ -40,34 +42,35 @@
           |  play all
       .head Similar Artists
       .clear
-  #cover
-    for album in albums
-      .album-container(data-name= album.name)
-        .leftside
-          .album-art
-            .album
-        .rightside
-          .header
-            .album= album.name
-            .artist= album.songs[0].Artist
-            .releasedate= album.songs[0].Date
-          .button-wrapper.left(data-album= album.name, data-artist= album.songs[0].Artist)
-            .button.text.addall
-              i.fa.fa-plus
-              |  add all
-            .button.text.playall
-              i.fa.fa-play
-              |  play all
-          .clear
+  .cover
+    if albums
+      for album in albums
+        .album-container(data-name= album.name)
+          .leftside
+            .album-art
+              .album
+          .rightside
+            .header
+              .album= album.name
+              .artist= album.songs[0].Artist
+              .releasedate= album.songs[0].Date
+            .button-wrapper.left(data-album= album.name, data-artist= album.songs[0].Artist)
+              .button.text.addall
+                i.fa.fa-plus
+                |  add all
+              .button.text.playall
+                i.fa.fa-play
+                |  play all
+            .clear
 
-          .songs
-            for song in album.songs
-              .song
-                .button-wrapper.left
-                  .button.add(data-file= song.file)
-                    i.fa.fa-plus
-                .attr.muted.track= song.Track
-                .attr= song.Title
-                .attr.muted= secondsToTimeString(song.Time)
-              .clear
+            .songs
+              for song in album.songs
+                .song
+                  .button-wrapper.left
+                    .button.add(data-file= song.file, title="add to queue")
+                      i.fa.fa-plus
+                  .attr.muted.track= song.Track
+                  .attr= song.Title
+                  .attr.muted= secondsToTimeString(song.Time)
+                .clear
 

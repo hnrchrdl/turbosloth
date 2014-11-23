@@ -1,10 +1,21 @@
 #queue
   .nav-main
+    .button-wrapper.left
+      .button.selecthelper.selectall(title="check all")
+        i.fa.fa-check-square-o
+      .button.selecthelper.unselectall(title="uncheck all")
+        i.fa.fa-square-o
     .button-wrapper.right
-      .button.text.queue-shuffle(title="shuffle queue")
+      .button.text.sloth-mode(title="sloth mode")
+        i.fa.fa-rocket
+        |  sloth mode
+      .button.text.save-playlist(title="save queue as new playlist")
+        i.fa.fa-save
+        |  save
+      .button.text.shuffle(title="shuffle queue")
         i.fa.fa-random
         |  shuffle
-      .button.text.queue-clear(title="clear queue")
+      .button.text.clear(title="clear queue")
         i.fa.fa-eraser
         |  clear
 
@@ -14,61 +25,44 @@
       .item.muted queue empty
     else
       - each song in queue
-        .item.leftclick(data-id= song.Id, data-path= song.file)
+        .item(data-pos= song.Pos, data-id= song.Id, data-path= song.file)
+          .attr.selector
+            .inner
+              i.fa.fa-check
           .attr.songpos
             if song.Pos
-              span.muted= (parseInt(song.Pos) + 1)
+              .inner
+                span.muted= (parseInt(song.Pos) + 1)
             else
-              span.muted #
+              .inner
+                span.muted #
           .attr.artist
             if song.Artist
-              a(href="#", data-artist= song.Artist)= song.Artist
+              .inner
+                a(href="#", data-artist= song.Artist)= song.Artist
           .attr.title  
             if song.Title
-              span= song.Title
+              .inner
+                span= song.Title
             else
-              span= song.file
+              .inner
+                span= song.file
           .attr.track
             if song.Track
-              span.muted= song.Track    
+              .inner
+                span.muted= song.Track    
           .attr.album
             if song.Album
-              span= song.Album
-            if song.Date
-              span.muted= ' (' + song.Date + ')'
+              .inner
+                a(href="#", data-artist= song.Artist, data-album= song.Album)= song.Album
+                if song.Date
+                    span.muted= ' (' + song.Date + ')'
           .attr.genre
             if song.Genre
-              span.muted= song.Genre
+              .inner
+                span.muted= song.Genre
           .attr.time
             if song.Time
-              - song.time = secondsToTimeString(song.Time)
-              span.muted= song.time     
-              
-                            
-
-
-          
-  //contextmenu
-  .contextmenu.queue
-    .button-wrapper.left
-      .button.left.text.play
-        i.fa.fa-play
-        |  play
-    .clear
-    .button-wrapper.left
-      .button.left.text.movenext
-        i.fa.fa-angle-double-right
-        |  play next
-    .clear
-    hr
-    .button-wrapper.left
-      .button.left.text.browse
-        i.fa.fa-folder-o
-        |  browse folder
-    .clear
-    hr
-    .button-wrapper.left
-      .button.left.text.remove
-        i.fa.fa-remove
-        |  remove from queue
-
+              .inner
+                - song.time = secondsToTimeString(song.Time)
+                span.muted= song.time     

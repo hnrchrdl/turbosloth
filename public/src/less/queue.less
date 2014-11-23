@@ -5,6 +5,22 @@
 		.button {
 			margin:    0 0 0 @short;
 	  }		
+		.selecthelper {
+			border: none;
+			margin: 0;
+			&:hover {
+				color: @primary;
+				background: none;
+			}
+		}
+	}
+	.attr.selector {
+		color: @subtle;
+		width: 2%;
+		min-width:	20px;
+		&.active {
+			color: @primary;
+		}
 	}
 	.attr.songpos {
 		text-align: right;
@@ -13,32 +29,32 @@
 	}
 	.attr.artist {
 		text-align: left;
-		width: 21%;
+		width: 22%;
 		min-width:	40px;
 	}
 	.attr.title {
 		text-align: left;
-		width: 21%;
+		width: 26%;
 		min-width:	40px;
+	}
+	.attr.track {
+		text-align: right;
+		width: 3%;
+		min-width:	10px;
 	}
 	.attr.album {
 		text-align: left;
 		width: 23%;
 		min-width:	40px;
 	}
-	.attr.track {
-		text-align: right;
-		width: 3%;
-		min-width:	20px;
-	}
 	.attr.genre {
 		text-align: left;
-		width: 10%;
+		width: 15%;
 		min-width:	30px;
 	}
 	.attr.date {
 		text-align: right;
-		width: 6%;
+		width: 3%;
 		min-width:	20px;
 	}
 }

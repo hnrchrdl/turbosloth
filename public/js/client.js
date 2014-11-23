@@ -60,10 +60,17 @@ function queueRequest() {
 }
 
 function playlistsRequest(order) {
-  var p = new Playlists(order, function(err, playlists) {
+  new Playlists(order, function(err, playlists) {
     if (err) { console.log(err); }
     else { playlists.render(); }
-     
+  });
+}
+
+function playlistDetailsRequest(playlist) {
+  new PlaylistDetails(playlist, function(err, playlist) {
+    console.log(playlist);
+    if (err) { console.log(err); }
+    else { playlist.render(); }
   });
 }
 
@@ -71,7 +78,7 @@ function browseRequest(folder, order) {
   if (!order) {
     order = 'none';
   }
-  var b = new Browse(folder, order, function(err, browse) {
+  new Browse(folder, order, function(err, browse) {
     if (err) { console.log(err); }
     else { browse.render(); }
      

@@ -9,7 +9,7 @@ var initHandlers = function() {
       window.location = '/logout';
     });
     $('#settings').on('click', function(){
-      showInfo('hi dude!', 3000);
+      showError('settings coming soon...', 3000);
     });
     
     //// nav main left
@@ -85,29 +85,41 @@ var initHandlers = function() {
         var seek_ratio = ( (e.clientX - seekBarContainer.position().left ) / seekBarContainer.width());
         var seek_sec = String(Math.round(seek_ratio * song.Time));
         socket.emit('mpd','seekcur',[seek_sec], function(err, msg) {
-          if (err) {  }
+          if (err) { showInfo("queue cleared", 2000); }
           //else { showInfo("seek " + Math.round(seek_ratio * 100) + "% into song" , 2000); }
         });
       }); 
     });
     
+
     
-    ////// dynamic
+    ////// dynamic handlers
+
+
+
     //// queue
-    // refresh queue click
-    $('main').on('click', '.queue-refresh' ,function() {
-      queueRequest();
+
+
+    // click play with dblclick
+    $('main').on('dblclick', '#queue .item', function() {
+      var songid = $(this).attr('data-id');
+      var pathToSong = $(this).attr('data-path');
+
+      socket.emit('mpd', 'playid', [songid], function() {
+        //showInfo("play '" + pathToSong + "'", 2000);
+      });
     });
-    // clear queue
-    $('main').on('click','.queue-clear',function() {
-      var button = $("<a href='#' id='clear-queue-confirm'>ok</a>");
-      showInfo("clear queue? ", 10000);
-      $('#info').append(button);
+
+    //// queue
+    // clear
+    $('main').on('click','.clear', function() {
+      $('#option-clearqueue').slideDown('fast');
     });
-    $('#info').on('click', '#clear-queue-confirm',function(e) {
-      e.preventDefault();
+    // ok
+    $('body').on('click', '#option-clearqueue .ok', function() { 
       socket.emit('mpd', 'clear', [], function(err, msg) {
-        if (err) { showInfo("error: " + err, 2000); }
+        $('#option-clearqueue').slideUp('fast');
+        if (err) { showInfo("error: " + err, 2500); }
         else {
           showInfo("queue cleared", 2000);
           currentSongRequest();
@@ -115,96 +127,289 @@ var initHandlers = function() {
         }
       });  
     });
-    // shuffle queue
-    $('main').on('click', '.queue-shuffle', function(){
+    // cancel
+    $('body').on('click', '#option-clearqueue .cancel', function() { 
+      $('#option-clearqueue').slideUp('fast');
+    });
+
+
+    //// queue
+    // shuffle
+    $('main').on('click', '#queue .shuffle', function() {
+      
       socket.emit('mpd', 'shuffle', [], function(err, msg) {
-        if (err) { showInfo("error: " + err, 2000); }         
+        if (err) { 
+          showInfo("error: " + err, 2000); 
+        }         
         else { 
           //showInfo("queue shuffled", 2000);
           queueRequest(); 
         }
       });
     });
-    // click play with dblclick
-    $('main').on('dblclick', '#queue > .scrollable > .item', function() {
-      var songid = $(this).attr('data-id');
-      var pathToSong = $(this).attr('data-path');
-      socket.emit('mpd', 'playid', [songid], function() {
-        //showInfo("play '" + pathToSong + "'", 2000);
-      });
+
+    //// queue
+    // save as new playlist
+    $('main').on('click', '#queue .save-playlist', function() {
+      $('#option-save-playlist').slideDown('fast');
+      $('#option-save-playlist input#save-playlist').focus();
     });
-    // click on artist
-    $('main').on('click', '#queue > .scrollable > .item > .artist > a', function(e) {
-      e.preventDefault();
-      var artist = $(this).attr('data-artist');
-      //console.log(artist);
-      artistDetailsRequest(artist);
-    });
-    // click play from context
-    $('main').on('click', '#queue > .contextmenu > .button-wrapper > .play', function() {
-      var songid = $(this).closest('.contextmenu').attr('data-id');
-      var songpath = $(this).closest('.contextmenu').attr('data-path');
-      socket.emit('mpd', 'playid', [songid], function(err, msg) {
-        if (err) { showInfo(err, 2000); }
-        else { showInfo("play: '" + songpath + "'", 2000); }
-      });
-      $(".contextmenu").hide();
-      $('.leftclick').removeClass('selected');
-    });
-    // click move next from context
-    $('main').on('click', '#queue > .contextmenu > .button-wrapper > .movenext', function() {
-      var songid = $(this).closest('.contextmenu').attr('data-id');
-      socket.emit('mpd', 'moveid', [songid, -1], function(err, msg) {
-        if (err) { showInfo(err, 2000); }
-        else { showInfo("moved to next", 2000); }
-      });
-      $(".contextmenu").hide();
-      $('.leftclick').removeClass('selected');
-      queueRequest();
-    });
-    // click lookup from context
-    $('main').on('click', '#queue > .contextmenu > .button-wrapper > .browse', function() {
-      try {
-        var directory = ($(this).closest('.contextmenu').attr('data-path').split('/'));
-        directory.pop();
-        directory = directory.join('/');
-        browseRequest(directory);
-      }
-      catch (err) {
-        showInfo("error: " + err, 2000);
-        $(".contextmenu").hide();
-        $('.leftclick').removeClass('selected');
-      }
-    });
-    // click remove from context
-    $('main').on('click', '#queue > .contextmenu > .button-wrapper > .remove', function() {
-      var songid = $(this).closest('.contextmenu').attr('data-id');
-      socket.emit('mpd', 'deleteid', [songid], function(err, msg) {
-        if (err) { showInfo("error: " + err, 2000); }
-        else {
-          showInfo("song removed", 2000);
-          $('main').find('.queue > .item[data-id="' + songid + '"]').remove();
-        } 
-        $(".contextmenu").hide();
-        $('.leftclick').removeClass('selected');
-      });
-    });
-    
-    
-    //// playlists
-    // save playlist
-    $('main').on('keyup', '#save-playlist', function(e){
-      if ( e.which === 13 ) {
-        var playlistName = $('#save-playlist').val();
-        socket.emit('mpd', 'save', [playlistName], function(err, msg){
-          if (err === {}) { showInfo("error: " + err, 2000); }
+    //ok
+    $('body').on('click', '#option-save-playlist .ok', function() {
+      var playlistName = $('#save-playlist').val();
+      if (playlistName !== "" && playlistName !== " ") {
+        socket.emit('mpd', 'save', [playlistName], function(err, msg) {
+          $('#option-save-playlist').slideUp('fast');
+          if (err) { 
+            showInfo("error : " + err, 2000); }
           else {
-            showInfo("playlist saved as: '" + playlistName + "'", 2000);
-            playlistsRequest(undefined);
+            showInfo("playlist saved as: '" + playlistName + "'", 2500);
           }
         });
       }
+      else {
+        showInfo("please enter one or more characters", 2500);
+      }
     });
+    //cancel
+    $('body').on('click', '#option-save-playlist .cancel', function() { 
+      $('#option-save-playlist').slideUp('fast');
+    });
+
+
+    //// queue
+    // sloth mode
+    $('main').on('click', '#queue .sloth-mode', function() {
+      showError('sloth mode coming soon...', 2500);
+    });
+
+
+    ////  queue | links
+    // click on artist link
+    $('main').on('click', '#queue .artist a', function(e) {
+      e.preventDefault();
+      var artist = $(this).attr('data-artist');
+      artistDetailsRequest(artist);
+    });
+    //click on album link
+    $('main').on('click', '#queue .album a', function(e) {
+      e.preventDefault();
+      var artist = $(this).attr('data-artist');
+      var album = $(this).attr('data-album');
+      artistDetailsRequest(artist);
+
+      setTimeout(function() { // a little timeout to let the page render first
+        $('main').find('#artistdetails > .cover').fadeIn();
+        $('main').find('#artistdetails > .cover > .album-container[data-name="' + album + '"]').fadeIn();
+      },1000);
+    });
+
+
+    //// queue
+    // selection handling
+    var posMousedown, posMousedown, selected; 
+    var mousedownTriggered = false;
+
+    $('main').on('mousedown', '#queue .item .selector', function() {
+      mousedownTriggered = true;
+      posMousedown = $(this).closest('.item').attr('data-pos');
+      selected = ($(this).hasClass('active') === true);
+    });
+
+    $('main').on('mouseup', '#queue .item .selector', function() {
+      if (mousedownTriggered) {
+        posMouseup = $(this).closest('.item').attr('data-pos');
+        
+        try {
+          var start = parseInt(posMousedown);
+          var end = parseInt(posMouseup);
+        }
+        catch(err) {
+          showInfo('Error trying to get song positions', 2500);
+          mousedownTriggered = false;
+          return; 
+        }
+
+        if (start > end) { // if start is greater than end, swap them
+          var start_tmp = start;
+          start = end;
+          end = start_tmp;
+        }
+
+        for (i = start; i <= end; i++) {
+          if (selected) { $('main').find('#queue .item[data-pos="' + i + '"] .selector').removeClass('active'); }
+          else { $('main').find('#queue .item[data-pos="' + i + '"] .selector').addClass('active'); }
+          if ($('body').find('#queue .item .selector').is('.active')) { $('#options-queue').slideDown('fast'); }
+          else { $('#options-queue').slideUp('fast'); } 
+        }
+      }
+      else { mousedownTriggered = false; }
+    });
+    
+
+    //// queue
+    // check all / uncheck all
+    $('body').on('click', '#queue .selecthelper', function() {
+      if ($(this).hasClass('selectall')) {
+        $('main').find('#queue .item .selector').addClass('active');
+        $('#options-queue').slideDown('fast');
+      }
+      else {
+        $('main').find('#queue .item .selector').removeClass('active');
+        $('#options-queue').slideUp('fast');
+      }
+    });
+
+
+    //// queue | options
+
+    //// queue | options
+    //play next
+    $('body').on('click', '#options-queue .playnext', function() {
+      var songs = $('main').find('#queue .item .selector.active');
+      var songcount = songs.length;
+      var songPositions = [];
+
+      $.each(songs, function(index, value) {
+        songPositions.push($(this).closest('.item').attr('data-pos'));
+      });
+
+      songPositions.sort().reverse(); // sort reverse to keep the current ordering
+
+      $.each(songPositions, function(index, value) {
+        playNext(value, function() {
+          if (index === songcount - 1) {
+            $('#options-queue').slideUp('fast');
+              showInfo(songcount + ' song(s) moved', 2500);
+              queueRequest();
+          }
+        });
+      });
+    });
+
+    //// queue | options
+    // add to playlist
+    $('body').on('click', '#options-queue .addtoplaylist', function() {
+      socket.emit('mpd', 'listplaylists', [], function(err, data) {
+        $('#options-queue').slideUp('fast');
+        if (err) {
+          showError('error fetching playlists: ' + err, 3000);
+        }
+        else if (data && data.length > 0) {
+          $('#playlist-selector .playlists').html(""); // clear contents
+          $.each(data, function(index, value) {
+            var playlist_name = value.playlist;
+            var button = $('<div>', {
+              class: 'button text save', 
+              text: playlist_name
+            }).attr('data-name', playlist_name);
+            var button_wrapper = $('<div>', {class: 'button-wrapper'})
+                .append(button)
+                .appendTo($('#playlist-selector .playlists'));
+
+          });
+          // show the playlist selector with dynamic content
+          $('#playlist-selector').slideDown('fast');
+        }
+        else {
+          showInfo('no playlists found', 2500);
+        }
+      })
+    });
+    //playlist clicked
+    $('body').on('click', '#playlist-selector .button.save', function() {
+      var playlist_name = $(this).attr('data-name');
+      var songs = $('main').find('#queue .item .selector.active');
+      var songcount = songs.length;
+      var errors = 0;
+      $.each(songs, function(index, value) {
+        var songPath = $(this).closest('.item').attr('data-path');
+        addSongToPlaylist(songPath, playlist_name, function(added) {
+          if (!added) {errors += 1; }
+          if (index === songcount - 1) {
+            $('#playlist-selector').slideUp('fast');
+            if (errors > 0) { showError(errors + ' song(s) could not be added!', 3000); }
+            else { 
+              showInfo(songcount + ' song(s) added to playlist "' + playlist_name + '"', 2500);
+              setTimeout(function() { $('#options-queue').slideDown('fast'); }, 2500);
+            }
+          }
+        });
+      });
+    });
+    //cancel
+    $('body').on('click', '#playlist-selector .cancel', function() {
+      $('#playlist-selector').slideUp('fast');
+      $('#options-queue').slideDown('fast');
+    });
+
+    
+    //// queue | options
+    // crop
+    $('body').on('click', '#options-queue .crop', function() {
+      var songsToCrop = $('main').find('#queue .item .selector.active');
+      songsToCropIds = [];
+
+      $.each(songsToCrop, function(index, value) {
+        songsToCropIds.push($(this).closest('.item').attr('data-id'));
+      });
+
+      var songsAll = $('main').find('#queue .item .selector');
+      var songcount = songsAll.length - songsToCrop.length;
+      var errors = 0;
+      
+      $.each(songsAll, function(index, value) {
+        var songId = $(this).closest('.item').attr('data-id');
+        if ($.inArray(songId, songsToCropIds) === -1) {
+
+          removeSongFromQueue(songId, function(deleted) {
+            if (!deleted) { errors += 1 };
+            if (index === songcount - 1) {
+              $('#options-queue').hide();
+              if (errors > 0) { showError(errors + ' songs could not be deleted!', 3000); }
+              else { 
+                showInfo(songcount + ' song(s) deleted', 2500);
+                queueRequest(); 
+              }
+            }
+          });
+        }
+      });
+    });
+
+    //// queue | options
+    //remove
+    $('body').on('click', '#options-queue .remove', function() {
+
+      var songs = $('main').find('#queue .item .selector.active');
+      var songcount = songs.length;
+      var errors = 0;
+
+      $.each(songs, function(index, value) {
+        var songId = $(this).closest('.item').attr('data-id');
+
+        removeSongFromQueue(songId, function(deleted) {
+          if (!deleted) { errors += 1 };
+          if (index === songcount - 1) {
+            $('#options-queue').hide();
+            if (errors > 0) { showError(errors + ' songs could not be deleted!', 3000); }
+            else { 
+              showInfo(songcount + ' song(s) deleted', 2500);
+              queueRequest(); 
+            }
+          }
+        });
+      });
+    });
+
+    
+
+
+
+
+    //// playlists
+
+
     // sort playlists
     $('main').on('click', '#playlists > .nav-main > .button-wrapper > .button.sort-by-name', function() {
       playlistsRequest('name');
@@ -212,57 +417,143 @@ var initHandlers = function() {
     $('main').on('click', '#playlists > .nav-main > .button-wrapper > .button.sort-by-date', function() {
       playlistsRequest('lastmodified');
     });
-    // append from context
-    $('main').on('click', '#playlists > .contextmenu > .button-wrapper > .add', function() {
-      var playlist = $(this).closest('.contextmenu').attr('data-name');
-      socket.emit('mpd', 'load', [playlist], function(err, msg) {
-        if (err) { showInfo("error: " + err, 2000); }
-        else {  showInfo("playlist '" + playlist + "' added to queue", 2000); }
-        $(".contextmenu").hide();
-        $('.leftclick').removeClass('selected');
-      });
+
+    //// playlists
+    // click on playlist
+    $('main').on('click', '#playlists .playlist', function() {
+      var playlist = $(this).attr('data-name');
+      console.log(playlist);
+      playlistDetailsRequest(playlist);
     });
-    // load from context
-    // append from context
-    $('main').on('click', '#playlists > .contextmenu > .button-wrapper > .load', function() {
-      var playlist = $(this).closest('.contextmenu').attr('data-name');
-      socket.emit('mpd', 'clear', [], function(err, msg) {
-        socket.emit('mpd', 'load', [playlist], function(err, msg) {
-          if (err) { showInfo("error: " + err, 2000); }
-          else { showInfo("playlist '" + playlist + "' added to queue", 2000); }
-          $(".contextmenu").hide();
-          $('.leftclick').removeClass('selected');
-        });
-      });
+    // hide the playlist details cover
+     $('main').on('click', '#playlists .cover', function(e) {
+      if (!$(e.target).parents('.button-wrapper').length > 0) {
+        $('main').find('#playlists .cover').fadeOut();
+      }
     });
-    // delete from context
-    $('main').on('click', '#playlists > .contextmenu > .button-wrapper > .delete', function() {
-      var name = $(this).closest('.contextmenu').attr('data-name');      
-      var button = $("<a href='#' id='delete-playlist-confirm' data-name=" + name + ">ok</a>");
-      showInfo("delete playlist " + name + "? ", 10000);
-      $('#info').append(button);
+
+
+    //// playlist | details
+    
+    // rename
+    $('main').on('click', '#playlists .cover .options .rename', function() {
+      $('#option-playlist-rename').slideDown('fast');
     });
-    $('#info').on('click', '#delete-playlist-confirm',function() {
-      var name = $(this).attr('data-name');
-      socket.emit('mpd', 'rm', [name], function(err, msg) {
-        if (err) { 
-          showInfo("error: " + err, 2000);
-          $(".contextmenu").hide();
-          $('.leftclick').removeClass('selected');
+    //ok
+    $('#option-playlist-rename').on('click', ('.ok'), function() {
+      var playlist = $('#playlists .cover .playlist-container').attr('data-name');
+      var newname = $('body').find('#option-playlist-rename input.playlist-rename').val();
+      console.log(playlist, newname);
+      socket.emit('mpd', 'rename', [playlist, newname], function(err, msg) {
+      $('#option-playlist-rename').slideUp('fast');
+        if (err) {
+          showError('error deleting playlist', 3000);
         }
         else {
-          showInfo("playlist '" + name + "' deleted", 1500);
+          showInfo('playlist "' + playlist + '" renamed to "' + newname + '"', 2500);
           playlistsRequest();
+          setTimeout(function() { playlistDetailsRequest(newname); }, 200);
         }
-      });  
+      });
+    });
+    //cancel
+    $('#option-playlist-rename').on('click', ('.cancel'), function() {
+      $('#option-playlist-rename').slideUp('fast');
     });
     
+    //// playlist | details
+    // delete
+    $('main').on('click', '#playlists .cover .options .delete', function() {
+      $('#option-playlist-delete').slideDown('fast');
+    });
+    //ok
+    $('#option-playlist-delete').on('click', ('.ok'), function() {
+      var playlist = $('#playlists .cover .playlist-container').attr('data-name');
+      socket.emit('mpd', 'rm', [playlist], function(err, msg) {
+        $('#option-playlist-delete').slideUp('fast');
+        if (err) {
+          showError('error deleting playlist', 3000);
+        }
+        else {
+          showInfo('playlist "' + playlist + '" deleted', 2500);
+          playlistsRequest();
+        }
+      });
+    });
+    //cancel
+    $('#option-playlist-delete').on('click', ('.cancel'), function() {
+      $('#option-playlist-delete').slideUp('fast');
+    });
+
+    //// playlist | details
+    // playlist add
+    $('main').on('click', '#playlists .cover .button.addall', function(){
+      var playlist = $(this).closest('.button-wrapper').attr('data-name');
+      socket.emit('mpd', 'load', [playlist], function(err, msg) {
+        if (err) { showInfo("error: " + err, 2500); }
+        else { showInfo("playlist added to queue", 2500); }
+      });
+    });
+
+    //// playlist | details
+    // playlist play
+    $('main').on('click', '#playlists .cover .button.playall', function() {
+      var playlist = $(this).closest('.button-wrapper').attr('data-name');
+      socket.emit('mpd', 'clear', [], function(err, msg) {
+        if (err) { showError("error: " + err, 3000); }
+        else {
+          socket.emit('mpd', 'load', [playlist], function(err, msg) {
+            if (err) { showError("error: " + err, 3000); }
+            else { 
+              socket.emit('mpd', 'play', []);
+              showInfo("queue replaced with playlist", 2500);
+            }
+          });
+        }
+      });
+    });
+
+    //// playlist | details
+    // song append
+    $('main').on('click', '#playlists .cover .song .add', function(){
+      var file = $(this).attr('data-file');
+      socket.emit('mpd', 'add', [file], function(err, msg) {
+        if (err) { showError("error: " + err, 3000); }
+        else { showInfo("song added to queue", 2500); }
+      });
+    });
+
+    //// playlist | details
+    // song remove
+    $('main').on('click', '#playlists .cover .song .remove', function(){
+      var pos = $(this).attr('data-pos');
+      var playlist = $('#playlists .cover .playlist-container').attr('data-name');
+      socket.emit('mpd', 'playlistdelete', [playlist, pos], function(err, msg) {
+        if (err) {
+          showError('error deleting song', 3000);
+        }
+        else {
+          showInfo('song removed from playlist', 2500);
+          playlistsRequest();
+          setTimeout(function() { playlistDetailsRequest(playlist); }, 200);
+        }
+      });
+    });
+
+
+
+    
+
+
+
     //// browse
+
+
     // rescan
     $('main').on('click', '#browse > .button-wrapper > .rescan', function() {
       socket.emit('mpd', 'rescan', [], function(err, msg) {
-        if (err) { showInfo("error: " + err, 2000); }
-        else { showInfo('database rescan complete', 2000); }
+        if (err) { showError("error: " + err, 3000); }
+        else { showInfo('database rescan complete', 2500); }
       });
     });
     // sort browse results
@@ -287,8 +578,8 @@ var initHandlers = function() {
     $('main').on('click', '#browse > .contextmenu > .button-wrapper > .add', function() {
       var dir = $(this).closest('.contextmenu').attr('data-path');
       socket.emit('mpd', 'add', [dir], function(err, msg) {
-        if (err) { showInfo("error: " + err, 2000); }
-        else { showInfo('songs added', 1500); }
+        if (err) { showError("error: " + err, 3000); }
+        else { showInfo('songs added', 2500); }
       });
     });
     // browse load via context
@@ -296,14 +587,19 @@ var initHandlers = function() {
       var dir = $(this).closest('.contextmenu').attr('data-path');
       socket.emit('mpd', 'clear', [], function(err,msg) {
         socket.emit('mpd', 'add', [dir], function(err,msg) {
-          if (err) { showInfo("error: " + err, 2000); }
-          else { showInfo('queue replaced', 1500); }
+          if (err) { showError("error: " + err, 3000); }
+          else { showInfo('queue replaced', 2500); }
         });
       });
     });
     
     
+    
+
+
     //// search
+
+
     // keyup on search field
     $('main').on('keyup', 'input.search-input', function(e) {
       var searchString = $('#search').find('input.search-input').val();
@@ -321,65 +617,80 @@ var initHandlers = function() {
         searchRequestFuzzy('##');
       }
     });
+
+    //// search
     // click on searchType button
-    $('main').on('click', '#search > .nav-main > .button-wrapper > .button.search-type', function() {
+    $('main').on('click', '#search .button.search-type', function() {
       $('#search > .nav-main > .button-wrapper > .button.search-type').removeClass('active');
       $(this).addClass('active');
       var searchString = $('#search > input.search-input').val();
       var searchType = $(this).attr('data-type');
       searchRequestFuzzy(searchString, searchType);
     });
+
+    //// search
     // artist details
-    $('main').on('click', '#search > .scrollable > .fuzzy-container > .fuzzy-item', function() {
+    $('main').on('click', '#search .fuzzy-item', function() {
       var artist = $(this).attr('data-artist');
       artistDetailsRequest(artist);
     });
+
+
+
+    //// artistdetails
+
     // click on similar artist
-    $('main').on('click', '.similar > .artist-container', function() {
+    $('main').on('click', '#artistdetails .similar > .artist-container', function() {
       artistDetailsRequest(($(this).attr('data-artist')));
     });
     // add all from artist details
     $('main').on('click', '#artistdetails > .button-wrapper > .addall', function(e) {
       var artist = $(this).attr('data-artist');
       socket.emit('mpd', 'findadd', ['Artist', artist], function(err, msg) {
-        if (err) { showInfo("error: " + err, 2000); }
-        else { showInfo("songs added", 1500); }
+        if (err) { showError("error: " + err, 3000); }
+        else { showInfo("songs added", 2500); }
       });
     });
+
+    //// artistdetails
     // play all from artist details
     $('main').on('click', '#artistdetails > .button-wrapper > .playall', function(e) {
       var artist = $(this).attr('data-artist');
       socket.emit('mpd', 'clear', [], function(err, msg) {
-        if (err) { showInfo("error: " + err, 2000); }
+        if (err) { showError("error: " + err, 3000); }
         else {
           socket.emit('mpd', 'findadd', ['Artist', artist], function(err, msg) {
-            if (err) { showInfo("error: " + err, 2000); }
+            if (err) { showError("error: " + err, 3000); }
             else { 
-              showInfo("songs added", 1500); }
+              showInfo("songs added", 2500); }
               socket.emit('mpd', 'play', []); 
           });
         }
       });
     });
+
+    //// artistdetails
     // add all from similar artists
-    $('main').on('click', '#artistdetails > .scrollable > .similar > .button-wrapper > .addall', function(e) {
+    $('main').on('click', '#artistdetails .similar .addall', function(e) {
       var artists = $('main').find('.similar > .artist-container');
       if (artists) {
         $.each(artists, function(index, value) {
           var artist = $(this).attr('data-artist');
           socket.emit('mpd', 'findadd', ['Artist', artist], function(err, msg) {
-            showInfo("songs added", 1500);
+            showInfo("songs added", 2500);
           });
         });
       }
     });
+
+    //// artistdetails
     // add play all from similar artists
-    $('main').on('click', '#artistdetails > .scrollable > .similar > .button-wrapper > .playall', function(e) {
+    $('main').on('click', '#artistdetails .similar .playall', function(e) {
       var artists = $('main').find('.similar > .artist-container');
       console.log(artists);
       if (artists) {
         socket.emit('mpd', 'clear', [], function(err, msg) {
-          if (err) { showInfo("error: " + err, 2000); }
+          if (err) { showError("error: " + err, 3000); }
           else {
             var len = artists.length;
             $.each(artists, function(index, value) {
@@ -388,7 +699,7 @@ var initHandlers = function() {
                 console.log(msg);
                 if (index === len - 1) {
                   socket.emit('mpd', 'play', []);
-                  showInfo("songs added", 1500);
+                  showInfo("songs added", 2500);
                 }
               });
             });
@@ -396,64 +707,64 @@ var initHandlers = function() {
         });
       }
     });
+
+    //// artistdetails
     // show album details 
     $('main').on('click', '#artistdetails > .scrollable > .albums > .album-container', function() {
       var album = $(this).attr('data-name');
-      $('main').find('#artistdetails > #cover').fadeIn();
-      $('main').find('#artistdetails > #cover > .album-container[data-name="' + album + '"]').fadeIn();
+      $('main').find('#artistdetails > .cover').fadeIn();
+      $('main').find('#artistdetails > .cover > .album-container[data-name="' + album + '"]').show();
     });
-    $('main').on('click', '#artistdetails > #cover', function(e) {
+    //hide the album details cover
+    $('main').on('click', '#artistdetails > .cover', function(e) {
       if (!$(e.target).parents('.button-wrapper').length > 0) {
-        $('main').find('#artistdetails > #cover').fadeOut();
-        $('main').find('#artistdetails > #cover > .album-container').hide();
+        $('main').find('#artistdetails > .cover').fadeOut();
+        $('main').find('#artistdetails > .cover > .album-container').hide();
       }
     });
+
+    //// artistdetails
     // album add
-    $('main').on('click', '#artistdetails #cover .album-container .addall', function(){
+    $('main').on('click', '#artistdetails .cover .album-container .addall', function(){
       var album = $(this).closest('.button-wrapper').attr('data-album');
       var artist = $(this).closest('.button-wrapper').attr('data-artist');
       socket.emit('mpd', 'findadd', ['Artist',artist,'Album',album], function(err, msg) {
-        if (err) { showInfo("error: " + err, 2000); }
-        else { showInfo("songs added", 2000); }
+        if (err) { showError("error: " + err, 3000); }
+        else { showInfo("songs added", 2500); }
       });
     });
+
+    //// artistdetails
     // album play
-    $('main').on('click', '#artistdetails #cover .album-container .playall', function() {
+    $('main').on('click', '#artistdetails .cover .album-container .playall', function() {
       var album = $(this).closest('.button-wrapper').attr('data-album');
       var artist = $(this).closest('.button-wrapper').attr('data-artist');
       socket.emit('mpd', 'clear', [], function(err, msg) {
-        if (err) { showInfo("error: " + err, 2000); }
+        if (err) { showError("error: " + err, 2000); }
         else {
           socket.emit('mpd', 'findadd', ['Artist',artist,'Album',album], function(err, msg) {
-            if (err) { showInfo("error: " + err, 2000); }
+            if (err) { showError("error: " + err, 3000); }
             else { 
               socket.emit('mpd', 'play', []);
-              showInfo("songs added", 2000);
+              showInfo("songs added", 2500);
             }
           });
         }
       });
     });
+
+    //// artistdetails
     // song append
-    $('main').on('click', '#artistdetails #cover .song .add', function(){
+    $('main').on('click', '#artistdetails .cover .song .add', function(){
       var file = $(this).attr('data-file');
       socket.emit('mpd', 'add', [file], function(err, msg) {
-        if (err) { showInfo("error: " + err, 2000); }
-        else { showInfo("song added", 2000); }
+        if (err) { showError("error: " + err, 3000); }
+        else { showInfo("song added", 2500); }
       });
     });
-    // click add all from album old
-    $('main').on('click', '#search > .contextmenu > .button-wrapper > .add-from-album', function() {
-      try {
-        var artist = $(this).closest('.contextmenu').attr('data-artist');
-        var album = $(this).closest('.contextmenu').attr('data-album');
-        socket.emit('mpd', 'searchadd', ['Artist', artist, 'Album', album], function(err, msg) {
-          if (err) { showInfo("error: " + err, 2000); }
-          else { showInfo(album + "' by " + artist + " added", 1500); }
-        });
-      }
-      catch (err) { showInfo("error: " + err, 2000); }
-    });
+
+
+
 
     // contextmenu 
     //prevent Default for left click on whole document
@@ -529,50 +840,50 @@ var interfaceRegistration = function() {
     
         $('#control-menu').on('click', '#previous', function() {
           socket.emit('mpd', 'previous', [], function(err, msg) {
-            if (err) { showInfo("error: " + err, 2000); }
+            if (err) { showError("error: " + err, 3000); }
           });
         });
     
         $('#control-menu').on('click', '#next', function() {
           socket.emit('mpd', 'next', [], function(err, msg) {
-            if (err) { showInfo("error: " + err, 2000); }
+            if (err) { showError("error: " + err, 3000); }
           });
         });
     
         $('#control-menu').on('click', '#play', function() {
           socket.emit('mpd', 'play', [], function(err, msg) {
-            if (err) { showInfo("error: " + err, 2000); }
+            if (err) { showError("error: " + err, 3000); }
           });
         });
     
         $('#control-menu').on('click', '#pause', function() {
           socket.emit('mpd', 'pause', [(status.state === 'pause' ? 0 : 1)], function(err, msg) {
-            if (err) { showInfo("error: " + err, 2000); }
+            if (err) { showError("error: " + err, 3000); }
           });
         });
     
         $('#control-menu').on('click', '#stop', function() {
           socket.emit('mpd', 'stop', [], function(err, msg) {
-            if (err) { showInfo("error: " + err, 2000); }
+            if (err) { showError("error: " + err, 3000); }
           });
         });
     
     
         $('#footer').on('click', '#random', function() {
           socket.emit('mpd', 'random', [1 - status.random], function(err, msg) {
-            if (err) { showInfo("error: " + err, 2000); }
+            if (err) { showError("error: " + err, 3000); }
           });
         });
     
         $('#footer').on('click', '#repeat', function() {
           socket.emit('mpd', 'repeat', [1 - status.repeat], function(err, msg) {
-            if (err) { showInfo("error: " + err, 2000); }
+            if (err) { showError("error: " + err, 3000); }
           });
         });
     
         $('#queue').on('click', '#consume', function() {
           socket.emit('mpd', 'consume', [1 - status.consume], function(err, msg) {
-            if (err) { showInfo("error: " + err, 2000); }
+            if (err) { showError("error: " + err, 3000); }
           });
         });
     

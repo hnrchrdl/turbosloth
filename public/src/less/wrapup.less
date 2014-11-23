@@ -115,20 +115,70 @@ input, select {
 	}
 }
 
-
-#info-wrapper {
-	display: 						none;
-	position: 					absolute;
-	bottom: 						0;
-	left: 							0;
-	right:							0;
-	height:		         	@leftWidth / 2 - @long;
-	line-height:		    @leftWidth / 2 - @long;
-	background-color:		@greenSea;
-	color:							@clouds;
-	padding:        		@long / 2;
-	text-align: 				center;
-
+.options-box {
+	display: none;
+	position: absolute;
+	bottom: @footerHeight  + @medium * 2;
+	right: @short + 8;
+	line-height: @buttonHeight;
+	background-color: @transDark;
+	color: @clouds;
+	padding: @medium;
+	text-align: center;
+	min-width:	@leftWidth * 2;
+	max-width: 60%;
+	//max-height: 600px;
+	overflow: auto;
+	&#error-box {
+		background-color: @alizarinTrans;
+	}
+	hr {
+		background-color: @concrete;
+		margin: @medium 0;
+	}
+	.button-wrapper {
+		float: left;
+		margin: 0 @medium;
+	}
+	.button {
+		float: left;
+		margin: 0 @short 0 0;
+		color: @clouds;
+	}
+	&.question {
+		.button-wrapper {
+			float: none;
+			display: inline-block;
+			.cancel {
+				border: 1px solid @concrete;
+				&:hover {
+					background-color: @concrete;
+				}
+			}
+		}
+		input {
+			display: inline-block;
+			margin: @medium 0;
+			background: none;
+			border: 1px solid @concrete;
+			color: @clouds;
+			&:focus {
+				border: 1px solid @primary;
+			}
+		}
+		.playlists {
+			line-height: 0;
+			//overflow: auto;
+			padding: @short;
+			.button-wrapper {
+				float: none;
+				margin: @short;
+			}
+		}
+	}
+	&.full-height {
+		top: 20%;
+	}
 }
 
 //pseudo-classes

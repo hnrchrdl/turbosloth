@@ -1,7 +1,7 @@
 main {
   position:         absolute;
   top:              0;
-  bottom:           @leftWidth / 2;
+  bottom:           @footerHeight + @medium *2 ;
   left:             @leftWidth + @short;
   right:            @short;
   //border-bottom:  1px solid @subtle;
@@ -42,7 +42,9 @@ main {
       height:         @buttonHeight;
       display:        inline-block;
       overflow:       hidden;
-      padding:        0 1% 0;
+      .inner {
+        padding:        0 @short 0;
+      }
       &.left {
         float:        left;
       }

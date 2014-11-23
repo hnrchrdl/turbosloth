@@ -83,6 +83,9 @@
     cursor:         pointer;
     overflow:       hidden;
     background-color:   @concrete;
+    &:hover {
+      background-color:   lighten(@concrete,20%);
+    }
     #seek-bar {
       height:             @seekBarHeight;
       width:              0;
