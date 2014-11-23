@@ -124,7 +124,6 @@ router.get('/playlists/:order', function(req, res) {
 
 router.get('/playlistdetails/:playlist', function(req, res) {
   var playlist = decodeURIComponent(req.params.playlist);
-  console.log(playlist);
   var mpdNamespace = req.session.mpdhost + ":" + req.session.mpdport;
   var komponistClient = komponist.getClient(mpdNamespace);
   komponistClient.listplaylistinfo([playlist], function(err, contents) {
@@ -133,7 +132,6 @@ router.get('/playlistdetails/:playlist', function(req, res) {
       res.render('playlistdetails', {playlist: playlist, contents: null});
     }
     else {
-      console.log(contents);
       res.render('playlistdetails', {playlist: playlist, contents: contents}); 
     }
   })

@@ -5,20 +5,20 @@ html(lang='en')
   
   body
     header
-      if config.appEnv === 'dev'
-        h1 turbosloth
-        #submenu
-          input#username.long(type="text", placeholder="username", value="")
-          input#password.long(type="password", placeholder="password", value="")
-          .button-wrapper
-            i.fa.fa-info
-            |  Login
-          .button-wrapper
-            i.fa.fa-info
-            |  New User
+      //- if config.appEnv === 'dev'
+      //-   h1 turbosloth
+      //-   #submenu
+      //-     input#username.long(type="text", placeholder="username", value="")
+      //-     input#password.long(type="password", placeholder="password", value="")
+      //-     .button-wrapper
+      //-       i.fa.fa-info
+      //-       |  Login
+      //-     .button-wrapper
+      //-       i.fa.fa-info
+      //-       |  New User
         
             
-    #background-wrapper.login
+    .login
       h1 turbosloth
       <br>
       .form-wrapper
@@ -35,13 +35,17 @@ html(lang='en')
         <br>
         <br>
         .button-wrapper
-          #enter.button.text.active S T A R T
+          #enter.button.text S T A R T
 
     if config.appEnv === 'production'
       script(src='/js/jquery-2.1.1.min.js')
     else
       script(src='/js/jquery-2.1.1.js')
       script(src='/js/less.js', type='text/javascript') // use in development only!
+
+
+
+
 
 
     // script for custom form posting
