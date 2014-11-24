@@ -10,8 +10,15 @@ var express = require('express')
   , redis = require('redis')
   , server = http.createServer(app)
   , LastFmNode = require('lastfm').LastFmNode;
+
   //, passport = require("passport");
-  
+
+require('console-stamp')(console, '[HH:MM:ss.l]');
+logger.format('mydate', function() {
+  var df = require('console-stamp/node_modules/dateformat');
+  return df(new Date(), 'HH:MM:ss.l');
+});
+
 if (app.get('env') !== 'production') {
   require('longjohn'); // for detailed error logging in dev
 }
