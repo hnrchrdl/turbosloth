@@ -368,7 +368,7 @@ var initHandlers = function() {
               $('#options-queue').hide();
               if (errors > 0) { showError(errors + ' songs could not be deleted!', 3000); }
               else { 
-                showInfo(songcount + ' song(s) deleted', 2500);
+                showInfo(songcount + ' song(s) removed', 2500);
                 queueRequest(); 
               }
             }
