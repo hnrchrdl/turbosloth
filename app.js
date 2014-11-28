@@ -2,16 +2,20 @@ var express = require('express')
   , app = express()
   , http = require('http')
   , path = require('path')
-  //, favicon = require('static-favicon')
   , logger = require('morgan')
   , cookieParser = require('cookie-parser')
   , bodyParser = require('body-parser')
   , session = require('express-session')
   , redis = require('redis')
   , server = http.createServer(app)
-  , LastFmNode = require('lastfm').LastFmNode;
+  , LastFmNode = require('lastfm').LastFmNode
+  , config = require('./config.json')[app.get('env')]
+  , redisClient = require('./lib/redisClient').getClient();
 
   //, passport = require("passport");
+if (app.get('env') !== 'production') {
+  require('longjohn'); // for detailed error logging in dev
+}
 
 require('console-stamp')(console, '[HH:MM:ss.l]');
 logger.format('mydate', function() {
@@ -19,23 +23,8 @@ logger.format('mydate', function() {
   return df(new Date(), 'HH:MM:ss.l');
 });
 
-if (app.get('env') !== 'production') {
-  require('longjohn'); // for detailed error logging in dev
-}
- 
-var config = require('./config.json')[app.get('env')];
-module.exports.config = config;
-
-module.exports.lastfm = new LastFmNode({
-  api_key: require('./config.json').lastfm.key,    // sign-up for a key at http://www.last.fm/api
-  secret: require('./config.json').lastfm.secret,
-  useragent: 'ts' // optional
-});
 
 //app.use(express.errorHandler(config.errorHandlerOptions));
-
-redisClient = redis.createClient(config.redisPort, config.redisHost);
-redisClient.select(config.redisDatabase);
 
 server.listen(config.appPort, config.appHost, function() {
   console.log('listening on ' + config.appHost + ': ' + config.appPort);
@@ -44,7 +33,6 @@ server.listen(config.appPort, config.appHost, function() {
 var io = require('./lib/sockets').listen(server);
 
 var routes = require('./routes/index').router;
-
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -130,4 +118,4 @@ app.use(function(err, req, res, next) {
   });
 });
 
-module.exports.app = app;
+module.exports = app;
