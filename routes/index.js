@@ -1,7 +1,7 @@
 var express = require('express')
   ,  router = express.Router()
   ,  komponist = require('../lib/komponist')
-  ,  lastfm = require('../app').lastfm;
+  ,  lastfm = require('../lib/lastfm');
 
 //This will sort your array
 function SortByLastModified(a, b) {
@@ -31,7 +31,7 @@ router.get('/', function(req, res) {
         host = req.session.mpdhost,
         password = req.session.mpdpassword;
     
-    var komponistInit = komponist.init(sessionID, host, port, password, function(err, obj) {
+    komponist.init(sessionID, host, port, password, function(err, obj) {
       if (err) {
         console.log('komponist init failed');
         req.session.destroy(); // logout
@@ -62,10 +62,16 @@ router.get('/', function(req, res) {
 
 //// get /queue
 router.get('/queue', function(req, res) {
-  var mpdNamespace = req.session.mpdhost + ":" + req.session.mpdport;
-  var komponistClient = komponist.getClient(req.sessionID, req.session.mpdhost, req.session.mpdport);
-  if (komponistClient) {
-    komponistClient.playlistinfo(function(err, data) {
+  
+  if (req.session) {
+    var options = {
+      host: req.session.mpdhost,
+      port: req.session.mpdport,
+      password: req.session.mpdpassword,
+      cmd: 'playlistinfo',
+      args: []
+    }
+    komponist.fireCommand(options, function(err, msg) {
       if (err) {
         console.log(err);
         res.render('queue',{queue: err});
@@ -73,13 +79,11 @@ router.get('/queue', function(req, res) {
         res.render('queue',{queue :data});
       }
     });
-  }
-  else {
+  } else
     req.session.destroy();
     res.redirect('/login?err=sessionLost');
-  } 
-});
-
+  }
+}
 
 
 // get /playlists
