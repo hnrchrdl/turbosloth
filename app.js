@@ -9,8 +9,9 @@ var express = require('express')
   , redis = require('redis')
   , server = http.createServer(app)
   , LastFmNode = require('lastfm').LastFmNode
-  , config = require('./config.json')[app.get('env')]
+  , config = module.exports.config = require('./config.json')[app.get('env')]
   , redisClient = require('./lib/redisClient').getClient();
+
 
   //, passport = require("passport");
 if (app.get('env') !== 'production') {
@@ -118,4 +119,5 @@ app.use(function(err, req, res, next) {
   });
 });
 
-module.exports = app;
+module.exports.app = app;
+module.exports.config = config;

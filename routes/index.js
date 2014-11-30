@@ -1,7 +1,9 @@
 var express = require('express')
   ,  router = express.Router()
   ,  komponist = require('../lib/komponist')
-  ,  lastfm = require('../lib/lastfm');
+  ,  lastfm = require('../lib/lastfm').client;
+
+console.log('lastfm: ' + lastfm);
 
 //This will sort your array
 function SortByLastModified(a, b) {
@@ -26,12 +28,17 @@ router.post('/login', function(req, res) {
 //// get /
 router.get('/', function(req, res) {
   if (req.session.mpdhost && req.session.mpdport) {
-    var sessionID = req.sessionID,
-        port = req.session.mpdport,
-        host = req.session.mpdhost,
-        password = req.session.mpdpassword;
+    var sessionID = req.sessionID
+      ,  port = req.session.mpdport
+      ,  host = req.session.mpdhost
+      ,  password = req.session.mpdpassword;
+    var options = {
+      host: req.session.mpdhost,
+      port: req.session.mpdport,
+      password: req.session.mpdpassword
+    }
     
-    komponist.init(sessionID, host, port, password, function(err, obj) {
+    komponist.init(options, function(err, obj) {
       if (err) {
         console.log('komponist init failed');
         req.session.destroy(); // logout
@@ -71,7 +78,7 @@ router.get('/queue', function(req, res) {
       cmd: 'playlistinfo',
       args: []
     }
-    komponist.fireCommand(options, function(err, msg) {
+    komponist.fireCommand(options, function(err, data) {
       if (err) {
         console.log(err);
         res.render('queue',{queue: err});
@@ -79,11 +86,11 @@ router.get('/queue', function(req, res) {
         res.render('queue',{queue :data});
       }
     });
-  } else
+  } else {
     req.session.destroy();
     res.redirect('/login?err=sessionLost');
   }
-}
+});
 
 
 // get /playlists
@@ -99,10 +106,15 @@ router.get('/playlists/:order', function(req, res) {
     order = 'name';
     req.session.playlistOrder = undefined;
   }
-  var mpdNamespace = req.session.mpdhost + ":" + req.session.mpdport;
-  var komponistClient = komponist.getClient(req.sessionID, req.session.mpdhost, req.session.mpdport)
-  if (komponistClient) {
-    komponistClient.listplaylists(function(err, data) {
+  if (req.session) {
+    var options = {
+      host: req.session.mpdhost,
+      port: req.session.mpdport,
+      password: req.session.mpdpassword,
+      cmd: 'listplaylists',
+      args: []
+    }
+    komponist.fireCommand(options, function(err, data) {
       if (err || Object.keys(data[0]).length === 0) {
         res.render('playlists', {playlists: undefined})
       }
@@ -130,15 +142,20 @@ router.get('/playlists/:order', function(req, res) {
 
 router.get('/playlistdetails/:playlist', function(req, res) {
   var playlist = decodeURIComponent(req.params.playlist);
-  var mpdNamespace = req.session.mpdhost + ":" + req.session.mpdport;
-  var komponistClient = komponist.getClient(req.sessionID, req.session.mpdhost, req.session.mpdport)
-  komponistClient.listplaylistinfo([playlist], function(err, contents) {
+  var options = {
+    host: req.session.mpdhost,
+    port: req.session.mpdport,
+    password: req.session.mpdpassword,
+    cmd: 'listplaylistinfo',
+    args: [playlist]
+  }
+  komponist.fireCommand(options, function(err, data) {
     if (err) {
       console.log(err);
       res.render('playlistdetails', {playlist: playlist, contents: null});
     }
     else {
-      res.render('playlistdetails', {playlist: playlist, contents: contents}); 
+      res.render('playlistdetails', {playlist: playlist, contents: data}); 
     }
   })
 });
@@ -175,69 +192,68 @@ router.get('/browse/:browsepath/:order', function(req, res) {
     order = 'name';
     req.session.browseOrder = undefined;
   }
-  var mpdNamespace = req.session.mpdhost + ":" + req.session.mpdport;
-  var komponistClient = komponist.getClient(req.sessionID, req.session.mpdhost, req.session.mpdport)
-  if (komponistClient) {
-    komponistClient.lsinfo([browsepath], function(err, contents) {
-      if (err) { 
-        console.log(err); 
-        res.render('browse', {dirs:[], files:[], breadcrumbs:false});
-      }
-      else {
-        var dirs = [], files = [];
-        // if contents contains only 1 item, mpd returns Object instead of Array
-        contents = (contents instanceof Array) ? contents : [contents];
-        if (contents.length > 1) {
-          for (i in contents) {
-            if (contents[i]['Last-Modified']) { 
-              contents[i]['lastmodified'] = contents[i]['Last-Modified'];
-            }
-            else {
-              contents[i]['lastmodified'] = '0000-00-00T00:00:00Z'; 
-            }
-            var item = contents[i];
-            if ('directory' in item) { // handle directory element
-              try {
-                var dir_split = item.directory.split('/');
-                item.name = dir_split[dir_split.length-1];
-                if (item.name !== "") {
-                  dirs.push(item); //push item into dirs array
-                }
-              }
-              catch(e) {
-                console.log(e);              
-              }
-            } else if ('file' in item) { // handle file element
-              try {
-                var dir_split = item.file.split('/');
-                item.name = dir_split[dir_split.length-1];
-                if (item.name !== "") {
-                  files.push(item); //push item into files array
-                }
-              }
-              catch(e) {
-                console.log(e);              
-              }
-            }
+  var options = {
+    host: req.session.mpdhost,
+    port: req.session.mpdport,
+    password: req.session.mpdpassword,
+    cmd: 'lsinfo',
+    args: [browsepath]
+  }
+  komponist.fireCommand(options, function(err, data) {
+    if (err) { 
+      console.log(err); 
+      res.render('browse', {dirs:[], files:[], breadcrumbs:false});
+    }
+    else {
+      var dirs = [], files = [];
+      // if contents contains only 1 item, mpd returns Object instead of Array
+      contents = (data instanceof Array) ? data : [data];
+      if (contents.length > 1) {
+        for (i in contents) {
+          if (contents[i]['Last-Modified']) { 
+            contents[i]['lastmodified'] = contents[i]['Last-Modified'];
           }
-          if (order === 'lastmodified') {
+          else {
+            contents[i]['lastmodified'] = '0000-00-00T00:00:00Z'; 
+          }
+          var item = contents[i];
+          if ('directory' in item) { // handle directory element
             try {
-              contents.sort(SortByLastModified).reverse();
-            } catch(e) {
-              console.log(e);
+              var dir_split = item.directory.split('/');
+              item.name = dir_split[dir_split.length-1];
+              if (item.name !== "") {
+                dirs.push(item); //push item into dirs array
+              }
+            }
+            catch(e) {
+              console.log(e);              
+            }
+          } else if ('file' in item) { // handle file element
+            try {
+              var dir_split = item.file.split('/');
+              item.name = dir_split[dir_split.length-1];
+              if (item.name !== "") {
+                files.push(item); //push item into files array
+              }
+            }
+            catch(e) {
+              console.log(e);              
             }
           }
         }
-        var breadcrumbs = browsepath.split('/');
-        req.session.breadcrumbs = breadcrumbs;
-        res.render('browse', {dirs:dirs, files:files, breadcrumbs:breadcrumbs, order: order});
+        if (order === 'lastmodified') {
+          try {
+            contents.sort(SortByLastModified).reverse();
+          } catch(e) {
+            console.log(e);
+          }
+        }
       }
-    });
-  }
-  else {
-    req.session.destroy();
-    res.redirect('/login?err=sessionLost');
-  }
+      var breadcrumbs = browsepath.split('/');
+      req.session.breadcrumbs = breadcrumbs;
+      res.render('browse', {dirs:dirs, files:files, breadcrumbs:breadcrumbs, order: order});
+    }
+  });
 });
 
 //// get search
@@ -271,122 +287,126 @@ router.get('/fuzzysearch/:searchString/:type', function(req, res) {
     });
   }
   else { // loaded Search
-    var mpdNamespace = req.session.mpdhost + ":" + req.session.mpdport;
-    var komponistClient = komponist.getClient(req.sessionID, req.session.mpdhost, req.session.mpdport)
-
-    if (komponistClient) {
-      komponistClient.search(type, searchString, function(err, contents) {
-        //console.log(contents);
-        if (err || Object.keys(contents[0]).length === 0) { // if object is empty
-          res.render('fuzzysearch', {
-            contents: undefined, 
-            searchString: searchString, 
-            type: type
-          });
-        }
-        else {
-          if (type === 'Artist' || type === 'Album' || type === 'Title' || type === 'Genre') {  // group Results by Artist
-            var artists = [];
-            var results = [];
-            for (i in contents) {
-              var item = contents[i];
-              if ('Artist' in item) {
-                var artist_name = item.Artist;
-                if (artists.indexOf(artist_name) === -1) {
-                  artists.push(artist_name);
-                  // get songs, albums and genres from the artist
-                  var songcount = 0;
-                  var albums = [];
-                  var genres = [];
-                  for (a in contents) {
-                    var test_item = contents[a];
-                    if ('Artist' in test_item) {
-                      if (artist_name === test_item.Artist) {
-                        songcount += 1;
-                        if ('Album' in test_item) {
-                          var album = test_item.Album;
-                          if (albums.indexOf(album) === -1) {
-                            albums.push(album);
-                          } 
-                        }
-                        if ('Genre' in test_item) {
-                          var genre = test_item.Genre;
-                          if (genres.indexOf(genre) === -1) {
-                            genres.push(genre);
-                          }
+    var options = {
+      host: req.session.mpdhost,
+      port: req.session.mpdport,
+      password: req.session.mpdpassword,
+      cmd: 'search',
+      args: [type, searchString]
+    }
+    komponist.fireCommand(options, function(err, data) {
+      //console.log(contents);
+      if (err || Object.keys(data[0]).length === 0) { // if object is empty
+        res.render('fuzzysearch', {
+          contents: undefined, 
+          searchString: searchString, 
+          type: type
+        });
+      }
+      else {
+        if (type === 'Artist' || type === 'Album' || type === 'Title' || type === 'Genre') {  // group Results by Artist
+          var artists = [];
+          var results = [];
+          for (i in data) {
+            var item = data[i];
+            if ('Artist' in item) {
+              var artist_name = item.Artist;
+              if (artists.indexOf(artist_name) === -1) {
+                artists.push(artist_name);
+                // get songs, albums and genres from the artist
+                var songcount = 0;
+                var albums = [];
+                var genres = [];
+                for (a in data) {
+                  var test_item = data[a];
+                  if ('Artist' in test_item) {
+                    if (artist_name === test_item.Artist) {
+                      songcount += 1;
+                      if ('Album' in test_item) {
+                        var album = test_item.Album;
+                        if (albums.indexOf(album) === -1) {
+                          albums.push(album);
+                        } 
+                      }
+                      if ('Genre' in test_item) {
+                        var genre = test_item.Genre;
+                        if (genres.indexOf(genre) === -1) {
+                          genres.push(genre);
                         }
                       }
                     }
                   }
-                  results.push(
-                    { artist : artist_name, 
-                      songcount : songcount,
-                      albumcount : albums.length,
-                      albums : albums.join(', '),
-                      genres : genres.join(', ') }
-                  );
-                  results.sort(function(a, b) {
-                    return a.songcount-b.songcount;
-                  }).reverse();
                 }
+                results.push(
+                  { artist : artist_name, 
+                    songcount : songcount,
+                    albumcount : albums.length,
+                    albums : albums.join(', '),
+                    genres : genres.join(', ') }
+                );
+                results.sort(function(a, b) {
+                  return a.songcount-b.songcount;
+                }).reverse();
               }
             }
-            res.render('fuzzysearch', {
-              contents: results,
-              searchString:searchString, 
-              type: type
-            });
-          } 
-        }
-      });
-    }
+          }
+          res.render('fuzzysearch', {
+            contents: results,
+            searchString:searchString, 
+            type: type
+          });
+        } 
+      }
+    });
   }
 });
 
 // exact search
-router.get('/artistdetails/:artist', function(req, res){
+router.get('/artistdetails/:artist', function(req, res) {
   var artist = decodeURIComponent(req.params.artist);
-  var mpdNamespace = req.session.mpdhost + ":" + req.session.mpdport;
-  var komponistClient = komponist.getClient(req.sessionID, req.session.mpdhost, req.session.mpdport)
-
-  if (komponistClient) {
-    komponistClient.find('Artist', artist, function(err, contents) {
-      if (err) {
+  var options = {
+    host: req.session.mpdhost,
+    port: req.session.mpdport,
+    password: req.session.mpdpassword,
+    cmd: 'find',
+    args: ['artist', artist]
+  }
+  komponist.fireCommand(options, function(err, data) {
+    if (err) {
       console.log(err);
-      }
-      else {
-        var album_names = [];
-        albums = [];
-        var others = [];
-        for (i in contents) {
-          var item = contents[i]; 
-          if ('Album' in item) {
-            var album_name = item.Album;
-            if (album_names.indexOf(album_name) === -1) {
-              album_names.push(album_name);
-              albums.push({name: album_name, songs: [item]});
-            }
-            else {
-              for (i in albums) {
-                var album = albums[i];
-                if (album_name === album.name) {
-                  album.songs.push(item);
-                } 
-              }
-            }
+    }
+    else {
+      var album_names = [];
+      albums = [];
+      var others = [];
+      for (i in data) {
+        var item = data[i]; 
+        if ('Album' in item) {
+          var album_name = item.Album;
+          if (album_names.indexOf(album_name) === -1) {
+            album_names.push(album_name);
+            albums.push({name: album_name, songs: [item]});
           }
           else {
-            others.push(item);
+            for (i in albums) {
+              var album = albums[i];
+              if (album_name === album.name) {
+                album.songs.push(item);
+              } 
+            }
           }
         }
-        res.render('artistdetails', {
-          songs: contents,
-          albums: albums, 
-          artist:artist
-        });
+        else {
+          others.push(item);
+        }
       }
-    });
-  }
+      res.render('artistdetails', {
+        songs: data,
+        albums: albums, 
+        artist:artist
+      });
+    }
+  });
 });
 
 // the search container for the fuzzy search
