@@ -51,7 +51,7 @@ function currentSongRequest() {
 function queueRequest() {
   new Queue(function(err, queue) {
     if (err) {
-      showInfo('error rendering queue', 2500);
+      showError('error rendering queue', 100000);
     }
     else { 
       queue.render();
