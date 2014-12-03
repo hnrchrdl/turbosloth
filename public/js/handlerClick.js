@@ -18,7 +18,7 @@ var initHandlers = function() {
       $('nav').find('.button').removeClass('active');
       $('nav').find('.button.queue').addClass('active');
       $('main').html('<i class="fa fa-circle-o-notch fa-spin loading"></i>');
-      queueRequest();
+      queueRequest('redis');
     });
     // playlists
     $('.button.playlists').on('click', function(){
@@ -123,7 +123,7 @@ var initHandlers = function() {
         else {
           showInfo("queue cleared", 2000);
           currentSongRequest();
-          queueRequest();
+          queueRequest('mpd');
         }
       });  
     });
@@ -143,7 +143,7 @@ var initHandlers = function() {
         }         
         else { 
           //showInfo("queue shuffled", 2000);
-          queueRequest(); 
+          queueRequest('mpd'); 
         }
       });
     });
@@ -281,7 +281,7 @@ var initHandlers = function() {
           if (index === songcount - 1) {
             $('#options-queue').slideUp('fast');
               showInfo(songcount + ' song(s) moved', 2500);
-              queueRequest();
+              queueRequest('mpd');
           }
         });
       });
@@ -369,7 +369,7 @@ var initHandlers = function() {
               if (errors > 0) { showError(errors + ' songs could not be deleted!', 3000); }
               else { 
                 showInfo(songcount + ' song(s) removed', 2500);
-                queueRequest(); 
+                queueRequest('mpd'); 
               }
             }
           });
@@ -395,7 +395,7 @@ var initHandlers = function() {
             if (errors > 0) { showError(errors + ' songs could not be deleted!', 3000); }
             else { 
               showInfo(songcount + ' song(s) deleted', 2500);
-              queueRequest(); 
+              queueRequest('mpd'); 
             }
           }
         });

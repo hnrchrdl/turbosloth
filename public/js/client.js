@@ -22,7 +22,7 @@ $(document).ready(function() {
 
 function initApp () {
   currentSongRequest();
-  queueRequest();
+  queueRequest('mpd');
 }
 
 function subsystemChange(system) {
@@ -48,8 +48,8 @@ function currentSongRequest() {
   });
 }
 
-function queueRequest() {
-  new Queue(function(err, queue) {
+function queueRequest(type) {
+  new Queue(type, function(err, queue) {
     if (err) {
       showError('error rendering queue', 100000);
     }

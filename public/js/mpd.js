@@ -134,11 +134,12 @@ CurrentSong.prototype.autoScroll = function() {
 
 //// Queue
 // Constructor
-var Queue = function(callback) {
+var Queue = function(type, callback) {
   $('main').html('<div class="loading-wrapper"><i class="fa fa-circle-o-notch fa-spin loading"></i></div>');
   var q = this;
   $.ajax({
-    url:'/queue'
+    url:'/queue',
+    data: {type: type}
   }).done(function(html) {
     q.html = html;
     callback(null, q);

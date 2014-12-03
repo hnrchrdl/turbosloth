@@ -1,9 +1,11 @@
 var express = require('express')
   ,  router = express.Router()
   ,  komponist = require('../lib/komponist')
-  ,  lastfm = require('../lib/lastfm').client;
+  ,  lastfm = require('../lib/lastfm').client
+  ,  skeleton = require('../controller/skeleton')
+  ,  queue = require('../controller/queue');
 
-console.log('lastfm: ' + lastfm);
+//console.log('lastfm: ' + lastfm);
 
 //This will sort your array
 function SortByLastModified(a, b) {
@@ -18,79 +20,18 @@ router.get('/login', function(req, res) {
 });
 //// post to /login
 router.post('/login', function(req, res) {
-  req.session.mpdhost = req.body.mpdhost || undefined;
-  req.session.mpdport = req.body.mpdport || undefined;
-  req.session.mpdpassword = req.body.mpdpassword || undefined;
+  req.session.mpdhost = req.body.mpd.host || undefined;
+  req.session.mpdport = req.body.mpd.port || undefined;
+  req.session.mpdpassword = req.body.mpd.password || undefined;
   req.session.streamurl = req.body.streamurl || undefined;
   res.redirect('/');
 });
 
 //// get /
-router.get('/', function(req, res) {
-  if (req.session.mpdhost && req.session.mpdport) {
-    var sessionID = req.sessionID
-      ,  port = req.session.mpdport
-      ,  host = req.session.mpdhost
-      ,  password = req.session.mpdpassword;
-    var options = {
-      host: req.session.mpdhost,
-      port: req.session.mpdport,
-      password: req.session.mpdpassword
-    }
-    
-    komponist.init(options, function(err, obj) {
-      if (err) {
-        console.log('komponist init failed');
-        req.session.destroy(); // logout
-        console.log(err);
-        res.redirect('/login?err='+err);
-      }
-      else {
-        console.log('komponist init success!');
-        
-        if (req.session.streamurl === "") {
-          req.session.streamurl = undefined;
-        }
-        //render skeleton
-        res.render('skeleton', {
-          title: 'turbosloth',
-          mpdhost: req.session.mpdhost,
-          mpdport: req.session.mpdport,
-          stream: req.session.streamurl
-        });
-      }
-    });
-  }
-
-  else { // if no session is found
-    res.redirect('/login?err=nosession');
-  }
-});
+router.get('/', skeleton.initMpd, skeleton.initStream, skeleton.renderSkeleton);
 
 //// get /queue
-router.get('/queue', function(req, res) {
-  
-  if (req.session) {
-    var options = {
-      host: req.session.mpdhost,
-      port: req.session.mpdport,
-      password: req.session.mpdpassword,
-      cmd: 'playlistinfo',
-      args: []
-    }
-    komponist.fireCommand(options, function(err, data) {
-      if (err) {
-        console.log(err);
-        res.render('queue',{queue: err});
-      } else {
-        res.render('queue',{queue :data});
-      }
-    });
-  } else {
-    req.session.destroy();
-    res.redirect('/login?err=sessionLost');
-  }
-});
+router.get('/queue', queue.renderQueue);
 
 
 // get /playlists
@@ -108,6 +49,7 @@ router.get('/playlists/:order', function(req, res) {
   }
   if (req.session) {
     var options = {
+      sessionID: req.sessionID,
       host: req.session.mpdhost,
       port: req.session.mpdport,
       password: req.session.mpdpassword,
@@ -143,6 +85,7 @@ router.get('/playlists/:order', function(req, res) {
 router.get('/playlistdetails/:playlist', function(req, res) {
   var playlist = decodeURIComponent(req.params.playlist);
   var options = {
+    sessionID: req.sessionID,
     host: req.session.mpdhost,
     port: req.session.mpdport,
     password: req.session.mpdpassword,
@@ -193,6 +136,7 @@ router.get('/browse/:browsepath/:order', function(req, res) {
     req.session.browseOrder = undefined;
   }
   var options = {
+    sessionID: req.sessionID,
     host: req.session.mpdhost,
     port: req.session.mpdport,
     password: req.session.mpdpassword,
@@ -288,6 +232,7 @@ router.get('/fuzzysearch/:searchString/:type', function(req, res) {
   }
   else { // loaded Search
     var options = {
+      sessionID: req.sessionID,
       host: req.session.mpdhost,
       port: req.session.mpdport,
       password: req.session.mpdpassword,
@@ -365,6 +310,7 @@ router.get('/fuzzysearch/:searchString/:type', function(req, res) {
 router.get('/artistdetails/:artist', function(req, res) {
   var artist = decodeURIComponent(req.params.artist);
   var options = {
+    sessionID: req.sessionID,
     host: req.session.mpdhost,
     port: req.session.mpdport,
     password: req.session.mpdpassword,

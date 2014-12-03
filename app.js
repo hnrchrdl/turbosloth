@@ -6,11 +6,11 @@ var express = require('express')
   , cookieParser = require('cookie-parser')
   , bodyParser = require('body-parser')
   , session = require('express-session')
-  , redis = require('redis')
+  //, redis = require('redis')
   , server = http.createServer(app)
-  , LastFmNode = require('lastfm').LastFmNode
+  //, LastFmNode = require('lastfm').LastFmNode
   , config = module.exports.config = require('./config.json')[app.get('env')]
-  , redisClient = require('./lib/redisClient').getClient();
+  , redis = require('./lib/redis');
 
 
   //, passport = require("passport");
