@@ -1,0 +1,28 @@
+// this is dynamically inserted into the search page
+if result
+  -each artist in result
+    .div= artist.name + ' (' + artist.genres + ')'
+else
+  .div= 'no results'
+
+//- .results
+//-   if !contents
+//-     span.muted 
+//-       .item sorry, no match for '#{searchString}' as '#{type}'
+//-   else if contents.length > 0
+//-     span.muted
+//-       .item found #{contents.length} artist(s)
+//-   else  
+//-     span.muted
+//-       .item please enter 3 or more characters
+//- .clear
+        
+//- .fuzzy-container
+//-   if contents
+//-     -each item in contents
+//-       .fuzzy-item(data-artist= item.artist)
+//-         .artistname= item.artist 
+//-         .genres
+//-           span.muted= item.genres
+//-         .info
+//-           span.muted= item.albumcount + ' album(s), ' + item.songcount + ' song(s)'

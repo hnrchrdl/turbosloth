@@ -12,40 +12,9 @@ var initHandlers = function() {
       showError('settings coming soon...', 3000);
     });
     
+
     //// nav main left
-    // queue
-    $('.button.queue').on('click', function(){
-      $('nav').find('.button').removeClass('active');
-      $('nav').find('.button.queue').addClass('active');
-      $('main').html('<i class="fa fa-circle-o-notch fa-spin loading"></i>');
-      queueRequest('redis');
-    });
-    // playlists
-    $('.button.playlists').on('click', function(){
-      $('nav').find('.button').removeClass('active');
-      $('nav').find('.button.playlists').addClass('active');
-      $('main').html('<i class="fa fa-circle-o-notch fa-spin loading"></i>');
-      playlistsRequest('none');
-    });
-    // browse
-    $('.button.browse').on('click', function(){
-      $('nav').find('.button').removeClass('active');
-      $('nav').find('.button.browse').addClass('active');
-      $('main').html('<i class="fa fa-circle-o-notch fa-spin loading"></i>');
-      browseRequest("#");
-    });
-    // search
-    $('.button.search').on('click', function(){
-      $('nav').find('.button').removeClass('active');
-      $('nav').find('.button.search').addClass('active');
-      searchRequest();
-    });
-    // search_old
-    $('.button.search-old').on('click', function(){
-      $('nav').find('.button').removeClass('active');
-      $('nav').find('.button.search-old').addClass('active');
-      oldSearchRequest("#", "any");
-    });
+    
     
     
     //// nav sub left
@@ -601,7 +570,7 @@ var initHandlers = function() {
 
 
     // keyup on search field
-    $('main').on('keyup', 'input.search-input', function(e) {
+    /*$('main').on('keyup', 'input.search-input', function(e) {
       var searchString = $('#search').find('input.search-input').val();
       if (e.which === 13) {
         // go to first result on enter
@@ -616,17 +585,17 @@ var initHandlers = function() {
       else {
         searchRequestFuzzy('##');
       }
-    });
+    });*/
 
     //// search
     // click on searchType button
-    $('main').on('click', '#search .button.search-type', function() {
+    /*$('main').on('click', '#search .button.search-type', function() {
       $('#search > .nav-main > .button-wrapper > .button.search-type').removeClass('active');
       $(this).addClass('active');
       var searchString = $('#search > input.search-input').val();
       var searchType = $(this).attr('data-type');
       searchRequestFuzzy(searchString, searchType);
-    });
+    });*/
 
     //// search
     // artist details

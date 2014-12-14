@@ -1,28 +1,27 @@
-#playlists
-  .nav-main
-    .button-wrapper.right
-      if order === 'lastmodified'
-        .button.text.sort-by-name
-          i.fa.fa-sort-alpha-asc
-          |  name
-        .button.text.sort-by-date.active
-          i.fa.fa-sort-amount-desc
-          |  last modification
-      else
-        .button.text.sort-by-name.active
-          i.fa.fa-sort-alpha-asc
-          |  name
-        .button.text.sort-by-date
-          i.fa.fa-sort-amount-desc
-          |  last modification
-  .clear
-  hr.prime
-  .scrollable
-    - each playlist in playlists
-      .playlist(data-name= playlist.playlist)
-        .name= playlist.playlist
-        .lastmodified
-          span.muted last modified: #{playlist.lastmodified}
+.nav-main
+  .button-wrapper.right
+    if order === 'lastmodified'
+      .button.text.sort-by-name
+        i.fa.fa-sort-alpha-asc
+        |  name
+      .button.text.sort-by-date.active
+        i.fa.fa-sort-amount-desc
+        |  last modification
+    else
+      .button.text.sort-by-name.active
+        i.fa.fa-sort-alpha-asc
+        |  name
+      .button.text.sort-by-date
+        i.fa.fa-sort-amount-desc
+        |  last modification
+.clear
+hr.prime
+.scrollable
+  - each playlist in playlists
+    .playlist(data-name= playlist.playlist)
+      .name= playlist.playlist
+      .lastmodified
+        span.muted last modified: #{playlist.lastmodified}
 
-  .cover
-    
+.cover
+  

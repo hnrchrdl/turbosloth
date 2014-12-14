@@ -247,7 +247,7 @@ Browse.prototype.render = function(html) {
 //// Search
 
 
-// Constructor
+/*// Constructor
 var Search = function(searchString, searchType, callback) {
   //$('main').html('<div class="loading-wrapper"><i class="fa fa-circle-o-notch fa-spin loading"></i></div>');
   var s = this;
@@ -273,13 +273,13 @@ Search.prototype.render = function(html) {
   var val = $('#search').find('input.search-input').val(searchString);
   var e = jQuery.Event("keyup"); // trigger keyup event on input field
   $('#search').find('input.search-input').trigger(e);
-};
+};*/
 
 
 //// FuzzySearch
 
 // Constructor
-var FuzzySearch = function(searchString, searchType, callback) {
+/*var FuzzySearch = function(searchString, searchType, callback) {
   $('.scrollable').html('<div class="loading-wrapper"><i class="fa fa-circle-o-notch fa-spin loading"></i></div>');
   var s = this;
   $.ajax({
@@ -298,13 +298,13 @@ FuzzySearch.prototype.render = function(html) {
     searchScrollable.html(this.html);
     fixScrollHeight();
   }
-};
+};*/
 
 
 //// ArtistDetails
 
 //Constructor
-var ArtistDetails = function(artist, callback) {
+/*var ArtistDetails = function(artist, callback) {
   $('main').html('<div class="loading-wrapper"><i class="fa fa-circle-o-notch fa-spin loading"></i></div>');
   var a = this;
   $.ajax({
@@ -328,7 +328,7 @@ ArtistDetails.prototype.render = function() {
   $('main').html(this.html);
   fixScrollHeight();
   return true;
-};
+};*/
 
 ArtistDetails.prototype.lastArtist = function() {
   // get Artist Info

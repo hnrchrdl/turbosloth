@@ -4,7 +4,8 @@ var LastArtist = function(artist, callback) {
   lastartist = this;
   $.ajax({
     dataType: "json",
-    url: '/lastfmartist/' + encodeURIComponent(artist)
+    url: '/lastfm-artist/',
+    data : { artist : artist }
   }).done(function(data) {
     data ? lastartist.data = data : lastartist.data = null;
     return callback(null, lastartist);
@@ -60,9 +61,11 @@ var LastAlbum = function(artist, album, callback) {
   }
   $.ajax({
     dataType: "json",
-    url: '/lastfmalbum/' + 
-        encodeURIComponent(artist) + '/' +
-        encodeURIComponent(album)
+    url: '/lastfm-album/'
+    data : {
+      artist : artist
+      album : album
+    }  
   }).done(function(data) {
     data ? lastalbum.data = data : lastalbum.data = null;
     return callback(null, lastalbum);
@@ -87,7 +90,8 @@ var LastTopAlbums = function(artist, callback) {
   lasttopalbum = this;
   $.ajax({
     dataType: "json",
-    url: '/lastfmtopalbums/' + encodeURIComponent(artist)
+    url: '/lastfm-topalbums/',
+    data : {artist : artist }
   }).done(function(data) {
     data ? lasttopalbum.data = data : lasttopalbum.data = null;
     return callback(null, lasttopalbum);
@@ -110,7 +114,11 @@ var LastSimilar = function(artist, q, callback) {
   lastsimilar = this;
   $.ajax({
     dataType: "json",
-    url: '/lastfmsimilar/' + encodeURIComponent(artist) + '/' + q
+    url: '/lastfm-similar/',
+    data : { 
+      artist : artist,
+      quantity : q 
+    }
   }).done(function(data) {
     data ? lastsimilar.data = data : lastsimilar.data = null;
     return callback(null, lastsimilar);

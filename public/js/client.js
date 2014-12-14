@@ -1,9 +1,15 @@
+
+
 //var socket = io();
 var audio_element = document.getElementsByTagName("audio")[0];
 
 //jQuery.fx.interval = 100;
 
 $(document).ready(function() {
+
+  $(document).on('resize', '.scrollable', function(){
+    console.log('change');
+  });
 
   // fix window resize
   $(window).on('resize', function(){
@@ -22,7 +28,7 @@ $(document).ready(function() {
 
 function initApp () {
   currentSongRequest();
-  queueRequest('mpd');
+  //queueRequest('mpd');
 }
 
 function subsystemChange(system) {
@@ -31,6 +37,9 @@ function subsystemChange(system) {
       currentSongRequest();
       break;
     case 'options':
+      interfaceRegistration();
+  
+    case 'playlist':
       interfaceRegistration();
   }
 }

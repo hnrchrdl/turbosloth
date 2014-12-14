@@ -18,9 +18,10 @@ function setStreamingStatus(status) {
   socket.emit('set_streaming_status', status);
 }
 
-function fixScrollHeight() {
-  var scrollable = $('.scrollable');
+function fixScrollHeight(div) {
+  var scrollable = $(div + ' .scrollable');
   if (scrollable.length > 0) {
+      console.log(div, scrollable.position().top);
       scrollable.height($('main').height() - scrollable.position().top);
   }
 }

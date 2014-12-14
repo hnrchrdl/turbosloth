@@ -1,60 +1,59 @@
-#browse
-  .breadcrumb
-    .item(data-position= 0)
-      .button-wrapper.left
-        .button.text
-          i.fa.fa-folder-open-o
-    if breadcrumbs
-      - each fragment, i in breadcrumbs
-        if fragment != ""
-          .item(data-position= i+1)
-            .button-wrapper.left  
-              .button.text
-                i.fa.fa-folder-open-o
-                |  #{fragment}
-  .nav-main
-    .button-wrapper.right
-      if order === 'lastmodified'
-        .button.text.sort-by-name
-          i.fa.fa-sort-alpha-asc
-          |  name
-        .button.text.sort-by-date.active
-          i.fa.fa-sort-amount-desc
-          |  last modification
-      else
-        .button.text.sort-by-name.active
-          i.fa.fa-sort-alpha-asc
-          |  name
-        .button.text.sort-by-date
-          i.fa.fa-sort-amount-desc
-          |  last modification
-  .clear
-  hr.prime
-  .scrollable
-    if dirs != []
-      - each item in dirs
-        .item.folder.leftclick(data-path= item.directory)
-          .attr
-             i.fa.fa-folder-o
-          .attr= item.name
-          span.muted
-            .attr.right last modified: #{item.lastmodified}
-    if files != []
-      - each item in files
-        .item.file.leftclick(data-path= item.file)
-          .attr
-            i.fa.fa-file-o  
-          .attr= item.name
+.breadcrumb
+  .item(data-position= 0)
+    .button-wrapper.left
+      .button.text
+        i.fa.fa-folder-open-o
+  if breadcrumbs
+    - each fragment, i in breadcrumbs
+      if fragment != ""
+        .item(data-position= i+1)
+          .button-wrapper.left  
+            .button.text
+              i.fa.fa-folder-open-o
+              |  #{fragment}
+.nav-main
+  .button-wrapper.right
+    if order === 'lastmodified'
+      .button.text.sort-by-name
+        i.fa.fa-sort-alpha-asc
+        |  name
+      .button.text.sort-by-date.active
+        i.fa.fa-sort-amount-desc
+        |  last modification
+    else
+      .button.text.sort-by-name.active
+        i.fa.fa-sort-alpha-asc
+        |  name
+      .button.text.sort-by-date
+        i.fa.fa-sort-amount-desc
+        |  last modification
+.clear
+hr.prime
+.scrollable
+  if dirs != []
+    - each item in dirs
+      .item.folder.leftclick(data-path= item.directory)
+        .attr
+           i.fa.fa-folder-o
+        .attr= item.name
+        span.muted
+          .attr.right last modified: #{item.lastmodified}
+  if files != []
+    - each item in files
+      .item.file.leftclick(data-path= item.file)
+        .attr
+          i.fa.fa-file-o  
+        .attr= item.name
 
-  //contextmenu
-  .contextmenu.browse
-    .button-wrapper.left
-      .button.text.add
-        i.fa.fa-plus-square
-        |  add to queue
-    .clear
-    .button-wrapper.left
-      .button.text.load
-        i.fa.fa-asterisk
-        |  replace queue
+//contextmenu
+.contextmenu.browse
+  .button-wrapper.left
+    .button.text.add
+      i.fa.fa-plus-square
+      |  add to queue
+  .clear
+  .button-wrapper.left
+    .button.text.load
+      i.fa.fa-asterisk
+      |  replace queue
 

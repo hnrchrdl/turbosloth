@@ -1,0 +1,15 @@
+input.search-input.long(type='text', placeholder="search", value="search", ng-model="searchstring")
+i.fa.fa-search.input-fa
+.nav-main
+  .button-wrapper
+    .button.text.search-type(ng-class="{active: searchtype=='Artist'}" ng-click="setSearchType('Artist')")
+      |  Artist
+    .button.text.search-type(ng-class="{active: searchtype=='Album'}" ng-click="setSearchType('Album')")
+      |  Album
+    .button.text.search-type(ng-class="{active: searchtype=='Title'}" ng-click="setSearchType('Title')")
+      |  Title
+    .button.text.search-type(ng-class="{active: searchtype=='Genre'}" ng-click="setSearchType('Genre')")
+      |  Genre
+.clear
+
+hr.prime
