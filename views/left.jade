@@ -1,0 +1,36 @@
+#left
+  header
+    | turbosloth
+  nav
+    .button-wrapper.left
+      .button.text.queue(ng-class="{active: location=='queue'}" ng-click="setLocation('queue')")
+        i.fa.fa-list
+        |  Queue
+    .clear
+    .button-wrapper.left
+      .button.text.search(ng-class="{active: location=='search'}" ng-click="setLocation('search')")
+        i.fa.fa-search
+        |  Search
+    .clear
+    .button-wrapper.left
+      .button.text.playlists(ng-class="{active: location=='playlists'}" ng-click="setLocation('playlists')")
+        i.fa.fa-file-audio-o
+        |  Playlists
+    .clear
+    .button-wrapper.left
+      .button.text.browse(ng-class="{active: location=='browse'}" ng-click="setLocation('browse')")
+        i.fa.fa-folder-o
+        |  Browse
+    .clear
+    .sub
+      .button-wrapper.left
+        #settings.button.text
+          i.fa.fa-cog
+          |  Settings
+      .clear
+      .button-wrapper.left
+        #logout.button.text
+          i.fa.fa-sign-out
+          |  Logout
+      .clear
+    .clear

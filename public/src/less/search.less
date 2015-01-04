@@ -24,5 +24,26 @@
           }
       }
     }
+    #searchResults {
+      position: absolute;
+      //bottom: @footerHeight * 2;
+      max-height: 50%;
+      top: @buttonHeight;
+      background-color: @background;
+      width: 30%;
+      overflow-y: auto;
+      border: 1px solid @extraSubtle;
+      .artist {
+        cursor: pointer;
+      }
+      .artist, .error {
+        padding: @short @medium;
+        border-bottom: 1px solid @extraSubtle;
+        &.active {
+          background-color: @primary;
+          color: @clouds;
+        }
+      }
+    }
 }
 

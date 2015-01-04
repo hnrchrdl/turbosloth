@@ -70,18 +70,18 @@ var initHandlers = function() {
 
 
     // click play with dblclick
-    $('main').on('dblclick', '#queue .item', function() {
+    /*$('main').on('dblclick', '#queue .item', function() {
       var songid = $(this).attr('data-id');
       var pathToSong = $(this).attr('data-path');
 
       socket.emit('mpd', 'playid', [songid], function() {
         //showInfo("play '" + pathToSong + "'", 2000);
       });
-    });
+    });*/
 
     //// queue
     // clear
-    $('main').on('click','.clear', function() {
+    /*$('main').on('click','.clear', function() {
       $('#option-clearqueue').slideDown('fast');
     });
     // ok
@@ -99,12 +99,12 @@ var initHandlers = function() {
     // cancel
     $('body').on('click', '#option-clearqueue .cancel', function() { 
       $('#option-clearqueue').slideUp('fast');
-    });
+    });*/
 
 
     //// queue
     // shuffle
-    $('main').on('click', '#queue .shuffle', function() {
+    /*$('main').on('click', '#queue .shuffle', function() {
       
       socket.emit('mpd', 'shuffle', [], function(err, msg) {
         if (err) { 
@@ -116,10 +116,10 @@ var initHandlers = function() {
         }
       });
     });
-
+*/
     //// queue
     // save as new playlist
-    $('main').on('click', '#queue .save-playlist', function() {
+    /*$('main').on('click', '#queue .save-playlist', function() {
       $('#option-save-playlist').slideDown('fast');
       $('#option-save-playlist input#save-playlist').focus();
     });
@@ -150,7 +150,7 @@ var initHandlers = function() {
     // sloth mode
     $('main').on('click', '#queue .sloth-mode', function() {
       showError('sloth mode coming soon...', 2500);
-    });
+    });*/
 
 
     ////  queue | links
@@ -176,10 +176,10 @@ var initHandlers = function() {
 
     //// queue
     // selection handling
-    var posMousedown, posMousedown, selected; 
-    var mousedownTriggered = false;
+    /*var posMousedown, selected; 
+    var mousedownTriggered = false;*/
 
-    $('main').on('mousedown', '#queue .item .selector', function() {
+    /*$('main').on('mousedown', '#queue .item .selector', function() {
       mousedownTriggered = true;
       posMousedown = $(this).closest('.item').attr('data-pos');
       selected = ($(this).hasClass('active') === true);
@@ -214,11 +214,11 @@ var initHandlers = function() {
       }
       else { mousedownTriggered = false; }
     });
-    
+    */
 
     //// queue
     // check all / uncheck all
-    $('body').on('click', '#queue .selecthelper', function() {
+    /*$('body').on('click', '#queue .selecthelper', function() {
       if ($(this).hasClass('selectall')) {
         $('main').find('#queue .item .selector').addClass('active');
         $('#options-queue').slideDown('fast');
@@ -227,14 +227,14 @@ var initHandlers = function() {
         $('main').find('#queue .item .selector').removeClass('active');
         $('#options-queue').slideUp('fast');
       }
-    });
+    });*/
 
 
     //// queue | options
 
     //// queue | options
     //play next
-    $('body').on('click', '#options-queue .playnext', function() {
+    /*$('body').on('click', '#options-queue .playnext', function() {
       var songs = $('main').find('#queue .item .selector.active');
       var songcount = songs.length;
       var songPositions = [];
@@ -254,11 +254,11 @@ var initHandlers = function() {
           }
         });
       });
-    });
+    });*/
 
     //// queue | options
     // add to playlist
-    $('body').on('click', '#options-queue .addtoplaylist', function() {
+    /*$('body').on('click', '#options-queue .addtoplaylist', function() {
       socket.emit('mpd', 'listplaylists', [], function(err, data) {
         $('#options-queue').slideUp('fast');
         if (err) {
@@ -284,9 +284,9 @@ var initHandlers = function() {
           showInfo('no playlists found', 2500);
         }
       })
-    });
+    });*/
     //playlist clicked
-    $('body').on('click', '#playlist-selector .button.save', function() {
+    /*$('body').on('click', '#playlist-selector .button.save', function() {
       var playlist_name = $(this).attr('data-name');
       var songs = $('main').find('#queue .item .selector.active');
       var songcount = songs.length;
@@ -305,17 +305,17 @@ var initHandlers = function() {
           }
         });
       });
-    });
+    });*/
     //cancel
-    $('body').on('click', '#playlist-selector .cancel', function() {
+    /*$('body').on('click', '#playlist-selector .cancel', function() {
       $('#playlist-selector').slideUp('fast');
       $('#options-queue').slideDown('fast');
     });
-
+*/
     
     //// queue | options
     // crop
-    $('body').on('click', '#options-queue .crop', function() {
+    /*$('body').on('click', '#options-queue .crop', function() {
       var songsToCrop = $('main').find('#queue .item .selector.active');
       songsToCropIds = [];
 
@@ -344,11 +344,11 @@ var initHandlers = function() {
           });
         }
       });
-    });
+    });*/
 
     //// queue | options
     //remove
-    $('body').on('click', '#options-queue .remove', function() {
+    /*$('body').on('click', '#options-queue .remove', function() {
 
       var songs = $('main').find('#queue .item .selector.active');
       var songcount = songs.length;
@@ -370,7 +370,7 @@ var initHandlers = function() {
         });
       });
     });
-
+*/
     
 
 

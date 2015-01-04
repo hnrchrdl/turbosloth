@@ -1,0 +1,20 @@
+
+<div id="searchResults" ng-show="searchCtrl.search.name.length > 0 
+      && searchCtrl.search.isFocused === true">
+  <div class="error" ng-show="searchCtrl.search.error">
+    {{searchCtrl.search.error}}
+  </div>
+  <div class="artist" ng-repeat="artist in searchCtrl.search.results" 
+      ng-class="{active:searchCtrl.search.selected===$index}" 
+      ng-mouseenter="searchCtrl.search.select($index)"
+      ng-click="searchCtrl.artistDetailsRequest()">
+    <div class="name">
+      {{artist.name}}
+    </div>
+    <div class="genre muted">
+      <span ng-repeat="genre in artist.genres">
+        {{genre}}{{{true: '', false: ', '}[$last]}}
+      </span>
+    </div>
+  </div>
+</div>

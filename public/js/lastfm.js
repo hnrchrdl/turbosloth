@@ -61,9 +61,9 @@ var LastAlbum = function(artist, album, callback) {
   }
   $.ajax({
     dataType: "json",
-    url: '/lastfm-album/'
+    url: '/lastfm-album/',
     data : {
-      artist : artist
+      artist : artist,
       album : album
     }  
   }).done(function(data) {

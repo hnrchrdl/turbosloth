@@ -13,6 +13,7 @@ module.exports.renderLogin = function(req, res) {
 *** render the Skeleton Page
 **/
 module.exports.renderSkeleton = function(req, res) {
+  console.log('renderSekeleton');
   res.render('skeleton', {
     title: 'turbosloth',
     mpdhost: req.session.mpdhost,
@@ -31,6 +32,7 @@ module.exports.login = function(req, res, next) {
   req.session.mpdport = req.body.mpd.port || undefined;
   req.session.mpdpassword = req.body.mpd.password || undefined;
   req.session.streamurl = req.body.streamurl || undefined;
+  console.log(req.session);
   next();
 };
 
@@ -39,7 +41,7 @@ module.exports.login = function(req, res, next) {
 *** Redirect to Start Point after Login
 **/
 module.exports.redirectToStart = function(req, res){
-  res.redirect('/queue');
+  res.redirect('/');
 }
 
 
@@ -55,7 +57,9 @@ module.exports.initMpd = function(req, res, next) {
       port: req.session.mpdport,
       password: req.session.mpdpassword
     }
+    console.log(options);
     mpd.init(options, function(err, obj) {
+      console.log(err, obj);
       if (err) {
         req.session.destroy(); // logout
         res.redirect('/login?err='+err);

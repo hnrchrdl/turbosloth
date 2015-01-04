@@ -49,7 +49,7 @@ app.use( session( {
   cookie : { maxAge: 2628000000 },
   store : new( require( 'express-sessions' ))( {
     storage : 'redis',
-    //instance : redisClient, // optional
+    instance : redisClient, // optional
     host : 'localhost', // optional
     port : 6379, // optional
     collection : 'sessions', // optional

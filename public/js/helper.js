@@ -18,14 +18,6 @@ function setStreamingStatus(status) {
   socket.emit('set_streaming_status', status);
 }
 
-function fixScrollHeight(div) {
-  var scrollable = $(div + ' .scrollable');
-  if (scrollable.length > 0) {
-      console.log(div, scrollable.position().top);
-      scrollable.height($('main').height() - scrollable.position().top);
-  }
-}
-
 function secondsToTimeString(seconds) {
   var date = new Date(1970,0,1);
   date.setSeconds(seconds);

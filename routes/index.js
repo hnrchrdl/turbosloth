@@ -22,6 +22,7 @@ router.get('/', loginCtrl.initMpd, loginCtrl.initStream, loginCtrl.renderSkeleto
 *** Queue
 **/
 router.get('/queue', queueCtrl.render);
+router.get('/api/queue', queueCtrl.get);
 
 
 /** 
@@ -35,7 +36,8 @@ router.get('/playlist-details/:playlist', playlistsCtrl.renderPlaylistDetails);
 *** Search
 **/
 router.get('/search-request', searchCtrl.renderRequest);
-router.get('/artist-details', searchCtrl.renderArtistDetails); 
+router.get('/artist-details', searchCtrl.renderArtistDetails);
+router.get('/api/search', searchCtrl.search);
 
 
 /** 

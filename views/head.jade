@@ -10,10 +10,12 @@ head
     link(rel='stylesheet/less', type='text/css', href='/src/less/styles.less')
 
   link(href='//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css' rel='stylesheet')
-  //link(rel='stylesheet' href=#{protocol} + '://fonts.googleapis.com/css?family=Quicksand:300' type='text/css')
-  //link(rel='stylesheet' href=#{protocol} + '://fonts.googleapis.com/css?family=Open+Sans:400,300,700' type='text/css')
   link(rel='stylesheet' href='https://fonts.googleapis.com/css?family=Quicksand:300' type='text/css')
   link(rel='stylesheet' href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,700' type='text/css')
-  //link(rel="stylesheet", href="https://fonts.googleapis.com/css?family=Montserrat")
 
-  //link(rel='stylesheet', href="/bootstrap-3.2.0-dist/css/bootstrap.css")
+  if stream
+    script(type="text/javascript").
+      var stream = '#{stream}';
+  else
+    script(type="text/javascript").
+      var stream = undefined;

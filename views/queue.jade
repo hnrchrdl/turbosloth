@@ -1,31 +1,37 @@
 .nav-main
   .button-wrapper.left
-    .button.selecthelper.selectall(title="check all")
+    .button.selecthelper(title="check all", ng-click="selectAll()")
       i.fa.fa-check-square-o
-    .button.selecthelper.unselectall(title="uncheck all")
+    .button.selecthelper(title="uncheck all", ng-click="unselectAll()")
       i.fa.fa-square-o
+    .button.selecthelper(title="find current song", ng-click="scrollToCurrent()")
+      i.fa.fa-music
   .button-wrapper.right
-    .button.text.sloth-mode(title="sloth mode")
+    .button.text.sloth-mode(title="sloth mode", ng-click="showDialog('sloth')")
       i.fa.fa-rocket
       |  sloth mode
-    .button.text.save-playlist(title="save queue as new playlist")
+    .button.text.save-playlist(title="save queue as new playlist", ng-click="showDialog('save')")
       i.fa.fa-save
       |  save
-    .button.text.shuffle(title="shuffle queue")
+    .button.text.shuffle(title="shuffle queue", ng-click="showDialog('shuffle')")
       i.fa.fa-random
       |  shuffle
-    .button.text.clear(title="clear queue")
+    .button.text.clear(title="clear queue", ng-click="showDialog('clear')")
       i.fa.fa-eraser
       |  clear
 
 hr.prime
+.clear
 .scrollable
   if !queue
     .item.muted queue empty
   else
     - each song in queue
-      .item(data-pos= song.Pos, data-id= song.Id, data-path= song.file)
-        .attr.selector
+      .item(data-pos= song.Pos, data-id= song.Id, 
+          data-path= song.file, ng-dblclick="playSong('" + song.Id + "')")
+        .attr.selector(ng-class="{active: isSelected(" + song.Pos + ")}",
+            ng-mousedown="selectStart(" + song.Pos + ")", 
+            ng-mouseup="selectEnd(" + song.Pos + ")")
           .inner
             i.fa.fa-check
         .attr.songpos
@@ -64,4 +70,72 @@ hr.prime
           if song.Time
             .inner
               - song.time = secondsToTimeString(song.Time)
-              span.muted= song.time     
+              span.muted= song.time
+
+// queue options dialog
+#options-queue.options-box(ng-show="dialogs.options")
+  .button-wrapper
+    .button.text.playnext(ng-click="playSelectionNext()")
+      i.fa.fa-arrow-down
+      |  play next
+  .button-wrapper
+    .button.text.addtoplaylist(ng-click="updatePlaylists(); showDialog('playlistselect');")
+      i.fa.fa-share
+      |  add to playlist
+  .button-wrapper
+    .button.text.crop(ng-click="cropSelection()")
+      i.fa.fa-cut
+      |  crop
+    .button.text.remove(ng-click="removeSelection()")
+      i.fa.fa-remove
+      |  remove
+
+// clear queue dialog
+#option-clearqueue.options-box.question(ng-show="dialogs.clear")
+  div clear queue?
+  hr
+  .button-wrapper
+    .button.text.ok(ng-click="clearQueue()")
+      i.fa.fa-check
+      |  ok
+    .button.text.cancel(ng-click="hideDialogs()")
+      i.fa.fa-close
+      |  cancel
+
+// shuffle queue dialog
+#option-shuffle.options-box.question(ng-show="dialogs.shuffle")
+  div shuffle queue?
+  hr
+  .button-wrapper
+    .button.text.ok(ng-click="shuffleQueue()")
+      i.fa.fa-check
+      |  ok
+    .button.text.cancel(ng-click="hideDialogs()")
+      i.fa.fa-close
+      |  cancel
+
+// save queue as new playlist dialog
+#option-save-queue.options-box.question(ng-show="dialogs.save")
+  div save queue as new playlist
+  hr
+  div
+    input#save-playlist(type='text', placeholder="name", ng-model="newplaylistname")
+  .button-wrapper
+    .button.text.ok(ng-click="saveQueue()")
+      i.fa.fa-check
+      |  ok
+    .button.text.cancel(ng-click="hideDialogs()")
+      i.fa.fa-close
+      |  cancel
+
+// playlist selector
+#playlist-selector.options-box.question.full-height(ng-show="dialogs.playlistselect")
+  div add selection to playlist
+  hr
+  .playlists
+      playlistselect-directive(playlists='playlists', selection="select.selection")
+  hr
+  .button-wrapper
+    .button.text.cancel(ng-click="hideDialogs()")
+      i.fa.fa-close
+      |  cancel

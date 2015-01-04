@@ -11,11 +11,6 @@ $(document).ready(function() {
     console.log('change');
   });
 
-  // fix window resize
-  $(window).on('resize', function(){
-    fixScrollHeight();
-  });
-
   // init script
   initApp();
   // init the audio element on start

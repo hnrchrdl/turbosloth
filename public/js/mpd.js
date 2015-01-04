@@ -155,7 +155,6 @@ Queue.prototype.render = function() {
   if (this.html) {
     $('main').html(this.html);
   }
-  fixScrollHeight();
   new CurrentSong(function(err, song) {
     if (song.data) {
       song.showInQueue();
@@ -187,7 +186,6 @@ Playlists.prototype.render = function() {
   $('nav').find('.button').removeClass('active');
   $('nav').find('.button.playlists').addClass('active');
   $('main').html(this.html);
-  fixScrollHeight();
 };
 
 
@@ -213,7 +211,6 @@ PlaylistDetails.prototype.render = function() {
   $('main').find('#playlists .cover').html('');
   $('main').find('#playlists .cover').append(this.html);
   $('main').find('#playlists .cover').fadeIn();
-  //fixScrollHeight();
 };
 
 
@@ -239,7 +236,6 @@ Browse.prototype.render = function(html) {
   $('nav').find('.button').removeClass('active');
   $('nav').find('.button.browse').addClass('active');
   $('main').html(this.html);
-  fixScrollHeight();
 };
 
 
@@ -330,7 +326,7 @@ ArtistDetails.prototype.render = function() {
   return true;
 };*/
 
-ArtistDetails.prototype.lastArtist = function() {
+/*ArtistDetails.prototype.lastArtist = function() {
   // get Artist Info
   new LastArtist(this.name, function(err, artist) {
     if (artist && artist.data) {
@@ -429,7 +425,7 @@ ArtistDetails.prototype.lastTopAlbums = function() {
   });
   return true;
 };
-
+*/
 
 
 

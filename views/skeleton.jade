@@ -1,109 +1,16 @@
-//-var protocol= "http"
 //if secure
   //-var protocol= "https"
 
 doctype html
 html(lang='en')
-
   include ./head.jade
-  if stream
-    script(type="text/javascript").
-      var stream = '#{stream}';
-  else
-    script(type="text/javascript").
-      var stream = undefined;
 
-  body(ng-app='app', ng-controller='MainController as mainCtrl')
+  body(ng-app='app', keypress-events, ng-controller='MainController as mainCtrl')
+    include ./left.jade
+    include ./main.jade
+    //include ./options.jade
+    include ./footer.jade
+    //include ./info.jade
 
-        
-    #left
-      header
-        | turbosloth
-      nav
-        .button-wrapper.left
-          .button.text.queue(ng-class="{active: main=='queue'}" ng-click='setMain("queue")')
-            i.fa.fa-list
-            |  Queue
-        .clear
-        .button-wrapper.left
-          .button.text.search(ng-class="{active: main=='search'}" ng-click='setMain("search")')
-            i.fa.fa-search
-            |  Search
-        .clear
-        .button-wrapper.left
-          .button.text.playlists(ng-class="{active: main=='playlists'}" ng-click='setMain("playlists")')
-            i.fa.fa-file-audio-o
-            |  Playlists
-        .clear
-        .button-wrapper.left
-          .button.text.browse(ng-class="{active: main=='browse'}" ng-click='setMain("browse")')
-            i.fa.fa-folder-o
-            |  Browse
-        .clear
-        .sub
-          .button-wrapper.left
-            #settings.button.text
-              i.fa.fa-cog
-              |  Settings
-          .clear
-          .button-wrapper.left
-            #logout.button.text
-              i.fa.fa-sign-out
-              |  Logout
-          .clear
-        .clear
-
-    main
-      #queue(ng-controller="QueueController" ng-show='isMain("queue")' ng-bind-html="html | unsafe")
-      #search(ng-controller="SearchController" ng-show='isMain("search")')
-        include ./searchContainer.jade
-        artist-details
-        search-request
-      #playlists(ng-controller="PlaylistsController" ng-show='isMain("playlists")' ng-bind-html='html | unsafe')
-      #browse(ng-controller="BrowseController" ng-show='isMain("browse")' ng-bind-html='html | unsafe')
-
-
-    include ./options.jade
-    
-
-  //footer
-  #footer
-    #albumart
-    #currentsong-wrapper
-      #currentsong
-
-    #control-menu.control-menu
-        .button-wrapper.left
-          #previous.left.button(title="previous")
-            i.fa.fa-step-backward
-          #pause.left.button(title="pause")
-            i.fa.fa-pause
-          #play.left.button.active(title="play")
-            i.fa.fa-play
-          #stop.left.button(title="stop")
-            i.fa.fa-stop
-          #next.left.button(title="next")
-            i.fa.fa-step-forward
-    #seek-current.seek-time 00:00:00
-    #seek-bar-container  
-      #seek-bar
-    #seek-songtime.seek-time 00:00:00
-
-    #control-menu2.control-menu
-        .button-wrapper.left
-          #stream.left.button(title="stream")
-            i.fa.fa-volume-up
-          #random.left.button(title="random")
-            i.fa.fa-random
-          #repeat.left.button(title="repeat")
-            i.fa.fa-repeat
-
-  #info-wrapper
-    #info
-
-    //| turbosloth v.0.1 | connected to #{mpdhost}:#{mpdport}
-  
-  audio(src= stream, preload='none')
-
-  include ./scripts.jade
-  
+    audio(src= stream, preload='none')
+    include ./scripts.jade

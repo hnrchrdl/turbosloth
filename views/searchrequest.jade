@@ -1,9 +1,14 @@
-// this is dynamically inserted into the search page
-if result
-  -each artist in result
-    .div= artist.name + ' (' + artist.genres + ')'
-else
-  .div= 'no results'
+
+#searchResults(ng-show="searchResultsAreShown()")
+  if result
+    -each artist, index in result
+      .artist(data-artist= artist.name, 
+          data-index= index, ng-class="{active: searchResultIsActive(" + index + ")}",
+          ng-mouseenter="selectSearchRequest(" + index + ")")
+        .name= artist.name
+          .genres.muted=artist.genres
+  else
+    .error= 'no results'
 
 //- .results
 //-   if !contents
