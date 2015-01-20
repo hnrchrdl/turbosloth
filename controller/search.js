@@ -51,10 +51,10 @@ module.exports.renderArtistDetails = function( req, res ) {
 };
 
 
-module.exports.search = function( req, res ) {
+module.exports.artistSearch = function(req, res) {
 
-  var name = req.query.name;
-  var type = req.query.type;
+  var type = req.params.type;
+  var name = req.params.name;
 
   if (name.length < 3) {
     return res.json({
@@ -69,22 +69,29 @@ module.exports.search = function( req, res ) {
     port: req.session.mpdport,
     password: req.session.mpdpassword,
     cmd: 'search',
-    args: [ type, name ]
+    args: [type, name]
   }
 
-  search.searchRequest( options, function( err, data ) {
-    if (err) return res.json({error: err});
-    
-    if (!data) {
-      return res.json({
-        error: 'sorry, no results found for ' + name,
-        results: null
-      });
-    }
-    return res.json({
-      error: null,
-      results: data
-    });
+  search.searchRequest( options, function(err, data) {
+    return res.json({error: err, results: data});
+  });
+
+};
+
+
+
+module.exports.albumSearch = function(req, res) {
+  var artist = req.params.name;
+  var options = {
+    sessionID: req.sessionID,
+    host: req.session.mpdhost,
+    port: req.session.mpdport,
+    password: req.session.mpdpassword,
+    cmd: 'find',
+    args: ['artist', artist]
+  }
+  search.getAlbumsFromArtist(options, function(err, data) {
+    return res.json({error: err, albums: data});
   });
 
 };

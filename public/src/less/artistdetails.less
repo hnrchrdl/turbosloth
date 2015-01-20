@@ -1,7 +1,4 @@
 #artistdetails {
-  .button {
-    margin:          0 0 0 @short;
-  }
   .artist-name {
     line-height: @buttonHeight;
     margin: 0 @medium @medium @medium;
@@ -9,13 +6,13 @@
   }
   .scrollable {
     .artist-info {
-      display: none;
-      .genre, .text, .bio {
+      margin-top: @medium;
+      .artist-genre, .artist-bio {
         margin: @medium;
       }
     }
     .artist-image {
-      display: none;
+      //display: none;
       float: right;
       width: 225px;
       height: 150px;
@@ -34,8 +31,10 @@
       }
       .head {
         line-height: @buttonHeight;
-        margin: 0 @medium @medium 0;
-        //font-weight: bold;
+        margin: 0 0 @medium 0;
+        .button {
+          margin: 0 0 0 @short;
+        }
       }
       .album-container, .artist-container {
         margin: 0 @medium @medium 0;

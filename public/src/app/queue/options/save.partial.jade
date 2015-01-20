@@ -1,0 +1,15 @@
+div save queue as new playlist
+  hr
+  div
+    input#save-playlist(
+          type='text',
+          placeholder='name',
+          ng-model='queueCtrl.newplaylistname'
+    )
+  .button-wrapper
+    .button.text.ok(ng-click='queueCtrl.save()')
+      i.fa.fa-check
+      |  ok
+    .button.text.cancel(ng-click='queueCtrl.dialogs.hideAll()')
+      i.fa.fa-close
+      |  cancel

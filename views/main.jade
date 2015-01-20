@@ -1,11 +1,5 @@
 main
-  #queue(ng-controller="QueueController as queueCtrl" ng-show="location==='queue'")
-    queue-directive
-  #search(ng-controller="SearchController as searchCtrl" ng-show="location==='search'")
-    search-container-directive
-    search-artist-details-directive
-    search-request-directive
+  #queue(ng-controller="QueueController as queueCtrl" ng-include="'queue/queue.partial.html'" ng-show="location==='queue'")
+  #search(ng-controller="SearchController as searchCtrl" ng-include="'search/search.partial.html'" ng-show="location==='search'")
   #playlists(ng-controller="PlaylistsController" ng-show="location==='playlists'")
-    playlists-directive
   #browse(ng-controller="BrowseController" ng-show="location==='browse'")
-    browse-directive

@@ -8,12 +8,17 @@ module.exports.searchRequest =  function(options, callback) {
   
     if (err) return callback(err, null);
   
-    if ( _.isEmpty(data[0] ))  return callback(null, null);
+    if ( _.isEmpty(data[0] )) {
+      var err = 'sorry, no results found for ' + 
+            options.args[1] + ' as ' +
+            options.args[0];
+      return callback(err, null);
+    }
 
-    var groups = _.groupBy(data, function(song){ // group songs by artist
-      if (song &&  song.Artist && song.Artist !== "") return song.Artist; 
+    var groups = _.groupBy(data, function(song) { // group songs by artist
+      if ('Artist' in song && song.Artist !== "") return song.Artist; 
     });
-    var result = _.map(groups, function(group){ // get genres and songcount for artist
+    var artists = _.map(groups, function(group){ // get genres and songcount for artist
       var artist = { 
         name : group[0].Artist,
         genres : _.uniq(_.pluck(group, 'Genre')),
@@ -21,8 +26,8 @@ module.exports.searchRequest =  function(options, callback) {
       };
       return artist;
     });
-    _.sortBy(result, 'songcount'); //higher rank for more artist with more songs
-    return callback(null, result);
+    _.sortBy(artists, 'songcount'); //higher rank for artists with more songs
+    return callback(null, artists);
   });
 };
 
@@ -30,43 +35,18 @@ module.exports.searchRequest =  function(options, callback) {
 /**
 *** render Artist Details
 **/
-module.exports.getArtistDetails = function(options, callback) {
+module.exports.getAlbumsFromArtist = function(options, callback) {
 
   mpd.fireCommand(options, function(err, data) {
+    console.log(options, err, data);
     
     if (err) return callback(err, null);
   
-    if ( _.isEmpty(data[0] )) return callback(null, null);
+    if ( _.isEmpty(data[0] )) return callback(null, []);
 
-    // todo : better coding with underscore...
-    // this is ugly
-    var album_names = [];
-    albums = [];
-    var others = [];
-    for (i in data) {
-      var item = data[i]; 
-      if ('Album' in item) {
-        var album_name = item.Album;
-        if (album_names.indexOf(album_name) === -1) {
-          album_names.push(album_name);
-          albums.push({name: album_name, songs: [item]});
-        }
-        else {
-          for (i in albums) {
-            var album = albums[i];
-            if (album_name === album.name) {
-              album.songs.push(item);
-            } 
-          }
-        }
-      }
-      else {
-        others.push(item);
-      }
-    }
-    return callback(null, {
-      albums: albums, 
-      songs: songs
+    var albums = _.groupBy(data, function(song) {
+      if ('Album' in song && song.Album != "") return song.Album;
     });
+    return callback(null, albums);
   });
 };

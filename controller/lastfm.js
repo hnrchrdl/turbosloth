@@ -4,16 +4,16 @@ var lastfm = require('../lib/lastfm');
 *** get Artist Details from LastFm
 **/
 module.exports.getArtistDetails = function( req, res ) {
-  var artist = req.query.artist;
-  var request = lastfm.request( 'artist.getInfo', {
+  var artist = req.params.artist;
+  var request = lastfm.request('artist.getInfo', {
     artist : artist,
     autocorrect : 1,
     handlers : {
-      success : function( data ) {
-        res.json( data );
+      success : function(data) {
+        res.json(data);
       },
-      error : function( err ) {
-        res.json( null );
+      error : function(err) {
+        res.json(null);
       }
     }
   });
@@ -23,19 +23,19 @@ module.exports.getArtistDetails = function( req, res ) {
 /**
 *** get Album Details from LastFm
 **/
-module.exports.getAlbumDetails = function( req, res ) {
-  var artist = req.query.artist;
-  var album = req.query.album;
-  var request = lastfm.request( 'album.getInfo', {
+module.exports.getAlbumDetails = function(req, res) {
+  var artist = req.params.artist;
+  var album = req.params.album;
+  var request = lastfm.request('album.getInfo', {
     artist : artist,
     album : album,
     autocorrect : 1,
     handlers : {
-      success : function( data ) {
+      success : function(data) {
         res.json(data);
       },
-      error : function( err ) {
-        res.json( null );
+      error : function(err) {
+        res.json(null);
       }
     }
   });
@@ -46,11 +46,14 @@ module.exports.getAlbumDetails = function( req, res ) {
 *** get Top Albums of any Artist from LastFm
 **/
 module.exports.getTopAlbums = function( req, res ) {
-  var artist = req.query.artist;
+  var artist = req.params.artist;
+  var limit = (typeof req.params.limit != 'undefined') ? 
+     req.params.limit :
+     12; // 12 is default
   var request = lastfm.request( 'artist.getTopAlbums', {
     artist : artist,
     autocorrect : 1,
-    limit : 12,
+    limit : limit,
     handlers: {
       success: function( data ) {
         res.json( data );
@@ -68,18 +71,20 @@ module.exports.getTopAlbums = function( req, res ) {
 *** get Similar Artist of any Artist from LastFm
 **/
 module.exports.getSimilarArtists = function( req, res ) {
-  var artist = req.query.artist;
-  var limit = parseInt(req.query.quantity);
+  var artist = req.params.artist;
+  var limit = (typeof req.params.limit != 'undefined') ? 
+     req.params.limit :
+     12; // 12 is default
   var request = lastfm.request( 'artist.getSimilar', {
     artist : artist,
     limit : limit,
     autocorrect : 1,
     handlers : {
-      success : function( data ) {
-        res.json( data );
+      success : function(data) {
+        res.json(data);
       },
-      error : function( err ) {
-        res.json( null );
+      error : function(err)  {
+        res.json(null);
       }
     }
   });

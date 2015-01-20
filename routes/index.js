@@ -26,18 +26,21 @@ router.get('/api/queue', queueCtrl.get);
 
 
 /** 
+*** Search
+**/
+router.get('/search-request', searchCtrl.renderRequest);
+router.get('/artist-details', searchCtrl.renderArtistDetails);
+router.get('/api/artistsearch/:type/:name', searchCtrl.artistSearch);
+router.get('/api/albumsearch/:name', searchCtrl.albumSearch);
+
+
+/** 
 *** Playlists
 **/
 router.get('/playlists', playlistsCtrl.renderPlaylists);
 router.get('/playlist-details/:playlist', playlistsCtrl.renderPlaylistDetails);
 
 
-/** 
-*** Search
-**/
-router.get('/search-request', searchCtrl.renderRequest);
-router.get('/artist-details', searchCtrl.renderArtistDetails);
-router.get('/api/search', searchCtrl.search);
 
 
 /** 
@@ -49,10 +52,12 @@ router.get('/browse', browseCtrl.render);
 /** 
 *** LastFm
 **/
-router.get('/lastfm-artist', lastfmCtrl.getArtistDetails);
-router.get('/lastfm-album', lastfmCtrl.getAlbumDetails);
-router.get('/lastfm-topalbums', lastfmCtrl.getTopAlbums);
-router.get('/lastfm-similar', lastfmCtrl.getSimilarArtists);
+router.get('/api/lastfm/artist/:artist', lastfmCtrl.getArtistDetails);
+router.get('/api/lastfm/album/:artist/:album', lastfmCtrl.getAlbumDetails);
+router.get('/api/lastfm/topalbums/:artist/:limit', lastfmCtrl.getTopAlbums);
+router.get('/api/lastfm/topalbums/:artist', lastfmCtrl.getTopAlbums);
+router.get('/api/lastfm/similar/:artist/:limit', lastfmCtrl.getSimilarArtists);
+router.get('/api/lastfm/similar/:artist', lastfmCtrl.getSimilarArtists);
 
 
 

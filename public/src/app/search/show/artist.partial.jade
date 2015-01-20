@@ -1,0 +1,90 @@
+#artistdetails(
+      ng-show="searchCtrl.results.artistinfo"
+)
+  .scrollable()
+    .artist-image(
+          ng-style="{'background-image': 'url(' + searchCtrl.results.artistinfo.imageurl + ')'}"
+    )
+    .artist-name 
+      |  {{searchCtrl.results.artistinfo.name}}
+    .artist-info
+      .artist-genre 
+        span(ng-repeat='genre in searchCtrl.results.artistinfo.tags.tag')
+          |  {{genre.name}}{{{true: '', false: ', '}[$last]}}
+      .artist-bio(
+            ng-bind-html="searchCtrl.results.artistinfo.bio.content | trustAsHtml"
+      )
+    .clear
+    hr
+    .albums
+      .album
+      .head
+        |  {{artistDetailsCtrl.albums | objectlength}} Album(s) in Database
+        .button-wrapper.right
+          .button.text.addall(
+                ng-click="searchCtrl.results.addAll()"
+          )
+            i.fa.fa-plus
+            |  add all
+          .button.text.playall(
+                ng-click="searchCtrl.results.playAll()"
+          )
+            i.fa.fa-play
+            |  play all
+      .clear
+      .album-container(
+            ng-repeat="(name, songs) in searchCtrl.results.albums"
+      )
+        .album 
+          |  {{name}}
+      .clear
+      //else
+      .head no Albums in Database found
+    hr
+    .albums-other
+      .head Top Albums
+      .clear
+    .clear
+    hr.prime
+    .similar
+      .button-wrapper.right
+        .button.text.addall
+          i.fa.fa-plus
+          |  add all
+        .button.text.playall
+          i.fa.fa-play
+          |  play all
+      .head Similar Artists
+      .clear
+  .cover
+    //if albums
+      //for album in albums
+    .album-container(data-name)
+      .leftside
+        .album-art
+          .album
+      .rightside
+        .header
+          .album
+          .artist
+          .releasedate
+        .button-wrapper.left(data-album, data-artist)
+          .button.text.addall
+            i.fa.fa-plus
+            |  add all
+          .button.text.playall
+            i.fa.fa-play
+            |  play all
+        .clear
+
+        .songs
+          //for song in album.songs
+          .song
+            .button-wrapper.left
+              .button.add(data-file, title)
+                i.fa.fa-plus
+            .attr.muted.track
+            .attr
+            .attr.muted
+          .clear
+
