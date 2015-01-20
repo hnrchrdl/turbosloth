@@ -48,8 +48,8 @@ router.get('/api/playlist/:name', playlistCtrl.getByName);
 /* Browse */
 
 //router.get('/browse', browseCtrl.render);
-router.get('/api/browse/:path', browseCtrl.getBrowseData);
-router.get('/api/browse/', browseCtrl.getBrowseData);
+router.get('/api/browse/:path', browseCtrl.browse);
+router.get('/api/browse/', browseCtrl.browse);
 
 
 
