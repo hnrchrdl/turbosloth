@@ -1,9 +1,20 @@
 var lastfm = require('../lib/lastfm');
 
-/**
-*** get Artist Details from LastFm
-**/
-module.exports.getArtistDetails = function( req, res ) {
+module.exports = {
+  getArtistDetails: getArtistDetails,
+  getAlbumDetails: getAlbumDetails,
+  getTopAlbums: getTopAlbums,
+  getSimilarArtists: getSimilarArtists
+}
+
+
+
+///////////////////////////////////////////////////
+
+
+/* get Artist Details from LastFm */
+
+function getArtistDetails(req, res) {
   var artist = req.params.artist;
   var request = lastfm.request('artist.getInfo', {
     artist : artist,
@@ -17,13 +28,12 @@ module.exports.getArtistDetails = function( req, res ) {
       }
     }
   });
-};
+}
 
 
-/**
-*** get Album Details from LastFm
-**/
-module.exports.getAlbumDetails = function(req, res) {
+/* get Album Details from LastFm */
+
+function getAlbumDetails(req, res) {
   var artist = req.params.artist;
   var album = req.params.album;
   var request = lastfm.request('album.getInfo', {
@@ -39,13 +49,12 @@ module.exports.getAlbumDetails = function(req, res) {
       }
     }
   });
-};
+}
 
 
-/**
-*** get Top Albums of any Artist from LastFm
-**/
-module.exports.getTopAlbums = function( req, res ) {
+/* get Top Albums of any Artist from LastFm */
+
+function getTopAlbums(req, res) {
   var artist = req.params.artist;
   var limit = (typeof req.params.limit != 'undefined') ? 
      req.params.limit :
@@ -56,21 +65,20 @@ module.exports.getTopAlbums = function( req, res ) {
     limit : limit,
     handlers: {
       success: function( data ) {
-        res.json( data );
+        res.json(data);
       },
       error: function( err ) {
-        res.json( null );
+        res.json(null);
       }
     }
   });
-};
+}
 
 
 
-/**
-*** get Similar Artist of any Artist from LastFm
-**/
-module.exports.getSimilarArtists = function( req, res ) {
+/* get Similar Artist of any Artist from LastFm */
+
+function getSimilarArtists(req, res) {
   var artist = req.params.artist;
   var limit = (typeof req.params.limit != 'undefined') ? 
      req.params.limit :
@@ -88,4 +96,4 @@ module.exports.getSimilarArtists = function( req, res ) {
       }
     }
   });
-};
+}
