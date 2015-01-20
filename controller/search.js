@@ -1,10 +1,10 @@
-var search = require( '../models/search' )
+var search = require('../models/search');
 
 
-module.export = {
-  artistSearch: aristSearch,
+module.exports = {
+  artistSearch: artistSearch,
   albumSearch: albumSearch
-}
+};
 
 
 ////////////////////////////////////////////////
@@ -34,7 +34,7 @@ function artistSearch(req, res) {
   search.searchRequest( options, function(err, data) {
     return res.json({error: err, results: data});
   });
-}
+};
 
 
 /* search Albums by Artist */

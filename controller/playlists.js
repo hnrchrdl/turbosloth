@@ -1,7 +1,7 @@
 var playlists = require('../models/playlists');
 
 module.exports = {
-  getList: getList,
+  getAll: getAll,
   getByName: getByName
 }
 

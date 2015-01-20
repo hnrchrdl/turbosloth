@@ -1,7 +1,7 @@
 (function() { 'use strict';
   
   angular.module('app')
-    .factory('browseFactory', BrowseFactory);
+    .factory('BrowseFactory', BrowseFactory);
     
   function BrowseFactory() {
     

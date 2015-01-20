@@ -5,7 +5,7 @@
     .artist-image(
           ng-style="{'background-image': 'url(' + searchCtrl.results.artistinfo.imageurl + ')'}"
     )
-    .artist-name 
+    .artist-name
       |  {{searchCtrl.results.artistinfo.name}}
     .artist-info
       .artist-genre 
@@ -18,7 +18,7 @@
     hr
     .albums
       .album
-      .head
+      .head  
         |  {{artistDetailsCtrl.albums | objectlength}} Album(s) in Database
         .button-wrapper.right
           .button.text.addall(
@@ -35,11 +35,9 @@
       .album-container(
             ng-repeat="(name, songs) in searchCtrl.results.albums"
       )
-        .album 
+        .album  
           |  {{name}}
       .clear
-      //else
-      .head no Albums in Database found
     hr
     .albums-other
       .head Top Albums

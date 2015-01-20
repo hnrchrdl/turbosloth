@@ -1,9 +1,9 @@
-var browse = require('../models/browse');
+var browseModel = require('../models/browse');
 
 
 module.exports = {
-  getBrowseData: getBrowseData
-}
+  browse: browse
+};
 
 //////////////////////////////////////////////
 
@@ -23,7 +23,7 @@ function browse(req,res) {
     cmd: 'lsinfo',
     args: [path]
   }
-  browse.fetchFromMpd(options, function(err, data) {
+  browseModel.fetchFromMpd(options, function(err, data) {
     return res.json({err: err, contents: data});
   });
 }

@@ -7,7 +7,12 @@
   angular.module('app')
     .controller( 'SearchController', SearchController);
 
-  function SearchController($scope, SearchRequestFactory, ArtistInfoFactory, SearchAlbumsFactory) {
+  function SearchController($scope
+        , SearchRequestFactory
+        , ArtistInfoFactory
+        , SearchAlbumsFactory
+        , TopAlbumsFactory
+        , SimilarArtistsFactory) {
     var vm = this;
 
     vm.search = { 
@@ -97,16 +102,22 @@
 
     function processResults() {
       vm.results.artisinfo = {};
-      var name = vm.results.artisinfo.name = vm.search.results[vm.search.selected].name;
+      var artistname = vm.results.artisinfo.name = vm.search.results[vm.search.selected].name;
 
-      SearchAlbumsFactory.getAlbums(name).then(function(results) {
-        console.log(results.albums);
+      SearchAlbumsFactory.getAlbums(artistname).then(function(results) {
+        console.log('SearchAlbum: ', results.albums);
         vm.results.albums = results.albums;
       });
-      ArtistInfoFactory.getArtistInfo(name).then(function(results) {
-        console.log(results.artist);
+      ArtistInfoFactory.getArtistInfo(artistname).then(function(results) {
+        console.log('ArtistInfo: ', results.artist);
         vm.results.artistinfo = results.artist;
         vm.results.artistinfo.imageurl = results.artist.image[4]['#text'];
+      });
+      TopAlbumsFactory.getAlbums(artistname).then(function(results) {
+        console.log('TopAlbums: ', results.topalbums);
+      });
+      SimilarArtistsFactory.getArtists(artistname).then(function(results) {
+        console.log('SimilarArtist: ', results.similarartists);
       });
 
       vm.search.isFocused = false;

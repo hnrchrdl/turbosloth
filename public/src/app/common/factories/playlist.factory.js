@@ -1,7 +1,7 @@
 (function(){ 'use strict';
   
   angular.module('app')
-    .factory('playlistsFactory', PlaylistsFactory);
+    .factory('PlaylistsFactory', PlaylistsFactory);
     
   function PlaylistsFactory($http, $q) {
     /* Queue Factory */

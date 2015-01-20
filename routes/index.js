@@ -1,12 +1,12 @@
 var express = require('express')
   , router = express.Router()
-  , userCtrl = require('../controller/user')
+  , userCtrl = require('../controller/userCtrl')
   , loginCtrl = require('../controller/login')
   , logoutCtrl = require('../controller/logout')
   , queueCtrl = require('../controller/queue')
+  , searchCtrl = require('../controller/search')
   , playlistsCtrl = require('../controller/playlists')
   , browseCtrl = require('../controller/browse')
-  , searchCtrl = require('../controller/search')
   , mpdCtrl = require('../controller/mpdCtrl')
   , lastfmCtrl = require('../controller/lastfm');
 
@@ -39,7 +39,6 @@ router.get('/api/queue', queueCtrl.get);
 
 
 
-
 /* Search */
 
 //router.get('/search-request', searchCtrl.renderRequest);
@@ -54,8 +53,8 @@ router.get('/api/search/albums/:artist', searchCtrl.albumSearch);
 
 //router.get('/playlists', playlistsCtrl.renderPlaylists);
 //router.get('/playlist-details/:playlist', playlistsCtrl.renderPlaylistDetails);
-router.get('/api/playlists', playlistCtrl.getList);
-router.get('/api/playlist/:name', playlistCtrl.getByName);
+router.get('/api/playlists', playlistsCtrl.getAll);
+router.get('/api/playlist/:name', playlistsCtrl.getByName);
 
 
 

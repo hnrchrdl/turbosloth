@@ -22,7 +22,7 @@
 
       var deferred = $q.defer();
 
-      $http.get('api/artistsearch/' + type + '/' + name)
+      $http.get('api/search/artist/' + type + '/' + name)
         .success(function(data) { deferred.resolve(data); })
         .error(function(err) { deferred.reject(err); });
 
@@ -43,12 +43,12 @@
 
     ///////////////////////////////////////////////7
 
-    function getAlbums(name) {
+    function getAlbums(artistname) {
       var deferred = $q.defer();
 
-      if (!name || name.length === 0) return deferred.reject(null);
+      if (!artistname || artistname.length === 0) return deferred.reject(null);
 
-      $http.get('api/albumsearch/' + name)
+      $http.get('api/search/albums/' + artistname)
         .success(function(data) { deferred.resolve(data); })
         .error(function(err) { deferred.reject(err); });
 

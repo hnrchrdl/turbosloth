@@ -13,7 +13,7 @@ module.exports = {
 
 function getList(req,res) {}
 
-function select (req,res) {}
+function select(req,res) {}
 
 function test(req,res) {}
 
