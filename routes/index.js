@@ -7,7 +7,7 @@ var express = require('express')
   , playlistsCtrl = require('../controller/playlists')
   , browseCtrl = require('../controller/browse')
   , searchCtrl = require('../controller/search')
-  , mpdCtrl = require('../controller/mpd')
+  , mpdCtrl = require('../controller/mpdCtrl')
   , lastfmCtrl = require('../controller/lastfm');
 
 
