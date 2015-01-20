@@ -7,51 +7,54 @@ var express = require('express')
   , browseCtrl = require('../controller/browse')
   , searchCtrl = require('../controller/search')
   , lastfmCtrl = require('../controller/lastfm');
+  
+  
 
+/* Login * Logout */
 
-/** 
-*** Login / Logout
-**/
 router.get('/login', loginCtrl.renderLogin);
 router.post('/login', loginCtrl.login, loginCtrl.redirectToStart);
 router.get('/logout', logoutCtrl.logout);
 router.get('/', loginCtrl.initMpd, loginCtrl.initStream, loginCtrl.renderSkeleton);
 
 
-/** 
-*** Queue
-**/
-router.get('/queue', queueCtrl.render);
+
+/* Queue */
+
+//router.get('/queue', queueCtrl.render);
 router.get('/api/queue', queueCtrl.get);
 
 
-/** 
-*** Search
-**/
-router.get('/search-request', searchCtrl.renderRequest);
-router.get('/artist-details', searchCtrl.renderArtistDetails);
-router.get('/api/artistsearch/:type/:name', searchCtrl.artistSearch);
-router.get('/api/albumsearch/:name', searchCtrl.albumSearch);
 
+/* Search */
 
-/** 
-*** Playlists
-**/
-router.get('/playlists', playlistsCtrl.renderPlaylists);
-router.get('/playlist-details/:playlist', playlistsCtrl.renderPlaylistDetails);
+//router.get('/search-request', searchCtrl.renderRequest);
+//router.get('/artist-details', searchCtrl.renderArtistDetails);
+router.get('/api/search/artist/:type/:name', searchCtrl.artistSearch);
+router.get('/api/search/albums/:artist', searchCtrl.albumSearch);
 
 
 
+/* Playlists */
 
-/** 
-*** Browse
-**/
-router.get('/browse', browseCtrl.render);
+//router.get('/playlists', playlistsCtrl.renderPlaylists);
+//router.get('/playlist-details/:playlist', playlistsCtrl.renderPlaylistDetails);
+router.get('/api/playlists', playlistCtrl.getList);
+router.get('/api/playlist/:name', playlistCtrl.getByName);
 
 
-/** 
-*** LastFm
-**/
+
+
+/* Browse */
+
+//router.get('/browse', browseCtrl.render);
+router.get('/api/browse/:path', browseCtrl.getBrowseData);
+router.get('/api/browse/', browseCtrl.getBrowseData);
+
+
+
+/* LastFm */
+
 router.get('/api/lastfm/artist/:artist', lastfmCtrl.getArtistDetails);
 router.get('/api/lastfm/album/:artist/:album', lastfmCtrl.getAlbumDetails);
 router.get('/api/lastfm/topalbums/:artist/:limit', lastfmCtrl.getTopAlbums);
