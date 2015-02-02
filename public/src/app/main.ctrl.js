@@ -11,9 +11,9 @@
   *** $scope.main represents the current route
   **/
   function MainController($rootScope, $route, $routeParams, $location) {
-    $rootScope.location = 'queue';
+    $rootScope.location = $location.path();
     $rootScope.setLocation = setLocation;
-    $location.path('/queue');
+    //$location.path('/queue');
 
     $rootScope.$watch('location', setLocation);
 
@@ -21,7 +21,7 @@
       if (location) {
         console.log(location);
         $rootScope.location = location;
-        $location.path("/" + location);
+        $location.path(location);
       }
     };
 

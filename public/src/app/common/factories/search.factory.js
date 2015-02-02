@@ -35,11 +35,13 @@
 
   /* Search Albums from Artist */
 
-  function SearchAlbums($http, $q) {
+  function SearchAlbums($http, $q, TopAlbumsFactory) {
 
     return {
-      getAlbums: getAlbums
-    }
+      getAlbums: getAlbums,
+      getAlbumsPro: getAlbumsPro,
+      getJoinedAlbums: getJoinedAlbums
+    };
 
     ///////////////////////////////////////////////7
 
@@ -55,7 +57,59 @@
       return deferred.promise;
     }
 
-  }
 
+    function getAlbumsPro(artistname) {
+      //var deferred = $q.defer();
+
+      if (!artistname || artistname.length === 0) return deferred.reject(null);
+
+      var promises = [SearchAlbumsFactory.getAlbums];
+
+      return $q.all(promises);
+    }
+
+
+    function getJoinedAlbums(artistname) {
+      var deferred = $q.defer();
+
+      $q.all([
+        getAlbums(artistname),
+        TopAlbumsFactory.getAlbums(artistname)
+      ]).then(function(results) {
+        var joined = [];
+        var albums = results[0].albums;
+        var topalbums = results[1].topalbums.album;
+        // top albums
+        _.each(topalbums,function(topalbum) {
+          topalbum.imageUrl = topalbum.image[3]['#text'];
+          var topalbumname = topalbum.name.toLowerCase();
+          if (_.has(albums, topalbumname)) {
+            topalbum.songs = albums[topalbumname];
+            topalbum.inDatabase = true;
+            delete albums[topalbumname];
+          } else {
+            topalbum.songs = null;
+            topalbum.inDatabase = false;
+          }
+          joined.push(topalbum);
+        });
+        //other albums
+        _.each(albums, function(album, key) {
+          if (key) {
+            joined.push({
+              name: key,
+              songs: album,
+              inDatabase: true,
+              imageUrl: 'http://static.last.fm/flatness/catalogue/noimage/noalbum_g3.png'
+            });
+          }
+        });
+        deferred.resolve(joined);
+      });
+
+      return deferred.promise;
+    }
+
+  }
 
 })();

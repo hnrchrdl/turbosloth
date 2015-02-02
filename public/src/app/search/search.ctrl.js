@@ -1,7 +1,6 @@
 (function() { 'use strict';
 
 
-
   /* Search Controller */
 
   angular.module('app')
@@ -12,7 +11,9 @@
         , ArtistInfoFactory
         , SearchAlbumsFactory
         , TopAlbumsFactory
-        , SimilarArtistsFactory) {
+        , SimilarArtistsFactory
+        , $q
+        , MpdFactory) {
     var vm = this;
 
     vm.search = { 
@@ -22,16 +23,15 @@
       selected: 0, // defaults to first item
       select: select
     };
-
-    vm.processResults = processResults;
     
     vm.results = {
       artistinfo: null,
       abums: null,
       similar: null,
       topAlbums: null,
+      process: process,
       addAll: addAll,
-      playAll: playAll
+      playAll: playAll,
     };
 
     $scope.$watch(getSearchName, searchRequest);
@@ -81,7 +81,7 @@
     $scope.$on('keydown:38', function() {
       if (vm.search.results && vm.search.isFocused &&
         vm.search.selected > 0) {
-        $scope.$apply(function(){
+        $scope.$apply(function() {
           vm.search.selected--; // select next
         });
       }
@@ -89,7 +89,7 @@
       
     $scope.$on('keydown:13', function() {
       if (vm.search.results && vm.search.isFocused) {
-        processResults();
+        vm.results.process();
       }
     });
 
@@ -100,32 +100,51 @@
       }
     });
 
-    function processResults() {
-      vm.results.artisinfo = {};
-      var artistname = vm.results.artisinfo.name = vm.search.results[vm.search.selected].name;
+    function process(artistname) {
 
-      SearchAlbumsFactory.getAlbums(artistname).then(function(results) {
-        console.log('SearchAlbum: ', results.albums);
-        vm.results.albums = results.albums;
-      });
-      ArtistInfoFactory.getArtistInfo(artistname).then(function(results) {
+      vm.results.artistinfo = {};
+      var artistname = vm.results.artistinfo.name = artistname || vm.search.results[vm.search.selected].name;
+
+      ArtistInfoFactory.getArtistInfo(artistname)
+      .then(function(results) {
         console.log('ArtistInfo: ', results.artist);
         vm.results.artistinfo = results.artist;
         vm.results.artistinfo.imageurl = results.artist.image[4]['#text'];
       });
-      TopAlbumsFactory.getAlbums(artistname).then(function(results) {
-        console.log('TopAlbums: ', results.topalbums);
+
+      SimilarArtistsFactory.getArtists(artistname)
+      .then(function(results) {
+        console.log('SimilarArtist: ', results.similarartists.artist);
+        var similarArtists = [];
+        _.each(results.similarartists.artist, function(artist) {
+          similarArtists.push({
+            name: artist.name,
+            imageUrl: artist.image[3]['#text']
+          });
+        });
+        vm.results.similarArtists = similarArtists;
       });
-      SimilarArtistsFactory.getArtists(artistname).then(function(results) {
-        console.log('SimilarArtist: ', results.similarartists);
+
+      SearchAlbumsFactory.getJoinedAlbums(artistname)
+      .then(function(results) {
+        console.log('Albums: ', results);
+        vm.results.joinedAlbums = results;
       });
 
       vm.search.isFocused = false;
       $('#search-input').blur();
     }
 
-    function addAll() {}
-    function playAll() {}
+    function addAll() {
+      MpdFactory.addAlbumsToQueue(vm.results.albums);
+    }
+
+    function playAll() {
+      MpdFactory.emitCommand('clear', [], function() {
+        MpdFactory.addAlbumsToQueue(vm.results.albums);
+      });
+    }
+
   }
 
 })();

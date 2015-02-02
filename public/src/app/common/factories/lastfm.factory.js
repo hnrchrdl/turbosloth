@@ -51,7 +51,7 @@
       
       var deferred = $q.defer();
       
-      $http.get('/api/lastfm/topalbums/' + artistname)
+      $http.get('/api/lastfm/topalbums/' + artistname + '/50')
         .success(function(data) { deferred.resolve(data); })
         .error(function(err) { deferred.reject(err); });
 

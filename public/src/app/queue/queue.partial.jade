@@ -60,7 +60,7 @@ hr.prime
     .attr.songpos
       .inner
         span.muted
-          | {{song.Pos + 1}} 
+          | {{song.Pos | plusOne}} 
     .attr.artist
       .inner
         a(href='#', data-artist='song.Artist') {{song.Artist}}
@@ -82,7 +82,7 @@ hr.prime
     .attr.time
       .inner
         span.muted
-          | {{song.Time}}
+          | {{song.Time | time}}
 #option-selectoptions.options-box(
       ng-include="'queue/options/selection.partial.html'",
       ng-show="queueCtrl.hasSelection()"

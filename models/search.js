@@ -45,8 +45,10 @@ module.exports.getAlbumsFromArtist = function(options, callback) {
     if ( _.isEmpty(data[0] )) return callback(null, []);
 
     var albums = _.groupBy(data, function(song) {
-      if ('Album' in song && song.Album != "") return song.Album;
+      if ('Album' in song && song.Album != "") 
+        return song['Album'].toLowerCase();
     });
+    
     return callback(null, albums);
   });
 };

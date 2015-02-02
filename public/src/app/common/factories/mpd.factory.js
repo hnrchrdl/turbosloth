@@ -1,7 +1,6 @@
 
 (function () {
   
-  //angular.module('app.factories', [])
   angular.module('app')
     .factory('MpdFactory', MpdFactory);
 
@@ -12,7 +11,9 @@
   function MpdFactory(MsgFactory) {
 
     return {
-      emitCommand: emitCommand
+      emitCommand: emitCommand,
+      addAlbumToQueue: addAlbumToQueue,
+      addAlbumsToQueue: addAlbumsToQueue
     };
 
     ///////////////////////////////
@@ -27,6 +28,22 @@
         return cb ? cb(err, msg) : true;
       });
     }
+
+    function addAlbumToQueue(songs) {
+      if (_.isArray(songs)) {
+        _.each(songs, function(song) {
+          emitCommand('add', [song.file]);
+        });
+      }
+    }
+
+    function addAlbumsToQueue(albums) {
+      _.each(albums, function(album) {
+        addAlbumToQueue(album);
+      });
+    }
+
+
   }
 
 

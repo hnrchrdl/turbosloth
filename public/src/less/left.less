@@ -33,22 +33,23 @@
 
 
 	nav {
-			margin: @medium 0;
-			.button {
-				border:	none;
-				width: @leftWidth - (@medium * 2);
-				padding: 0 @medium;
-				text-align: left;
-				&:hover {
-					background-color: @background2;
-				}
-				&:active {
-					background-color: @primary !important;
-				}
+		margin: @medium 0;
+		.button {
+			border:	none;
+			height: 50px;
+			line-height: 50px;
+			width: @leftWidth - (@medium * 2);
+			padding: 0 @medium;
+			text-align: left;
+			&:hover {
+				background-color: @background2;
 			}
+			&:active {
+				background-color: @primary !important;
+			}
+		}
 	}
 	.sub {
-
 		position: absolute;
 		bottom: @medium;
 	}

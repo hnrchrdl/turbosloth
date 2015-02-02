@@ -36,7 +36,8 @@
           margin: 0 0 0 @short;
         }
       }
-      .album-container, .artist-container {
+      album-directive, artist-directive, .artist-container {
+        position: relative;
         margin: 0 @medium @medium 0;
         border: 1px solid @background2;
         width: 150px;
@@ -54,9 +55,29 @@
           cursor: pointer; 
           border: 1px solid @primary;
         }
+        i {
+          position: absolute;
+          bottom: 0;
+          font-size: 40px;
+          bottom: 10px;
+          &.play {
+            right: 10px;
+          }
+          &.add {
+            left: 10px;
+          }
+          &:hover {
+            color: @primary;
+          }
+        }
         .album, .artist {
           padding: @short;
           background-color: @trans;
+          &.not-in-db {
+            height: 100%;
+            background-color: @transDark;
+            cursor: default;
+          }
         }
       }
     }
@@ -68,12 +89,9 @@
       }
     }
     .similar {
-      .head {
-        font-weight: bold;
-      }
       .artist-container {
-        width: 90px;
-        height: 90px;
+        width: 120px;
+        height: 120px;
         .artist {
         }
       }
