@@ -4,7 +4,8 @@
   angular.module('app')
     .factory('ArtistInfoFactory', ArtistInfoFactory)
     .factory('TopAlbumsFactory', TopAlbumsFactory)
-    .factory('SimilarArtistsFactory', SimilarArtistsFactory);
+    .factory('SimilarArtistsFactory', SimilarArtistsFactory)
+    .factory('AlbumInfoFactory', AlbumInfoFactory);
 
 
 
@@ -27,6 +28,28 @@
       var deferred = $q.defer();
       
       $http.get('/api/lastfm/artist/' + artistname)
+        .success(function(data) { deferred.resolve(data); })
+        .error(function(err) { deferred.reject(err); });
+
+      return deferred.promise;
+    }
+  }
+
+  function AlbumInfoFactory($http, $q) {
+
+    return {
+      getDetails: getDetails
+    };
+
+    ///////////////////////////////////
+
+    function getDetails(artist, album) {
+      
+      console.log('AlbumInfoRequest: ', artist, album);
+
+      var deferred = $q.defer();
+      
+      $http.get('/api/lastfm/album/' + artist + '/' + album)
         .success(function(data) { deferred.resolve(data); })
         .error(function(err) { deferred.reject(err); });
 

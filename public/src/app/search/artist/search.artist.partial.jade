@@ -1,13 +1,13 @@
-#artistdetails(ng-show="searchCtrl.results.artistinfo")
+#artistdetails
   .scrollable()
-    .artist-image(ng-style="{'background-image': 'url(' + searchCtrl.results.artistinfo.imageurl + ')'}")
+    .artist-image(ng-style="{'background-image': 'url(' + artistinfo.imageurl + ')'}")
     .artist-name
-      |  {{searchCtrl.results.artistinfo.name}}
+      |  {{artistinfo.name}}
     .artist-info
       .artist-genre 
-        span(ng-repeat='genre in searchCtrl.results.artistinfo.tags.tag')
+        span(ng-repeat='genre in artistinfo.tags.tag')
           |  {{genre.name}}{{{true: '', false: ', '}[$last]}}
-      .artist-bio(ng-bind-html="searchCtrl.results.artistinfo.bio.content | trustAsHtml")
+      .artist-bio(ng-bind-html="artistinfo.bio.content | trustAsHtml")
     .clear
     hr
     .albums
@@ -15,14 +15,14 @@
       .head  
         |  {{artistDetailsCtrl.albums | objectlength}} Albums
         .button-wrapper.right
-          .button.text.addall(ng-click="searchCtrl.results.addAll()")
+          .button.text.addall(ng-click="addAll()")
             i.fa.fa-plus
             |  add all
-          .button.text.playall(ng-click="searchCtrl.results.playAll()")
+          .button.text.playall(ng-click="playAll()")
             i.fa.fa-play
             |  play all
       .clear
-      album-directive(ng-repeat="(key, album) in searchCtrl.results.joinedAlbums", album="album")
+      album-directive(ng-repeat="(key, album) in joinedAlbums", album="album")
       .clear
     hr
     .similar
@@ -36,7 +36,7 @@
       .head 
         |  Similar Artists
       .clear
-      artist-directive(ng-repeat="(key, artist) in searchCtrl.results.similarArtists", artist="artist")
+      artist-directive(ng-repeat="(key, artist) in similarArtists", artist="artist")
       .clear
   .cover
     //if albums

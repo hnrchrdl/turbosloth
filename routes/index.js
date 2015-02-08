@@ -3,6 +3,8 @@ var express = require('express')
   , userCtrl = require('../controller/userCtrl')
   , loginCtrl = require('../controller/login')
   , logoutCtrl = require('../controller/logout')
+  , statusCtrl = require('../controller/status')
+  , songCtrl = require('../controller/song')
   , queueCtrl = require('../controller/queue')
   , searchCtrl = require('../controller/search')
   , playlistsCtrl = require('../controller/playlists')
@@ -30,7 +32,9 @@ router.get('/logout', logoutCtrl.logout);
 router.get('/', loginCtrl.initMpd, loginCtrl.initStream, loginCtrl.renderSkeleton);
 
 
-
+/* Song and Status */
+router.get('/api/mpd/song', songCtrl.getSong);
+router.get('/api/mpd/status', statusCtrl.getStatus);
 
 /* Queue */
 

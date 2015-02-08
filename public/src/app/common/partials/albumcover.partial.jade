@@ -1,5 +1,6 @@
-i.fa.fa-plus.add(ng-click="addAlbum(album)")
-i.fa.fa-play.play(ng-click="playAlbum(album)")
+i.fa.fa-plus.add(ng-click="addAlbum(album.songs)")
+i.fa.fa-play.play(ng-click="playAlbum(album.songs)")
 .album
-  |  {{album.name}}
+  span  {{album.name}} 
+  span(class="muted", ng-show="album.songs")  ({{album.songs.length}})
   br

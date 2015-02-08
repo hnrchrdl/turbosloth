@@ -133,29 +133,26 @@
       return vm.queue.data;
     }
 
-    function playSong(songId){
-      MpdFactory.emitCommand('playid', [songId]);
+    function playSong(id){
+      MpdFactory.playSong(id);
     }
 
     function save() {
-      MpdFactory.emitCommand('save', [vm.newplaylistname]);
+      MpdFactory.savePlaylist(vm.newplaylistname);
     }
 
     function shuffle() {
-      MpdFactory.emitCommand('shuffle', []);
+      MpdFactory.shufflePlaylist();
     }
 
     function clear() {
-      MpdFactory.emitCommand('clear', []);
+      MpdFactory.clearPlaylist();
     }
 
     function playNext() {
       var songsToPlayNext = getSongsFromSelection(true);
       _.sortBy(songsToPlayNext, function(song){ return -song.Pos; });
-
-      $.each(songsToPlayNext, function(index, song) {
-        MpdFactory.emitCommand('moveid', [song.Id, -1]);
-      });
+      MpdFactory.playNext(songsToPlayNext);
     }
 
     function addToPlaylist() {
@@ -164,18 +161,12 @@
 
     function crop() {
       var songsToRemove = getSongsFromSelection(false);
-
-      $.each(songsToRemove, function(index, song) { // iterate selection
-        MpdFactory.emitCommand('deleteid', [song.Id]); // remove
-      });
+      MpdFactory.removeFromPlaylist(songsToRemove);
     }
 
     function remove() {
       var songsToRemove = getSongsFromSelection(true);
-
-      $.each(songsToRemove, function(index, song) { // iterate selection
-        MpdFactory.emitCommand('deleteid', [song.Id]); // remove
-      });
+      MpdFactory.removeFromPlaylist(songsToRemove);
     }
 
   }

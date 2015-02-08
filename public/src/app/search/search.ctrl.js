@@ -8,12 +8,9 @@
 
   function SearchController($scope
         , SearchRequestFactory
-        , ArtistInfoFactory
-        , SearchAlbumsFactory
-        , TopAlbumsFactory
-        , SimilarArtistsFactory
-        , $q
-        , MpdFactory) {
+        , MpdFactory
+        , $location) {
+
     var vm = this;
 
     vm.search = { 
@@ -24,15 +21,11 @@
       select: select
     };
     
-    vm.results = {
-      artistinfo: null,
-      abums: null,
-      similar: null,
-      topAlbums: null,
-      process: process,
-      addAll: addAll,
-      playAll: playAll,
-    };
+    vm.processSearch = processSearch;
+
+    vm.artist = false;
+    vm.album = false;
+    vm.mode = false;
 
     $scope.$watch(getSearchName, searchRequest);
     $scope.$watch(getSearchType, searchRequest);
@@ -70,8 +63,10 @@
     }
 
     $scope.$on('keydown:40', function() {
+
       if (vm.search.results && vm.search.isFocused &&
-        vm.search.selected < vm.search.results.length - 1) {
+      vm.search.selected < vm.search.results.length - 1) {
+        
         $scope.$apply(function() {
           vm.search.selected++; // select next
         });
@@ -79,60 +74,59 @@
     });
       
     $scope.$on('keydown:38', function() {
+      
       if (vm.search.results && vm.search.isFocused &&
-        vm.search.selected > 0) {
+      vm.search.selected > 0) {
+        
         $scope.$apply(function() {
           vm.search.selected--; // select next
         });
       }
     });
-      
+
     $scope.$on('keydown:13', function() {
-      if (vm.search.results && vm.search.isFocused) {
-        vm.results.process();
+
+      if (vm.search.results && vm.search.isFocused) {        
+        $location.path('/search/' + 'artist' + '/' + vm.search.results[vm.search.selected].name);
       }
     });
 
     $scope.$on('keydown:27', function() {
+
       if (vm.search.isFocused) {
         vm.search.isFocused = false;
         $('#search-input').blur();
       }
     });
 
-    function process(artistname) {
 
-      vm.results.artistinfo = {};
-      var artistname = vm.results.artistinfo.name = artistname || vm.search.results[vm.search.selected].name;
+    $scope.$on('search:artist', function(e, params) {
+      
+      processSearch(params);
+    });
 
-      ArtistInfoFactory.getArtistInfo(artistname)
-      .then(function(results) {
-        console.log('ArtistInfo: ', results.artist);
-        vm.results.artistinfo = results.artist;
-        vm.results.artistinfo.imageurl = results.artist.image[4]['#text'];
-      });
 
-      SimilarArtistsFactory.getArtists(artistname)
-      .then(function(results) {
-        console.log('SimilarArtist: ', results.similarartists.artist);
-        var similarArtists = [];
-        _.each(results.similarartists.artist, function(artist) {
-          similarArtists.push({
-            name: artist.name,
-            imageUrl: artist.image[3]['#text']
-          });
-        });
-        vm.results.similarArtists = similarArtists;
-      });
+    $scope.$on('search:album', function(e, params) {
+      
+      processSearch(params);
+    });
 
-      SearchAlbumsFactory.getJoinedAlbums(artistname)
-      .then(function(results) {
-        console.log('Albums: ', results);
-        vm.results.joinedAlbums = results;
-      });
+
+
+
+    function processSearch(params) {
 
       vm.search.isFocused = false;
       $('#search-input').blur();
+
+      vm.mode = params.mode;
+      console.log(params.artist);
+      vm.artist = params.artist;
+      if (vm.mode === 'album')  {
+        vm.album = params.album;
+      }
+
+
     }
 
     function addAll() {

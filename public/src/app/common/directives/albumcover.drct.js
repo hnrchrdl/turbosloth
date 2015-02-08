@@ -26,11 +26,15 @@
     }
 
     function albumCoverController($scope, MpdFactory) {
-      $scope.addAlbum = addAlbum;
+      $scope.addAlbum = addSongs;
+      $scope.playAlbum = playSongs;
 
-      function addAlbum(album) {
-        // this is not working because the scope is not filled with the songs yet
-        console.log(album.songs);
+      function addSongs(songs) {
+        MpdFactory.addSongs(songs);
+      }
+
+      function playSongs(songs) {
+        MpdFactory.addSongsAndReplace(songs);
       }
     }
   }

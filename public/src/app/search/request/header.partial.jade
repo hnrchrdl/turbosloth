@@ -1,0 +1,31 @@
+input#search-input.long(
+      type='text', placeholder='search', 
+      value='search', 
+      ng-model='searchCtrl.search.name', 
+      ng-focus='searchCtrl.search.isFocused=true', 
+      ng-blur='search.isFocused=false'
+)
+i.fa.fa-search.input-fa
+.toolbar
+  .button-wrapper.right
+    .button.text.search-type(
+          ng-class="{active: searchCtrl.search.type==='Artist'}", 
+          ng-click="searchCtrl.search.type='Artist'"
+    )
+      | Artist
+    .button.text.search-type(
+          ng-class="{active: searchCtrl.search.type==='Album'}", 
+          ng-click="searchCtrl.search.type='Album'"
+    )
+      | Album
+    .button.text.search-type(
+          ng-class="{active: searchCtrl.search.type==='Title'}", 
+          ng-click="searchCtrl.search.type='Title'"
+    )
+      | Title
+    .button.text.search-type(
+          ng-class="{active: searchCtrl.search.type==='Genre'}", 
+          ng-click="searchCtrl.search.type='Genre'"
+    )
+      | Genre
+.clear

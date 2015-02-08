@@ -10,67 +10,71 @@
   *** main app controller for routing
   *** $scope.main represents the current route
   **/
-  function MainController($rootScope, $route, $routeParams, $location) {
-    $rootScope.location = $location.path();
-    $rootScope.setLocation = setLocation;
-    //$location.path('/queue');
+  function MainController($rootScope, $location, MpdFactory) {
 
-    $rootScope.$watch('location', setLocation);
+    var vm = this;
+
+    $rootScope.setLocation = setLocation;
+
+    vm.cmd = {
+      play: play,
+      stop: stop,
+      previous: previous,
+      next: next,
+      pause: pause,
+      toggleRandom: toggleRandom,
+      toggleRepeat: toggleRepeat,
+      toggleStream: toggleStream
+    };
+
+    function play (argument) {
+      MpdFactory.sendCommand('play');
+    }
+
+    function stop (argument) {
+      MpdFactory.sendCommand('stop');
+    }
+
+    function previous (argument) {
+      MpdFactory.sendCommand('previous');
+    }
+
+    function next (argument) {
+      MpdFactory.sendCommand('next');
+    }
+
+    function pause (argument) {
+      MpdFactory.sendCommand('pause', [1]);
+    }
+
+    function toggleStream() {
+      // body...
+    }
+
+    function toggleRepeat(status) {
+      var newStatus = 1 - parseInt(status); // set to opposite
+      MpdFactory.sendCommand('repeat', [newStatus]);
+    }
+
+    function toggleRandom(status) {
+      var newStatus = 1 - parseInt(status); // set to opposite
+      MpdFactory.sendCommand('random', [newStatus]);
+    }
+
 
     function setLocation(location) {
       if (location) {
-        console.log(location);
-        $rootScope.location = location;
+        console.log('set location: ', location);
         $location.path(location);
       }
-    };
-
-
-    $rootScope.$on('search:artistDetailsRequest', function(e, name) {
-      // broadcast artist details request to controller;
-      $rootScope.$broadcast('search:artistDetails', name);
-    });
+    }
 
 
 
-    var socket = io();
 
-    socket.on('connect', function () {
-      console.log('established socket connection');
-    });
 
-    socket.on('clientError', function(msg) {
-      console.log(msg);
-    });
 
-    socket.on('error', function (reason) {
-      console.error('Unable to connect Socket.IO: ', reason);
-    });
-
-    socket.on('change', function(system) {
-      switch(system) {
-
-        case 'player':
-          console.log('player changed. broadcasting to rootScope...');
-          $rootScope.$broadcast('change:player');
-          break;
-
-        case 'options':
-          console.log('options changed. broadcasting to rootScope...');
-          $rootScope.$broadcast('change:options');
-          break;
-
-        case 'playlist':
-          console.log('queue changed. broadcasting to rootScope...');
-          $rootScope.$broadcast('change:queue');
-          break;
-      
-        case 'stored_playlist':
-          console.log('a stored playlist changed. broadcasting to rootScope...');
-          $rootScope.$broadcast('change:storedPlaylist');
-          break;
-      }
-    });
   }
+
 
 })();

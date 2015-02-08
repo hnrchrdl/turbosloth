@@ -12,7 +12,8 @@
       scope: '=',
       templateUrl: 'common/partials/artistimage.partial.html',
       link: link,
-      controller: artistDirectiveController
+      controller: artistDirectiveController,
+      controllerAs: 'artistDrctCtrl'
     }
 
     //---------------------
@@ -25,8 +26,14 @@
       }
     }
 
-    function artistDirectiveController(MpdFactory) {
+    function artistDirectiveController($rootScope, MpdFactory) {
+      var vm = this;
 
+      vm.goToArtist = goToArtist;
+
+      function goToArtist(name) {
+        $rootScope.setLocation('/search/artist/' + name);
+      }
     }
 
   }

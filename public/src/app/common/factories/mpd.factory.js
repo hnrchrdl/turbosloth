@@ -5,44 +5,97 @@
     .factory('MpdFactory', MpdFactory);
 
 
-
   /* Mpd Factory */
 
-  function MpdFactory(MsgFactory) {
+  function MpdFactory(MsgFactory, socket) {
 
     return {
-      emitCommand: emitCommand,
-      addAlbumToQueue: addAlbumToQueue,
-      addAlbumsToQueue: addAlbumsToQueue
+      sendCommand: sendCommand,
+      playSong: playSong,
+      savePlaylist: savePlaylist,
+      shufflePlaylist: shufflePlaylist,
+      clearPlaylist: clearPlaylist,
+      playNext: playNext,
+      removeFromPlaylist: removeFromPlaylist,
+      seekToTime: seekToTime,
+      addSongs: addSongs,
+      addSongsNext: addSongsNext,
+      addSongsAndReplace: addSongsAndReplace
     };
 
-    ///////////////////////////////
 
-    function emitCommand(cmd, args, cb) {
-      console.log('emitting Mpd Command: ' + cmd + ': ' + args);
-      var cmd = cmd;
-      var args = args || [];
-      socket.emit('mpd', cmd, args, function(err, msg) {
-        if (err) MsgFactory.error(201);
-        else MsgFactory.info(101);
-        return cb ? cb(err, msg) : true;
-      });
+    /////////////////////////////////
+
+    function sendCommand(cmd, args) {
+      socket.emitMpdCommand(cmd, args);
     }
 
-    function addAlbumToQueue(songs) {
-      if (_.isArray(songs)) {
+
+    function playSong(id) {
+      socket.emitMpdCommand('playid', [id]);
+    }
+
+
+    function savePlaylist(name) {
+       socket.emitMpdCommand('save', [name]);
+    }
+
+
+    function shufflePlaylist() {
+      socket.emitMpdCommand('shuffle');
+    }
+
+
+    function clearPlaylist() {
+      socket.emitMpdCommand('clear');
+    }
+
+
+    function playNext(songs) {
+      if (_.isArray(songs)) { // array of songs
         _.each(songs, function(song) {
-          emitCommand('add', [song.file]);
+          socket.emitMpdCommand('moveid', [song.Id, -1]);
         });
       }
     }
 
-    function addAlbumsToQueue(albums) {
-      _.each(albums, function(album) {
-        addAlbumToQueue(album);
+
+    function removeFromPlaylist(songs) {
+      if (_.isArray(songs)) { // array of songs
+        _.each(songs, function(song) { // iterate selection
+          socket.emitMpdCommand('deleteid', [song.Id]); // remove
+        });
+      }
+    }
+
+    function seekToTime(time) {
+      socket.emitMpdCommand('seekcur', [time]);
+    }
+
+
+    function addSongs(songs) {
+      var cmd = 'add';
+      if (_.isArray(songs)) { // array of songs
+        _.each(songs, function(song) {
+          var args = song.file
+          socket.emitMpdCommand(cmd, [args]);
+        });
+      } else { // just one song
+        var args = songs.file
+        socket.emitMpdCommand(cmd, [args]);
+      }
+    }
+
+
+    function addSongsAndReplace(songs) {
+      socket.emitMpdCommand('clear', [], function() {
+        addSongs(songs);
       });
     }
 
+    function addSongsNext(songs) {
+
+    }
 
   }
 

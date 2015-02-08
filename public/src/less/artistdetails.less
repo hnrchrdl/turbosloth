@@ -39,7 +39,7 @@
       album-directive, artist-directive, .artist-container {
         position: relative;
         margin: 0 @medium @medium 0;
-        border: 1px solid @background2;
+        //border: 1px solid @background2;
         width: 150px;
         height: 150px;
         float: left;
@@ -51,14 +51,10 @@
         background-size: cover;
         background-color: @trans;
         overflow:   hidden;
-        &:hover {
-          cursor: pointer; 
-          border: 1px solid @primary;
-        }
         i {
           position: absolute;
           bottom: 0;
-          font-size: 40px;
+          font-size: 20px;
           bottom: 10px;
           &.play {
             right: 10px;
@@ -68,15 +64,22 @@
           }
           &:hover {
             color: @primary;
+            cursor: pointer;
           }
         }
         .album, .artist {
           padding: @short;
           background-color: @trans;
+          &:hover {
+            //color: @primary;
+            cursor: pointer;
+            background-color: @primary;
+          }
           &.not-in-db {
             height: 100%;
-            background-color: @transDark;
+            background-color: @trans;
             cursor: default;
+            color: gray;
           }
         }
       }

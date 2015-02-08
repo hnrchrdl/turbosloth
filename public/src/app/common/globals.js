@@ -9,7 +9,3 @@ function removeA(arr) {
     }
     return arr;
 }
-
-
-
-var socket = io();

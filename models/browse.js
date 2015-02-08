@@ -47,6 +47,6 @@ module.exports.fetchFromMpd = function(options, callback) {
     result.dirs = dirs;
     result.files = files;
     result.breadcrumbs = breadcrumbs;
-    callback(null, result)
+    return callback(null, result)
   });
 };
