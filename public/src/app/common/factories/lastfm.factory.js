@@ -2,10 +2,11 @@
   
 
   angular.module('app')
-    .factory('ArtistInfoFactory', ArtistInfoFactory)
-    .factory('TopAlbumsFactory', TopAlbumsFactory)
-    .factory('SimilarArtistsFactory', SimilarArtistsFactory)
-    .factory('AlbumInfoFactory', AlbumInfoFactory);
+    .factory('lastfmFactory', lastfmFactory);
+    //.factory('ArtistInfoFactory', ArtistInfoFactory)
+    //.factory('TopAlbumsFactory', TopAlbumsFactory)
+    //.factory('SimilarArtistsFactory', SimilarArtistsFactory)
+    //.factory('AlbumInfoFactory', AlbumInfoFactory);
 
 
 
@@ -13,16 +14,18 @@
 
 
   /* Artist Info Factory */
-
-  function ArtistInfoFactory($http, $q) {
+  function lastfmFactory($http, $q) {
     
-    return {
-      getArtistInfo: getArtistInfo
+     return {
+      artistInfo: artistInfo,
+      albumInfo: albumInfo,
+      topAlbums: topAlbums,
+      similarArtists, similarArtists
     };
-
-    //----------------------
-
-    function getArtistInfo(artistname) {
+    
+    //-------------------------------------
+  
+    function artistInfo(artistname) {
 
       var deferred = $q.defer();
       
@@ -32,17 +35,11 @@
 
       return deferred.promise;
     }
-  }
+  
 
-  function AlbumInfoFactory($http, $q) {
+   //-------------------------------------
 
-    return {
-      getDetails: getDetails
-    };
-
-    ///////////////////////////////////
-
-    function getDetails(artist, album) {
+    function albumInfo(artist, album) {
       
       var deferred = $q.defer();
       
@@ -52,21 +49,11 @@
 
       return deferred.promise;
     }
-  }
 
 
+    //---------------------------------
 
-  /* Artist Info Factory */
-
-  function TopAlbumsFactory($http, $q) {
-    
-    return {
-      getAlbums: getAlbums
-    };
-
-    //-----------------------
-
-    function getAlbums(artistname) {
+    function topAlbums(artistname) {
       
       var deferred = $q.defer();
       
@@ -76,21 +63,11 @@
 
       return deferred.promise;
     }
-  }
-
-
-
-  /* Artist Info Factory */
-
-  function SimilarArtistsFactory($http, $q) {
-    
-    return {
-      getArtists: getArtists
-    };
+  
 
     //-----------------------
 
-    function getArtists(artistname) {
+    function similarArtists(artistname) {
       
       var deferred = $q.defer();
       
