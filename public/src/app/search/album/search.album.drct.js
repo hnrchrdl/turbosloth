@@ -6,9 +6,7 @@
 
   ///////////////////////////////////////
 
-  function searchAlbumDirective(
-          AlbumInfoFactory
-        , SearchFactory) {
+  function searchAlbumDirective(SearchFactory, lastfmFactory) {
 
     return {
       restrict: 'E',
@@ -46,7 +44,7 @@
           });
           
           // get the album details from lastFm
-          AlbumInfoFactory.getDetails(artist, album)
+          lastfmFactory.albumInfo(artist, album)
           .then(function(albumDetails) {
             console.log(albumDetails);
             scope.albumDetails = albumDetails;
