@@ -8,7 +8,6 @@
 
   function SearchController($scope
         , SearchRequestFactory
-        , MpdFactory
         , $location) {
 
     var vm = this;
@@ -44,7 +43,7 @@
         var type = vm.searchRequest.type;
         var name = vm.searchRequest.name;
 
-        SearchRequestFactory.getArtistSearch(type, name).then(function(data) {
+        SearchFactory.getArtist(type, name).then(function(data) {
           vm.searchRequest.results = data.results;
           vm.searchRequest.error = data.error;
           vm.searchRequest.selected = 0;
