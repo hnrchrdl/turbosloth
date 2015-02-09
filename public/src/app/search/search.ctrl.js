@@ -120,7 +120,6 @@
       $('#search-input').blur();
 
       vm.mode = params.mode;
-      console.log(params.artist);
       vm.artist = params.artist;
       if (vm.mode === 'album')  {
         vm.album = params.album;

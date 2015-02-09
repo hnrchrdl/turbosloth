@@ -14,8 +14,15 @@
     vm.queue = [];
     vm.update = update;
 
+    vm.currentSongId = '16824';
+
     $scope.$on('change:queue', function() {
       vm.update();
+    });
+
+    $scope.$on('change:player', function(e, data) {
+      vm.currentSongId = data[1].song.Id;
+      console.log(vm.currentSongId);
     });
 
     vm.dialogs = {
@@ -50,7 +57,6 @@
 
     function update() {
       QueueFactory.getQueue().then(function(data) {
-        console.log('updating Queue', data);
         vm.queue = data
       });
     }
@@ -73,7 +79,6 @@
     function showDialog(id) {
       vm.dialogs.hideAll();
       vm.dialogs.id = id;
-      console.log(vm.dialogs);
     }
 
     function batchSelect(mode) {
@@ -86,7 +91,6 @@
       try {
         vm.select.startPos = parseInt(pos);
         vm.select.mode = isSelected ? 'unselect' : 'select';
-        console.log()
       } catch(e) {
         vm.select.startPos = -1;
       }

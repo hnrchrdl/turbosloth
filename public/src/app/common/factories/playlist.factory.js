@@ -13,7 +13,6 @@
     ///////////////////////////////
 
     function getPLaylists(playlistname) {
-      console.log('Playlists Request');
       
       var playlistname = (typeof(playlist) != 'undefined') ?
         playlistname :

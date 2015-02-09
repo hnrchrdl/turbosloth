@@ -34,14 +34,12 @@
 
           ArtistInfoFactory.getArtistInfo(artist)
           .then(function(results) {
-            console.log('ArtistInfo: ', results.artist);
             scope.artistinfo = results.artist;
             scope.artistinfo.imageurl = results.artist.image[4]['#text'];
           });
 
           SimilarArtistsFactory.getArtists(artist)
           .then(function(results) {
-            console.log('SimilarArtist: ', results.similarartists.artist);
             var similarArtists = [];
             _.each(results.similarartists.artist, function(artist) {
               similarArtists.push({
@@ -54,7 +52,6 @@
 
           SearchAlbumsFactory.getJoinedAlbums(artist)
           .then(function(results) {
-            console.log('Albums: ', results);
             scope.joinedAlbums = results;
           });
         

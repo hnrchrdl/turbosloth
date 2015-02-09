@@ -21,7 +21,6 @@
 
 
     function getQueue() {
-      console.log('Queue Request');
 
       var deferred = $q.defer();
       

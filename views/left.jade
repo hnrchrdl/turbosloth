@@ -3,34 +3,34 @@
     | ts
   nav
     .button-wrapper.left
-      .button.text.queue(ng-class="{active: location=='queue'}" ng-click="setLocation('queue')")
+      .button.text.queue(title="QUEUE", ng-class="{active: location=='queue'}" ng-click="setLocation('queue')")
         i.fa.fa-list
-        |  Queue
+        //|  Queue
     .clear
     .button-wrapper.left
-      .button.text.search(ng-class="{active: location=='search'}" ng-click="setLocation('search')")
+      .button.text.search(title="SEARCH", ng-class="{active: location=='search'}" ng-click="setLocation('search')")
         i.fa.fa-search
-        |  Search
+        //|  Search
     .clear
     .button-wrapper.left
-      .button.text.playlists(ng-class="{active: location=='playlists'}" ng-click="setLocation('playlists')")
+      .button.text.playlists(title="PLAYLISTS", ng-class="{active: location=='playlists'}" ng-click="setLocation('playlists')")
         i.fa.fa-file-audio-o
-        |  Playlists
+        //|  Playlists
     .clear
     .button-wrapper.left
-      .button.text.browse(ng-class="{active: location=='browse'}" ng-click="setLocation('browse')")
+      .button.text.browse(title="BROWSE", ng-class="{active: location=='browse'}" ng-click="setLocation('browse')")
         i.fa.fa-folder-o
-        |  Browse
+        //|  Browse
     .clear
     .sub
-      .button-wrapper.left
+      .button-wrapper.left(title="SETTINGS")
         #settings.button.text
           i.fa.fa-cog
-          |  Settings
+          //|  Settings
       .clear
-      .button-wrapper.left
+      .button-wrapper.left(title="LOGOUT")
         #logout.button.text
           i.fa.fa-sign-out
-          |  Logout
+          //|  Logout
       .clear
     .clear

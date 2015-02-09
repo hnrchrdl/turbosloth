@@ -18,12 +18,10 @@
         .bind('keypress', keypress);
 
       function keydown(e) {
-        console.log('Got keydown:', e.which);
         $rootScope.$broadcast('keydown:' + e.which, e);
       };
 
       function keypress(e) {
-        console.log('Got keypress:', e.which);
         $rootScope.$broadcast('keypress:' + e.which, e);
       };
     }

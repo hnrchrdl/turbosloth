@@ -23,7 +23,6 @@
     //----------------------
 
     function getArtistInfo(artistname) {
-      console.log('ArtistInfoRequest: ', artistname);
 
       var deferred = $q.defer();
       
@@ -45,8 +44,6 @@
 
     function getDetails(artist, album) {
       
-      console.log('AlbumInfoRequest: ', artist, album);
-
       var deferred = $q.defer();
       
       $http.get('/api/lastfm/album/' + artist + '/' + album)
@@ -70,7 +67,6 @@
     //-----------------------
 
     function getAlbums(artistname) {
-      console.log('TopAlbumsRequest: ', artistname);
       
       var deferred = $q.defer();
       
@@ -95,7 +91,6 @@
     //-----------------------
 
     function getArtists(artistname) {
-      console.log('SimilarArtistsRequest: ', artistname);
       
       var deferred = $q.defer();
       

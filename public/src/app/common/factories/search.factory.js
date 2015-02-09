@@ -18,7 +18,6 @@
     ///////////////////////////////////////////////7
 
     function getArtistSearch(type, name) {
-      console.log('Search Request: ', type, name);
 
       var deferred = $q.defer();
 
