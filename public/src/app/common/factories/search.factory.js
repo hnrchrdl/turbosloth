@@ -8,7 +8,7 @@
 
   /* Search Request Factory */
 
-  function SearchFactory($http, $q) {
+  function SearchFactory($http, $q, lastfmFactory) {
 
     return {
       getArtistsByType: getArtistsByType,
@@ -49,7 +49,7 @@
 
       $q.all([
         getAlbums(artistname),
-        TopAlbumsFactory.getAlbums(artistname)
+        lastfmFactory.topAlbums(artistname)
       ]).then(function(results) {
         var joined = [];
         var albums = results[0].albums;
