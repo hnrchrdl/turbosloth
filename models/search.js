@@ -26,8 +26,14 @@ module.exports.searchRequest =  function(options, callback) {
       };
       return artist;
     });
-    _.sortBy(artists, 'songcount'); //higher rank for artists with more songs
-    return callback(null, artists);
+    try {
+      var sortedArtists = _.sortBy(artists, function(artist) {
+        return -parseInt(artist.songcount);
+      }); //higher rank for artists with more songs
+    } catch(e) {}
+    //only first 5 elements
+    sortedArtists = sortedArtists.slice(0, Math.min(sortedArtists.length, 5));
+    return callback(null, sortedArtists);
   });
 };
 

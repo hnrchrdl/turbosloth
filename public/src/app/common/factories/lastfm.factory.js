@@ -20,7 +20,7 @@
       artistInfo: artistInfo,
       albumInfo: albumInfo,
       topAlbums: topAlbums,
-      similarArtists, similarArtists
+      similarArtists: similarArtists
     };
     
     //-------------------------------------

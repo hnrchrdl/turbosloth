@@ -25,9 +25,10 @@
       }
     }
 
-    function albumCoverController($scope, MpdFactory) {
+    function albumCoverController($rootScope, $scope, MpdFactory) {
       $scope.addAlbum = addSongs;
       $scope.playAlbum = playSongs;
+      $scope.goToAlbum = goToAlbum;
 
       function addSongs(songs) {
         MpdFactory.addSongs(songs);
@@ -35,6 +36,12 @@
 
       function playSongs(songs) {
         MpdFactory.addSongsAndReplace(songs);
+      }
+
+      function goToAlbum(albumname, artistname) {
+        var url = 'search/album/' + artistname + '/' + albumname;
+        console.log(url);
+        $rootScope.setLocation(url);
       }
     }
   }

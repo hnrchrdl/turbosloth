@@ -6,26 +6,32 @@
 
   ////////////////////////////
 
-  function albumartDirective(AlbumInfoFactory) {
+  function albumartDirective(lastfmFactory) {
 
     return {
       restrict: 'A',
-      scope: {currentsong: '='},
+      scope: {
+        artist: '=',
+        album: '=',
+        size: '='
+      },
       link: link
     };
 
     //---------------------
 
     function link(scope, element, attr) {
-      scope.$watch('currentsong', function(data) {
-        var artist = scope.currentsong.Artist;
-        var album = scope.currentsong.Album;
-        if (artist && album) {
-          AlbumInfoFactory.getDetails(artist, album).then(function(results) {
-            try {
-              element.css('background-image', 'url(' + results.album.image[2]['#text'] + ')');
-            } catch(e) {}
-          });
+      scope.$watchGroup(['artist', 'album'], function(data) {
+        if (scope.artist && scope.album) {
+          var artist = scope.artist;
+          var album = scope.album;
+          if (artist && album) {
+            lastfmFactory.albumInfo(artist, album).then(function(results) {
+              try {
+                element.css('background-image', 'url(' + results.album.image[scope.size]['#text'] + ')');
+              } catch(e) {}
+            });
+          }
         }
       });
     }

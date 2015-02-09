@@ -37,14 +37,14 @@ hr.prime
         i.fa.fa-check
     .attr.songpos
       .inner
-        span.muted
+        i.fa.fa-play(ng-show="queueCtrl.currentSongId===song.Id")
+        span.muted(ng-show="queueCtrl.currentSongId!==song.Id")
           | {{song.Pos | plusOne}}
     .attr.artist
       .inner
         a(ng-href="/#/search/artist/{{song.Artist}}") {{song.Artist}}
     .attr.title
       .inner
-        i.fa.fa-play(ng-show="queueCtrl.currentSongId===song.Id")
         |  {{song.Title}}
     .attr.track
       .inner

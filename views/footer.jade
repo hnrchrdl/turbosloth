@@ -1,5 +1,5 @@
 #footer(ng-controller="PlayerController as playerCtrl")
-  #albumart(albumart, currentsong="playerCtrl.currentsong")
+  #albumart(albumart, artist="playerCtrl.currentsong.Artist", album="playerCtrl.currentsong.Album", size="2")
   #currentsong-wrapper
     #currentsong
       div {{playerCtrl.currentsong.Artist}}

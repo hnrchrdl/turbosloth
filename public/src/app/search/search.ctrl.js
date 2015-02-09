@@ -6,9 +6,7 @@
   angular.module('app')
     .controller( 'SearchController', SearchController);
 
-  function SearchController($scope
-        , SearchRequestFactory
-        , $location) {
+  function SearchController($scope, $location, $timeout, SearchFactory) {
 
     var vm = this;
 
@@ -20,17 +18,23 @@
       selected: 0, // defaults to first item
       isFocused: false,
       select: select,
+      blur: blur
     };
     
     vm.displayDetails = {
       type: false,
-      artist: null,
-      album: null
+      artist: {},
+      album: {}
     };
+
+    vm.processResults = processResults;
     
     
     //watch the search request parameters, and execute a search Request when something changes
-    $scope.$watch(function() { return vm.searchRequest.name, vm.searchRequest.type; }, searchRequest);
+    $scope.$watchGroup([
+      function() { return vm.searchRequest.name; },
+      function() { return vm.searchRequest.type; }
+    ], searchRequest);
 
 
     ////////////////////////////////////////////
@@ -38,12 +42,13 @@
     
     function searchRequest() {
 
+
       if (vm.searchRequest.name.length > 0) {
         
         var type = vm.searchRequest.type;
         var name = vm.searchRequest.name;
 
-        SearchFactory.getArtistsByType(artist, type).then(function(data) {
+        SearchFactory.getArtistsByType(name, type).then(function(data) {
           vm.searchRequest.results = data.results;
           vm.searchRequest.error = data.error;
           vm.searchRequest.selected = 0;
@@ -58,16 +63,28 @@
       vm.searchRequest.selected = index;
     }
 
+    function processResults() {
+      vm.searchRequest.isFocused = false;
+      $('#search-input').blur();
+      $location.path('/search/' + 'artist' + '/' + vm.searchRequest.results[vm.searchRequest.selected].name);
+    }
+
     $scope.$on('keydown:40', function() {
 
       if (vm.searchRequest.results && vm.searchRequest.isFocused &&
-      vm.searchRequest.selected < vm.search.results.length - 1) {
+      vm.searchRequest.selected < vm.searchRequest.results.length - 1) {
         
         $scope.$apply(function() {
           vm.searchRequest.selected++; // select next
         });
       }
     });
+
+    function blur() {
+      $timeout(function(){
+        vm.searchRequest.isFocused = false;
+      }, 50);
+    }
       
     $scope.$on('keydown:38', function() {
       
@@ -83,7 +100,7 @@
     $scope.$on('keydown:13', function() {
 
       if (vm.searchRequest.results && vm.searchRequest.isFocused) {
-        $location.path('/search/' + 'artist' + '/' + vm.search.results[vm.search.selected].name);
+        $location.path('/search/' + 'artist' + '/' + vm.searchRequest.results[vm.searchRequest.selected].name);
       }
     });
 
@@ -100,8 +117,6 @@
 
 
     $scope.$on('search:displayDetails:artist', function(e, searchParams) {
-      vm.searchRequest.isFocused = false;
-      $('#search-input').blur();
       vm.displayDetails.type = 'artist';
       vm.displayDetails.artist.name = searchParams.artistname;
     });
@@ -120,6 +135,7 @@
       vm.displayDetails.type = false;
      });
 
+    
 
   }
 

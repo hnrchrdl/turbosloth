@@ -11,8 +11,8 @@
     return {
       restrict: 'E',
       scope: {
-        artist: '=',
-        album: '='
+        artistname: '=',
+        albumname: '='
       },
       templateUrl: 'search/album/search.album.partial.html',
       link: link
@@ -22,35 +22,23 @@
     
     function link(scope, element, attr) {
 
-      scope.$watch('[artist, album]', function(data) {
+      scope.$watch('[artistname, albumname]', function(data) {
 
-        var artist = data[0];
-        var album = data[1];
+        var artistname = data[0];
+        var albumname = data[1];
 
         console.log(data);
 
-        if (artist && album) {
+        if (artistname && albumname) {
 
-          console.log(artist, album);
-          
           // get the album from Mpd
-          SearchFactory.getAlbumByName(artist, album)
+          SearchFactory.getAlbumByName(artistname, albumname)
           .then(function(album) {
-            console.log(album);
+            console.log('album: ', album);
             scope.album = album;
           }, function(reason) {
             console.log(reason);
             scope.album = null;
-          });
-          
-          // get the album details from lastFm
-          lastfmFactory.albumInfo(artist, album)
-          .then(function(albumDetails) {
-            console.log(albumDetails);
-            scope.albumDetails = albumDetails;
-          }, function(reason) {
-            console.log(reason);
-            scope.albumDetails = {};
           });
         }
       });

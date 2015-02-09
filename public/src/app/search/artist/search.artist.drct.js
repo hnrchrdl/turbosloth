@@ -10,7 +10,7 @@
     return {
       restrict: 'E',
       scope: {
-        artist: '=artist'
+        artistname: '='
       },
       templateUrl: 'search/artist/search.artist.partial.html',
       link: link
@@ -20,21 +20,23 @@
 
     function link(scope, element, attr) {
 
-      scope.$watch('artist', function(artist) {
+      scope.$watch('artistname', function(artistname) {
 
-        if (artist) {
+        console.log(artistname);
+
+        if (artistname) {
 
           scope.artistinfo = {};
           
-          scope.artistinfo.name = artist;
+          scope.artistinfo.name = artistname;
 
-          lastfmFactory.artistInfo(artist)
+          lastfmFactory.artistInfo(artistname)
           .then(function(results) {
             scope.artistinfo = results.artist;
             scope.artistinfo.imageurl = results.artist.image[4]['#text'];
           });
 
-          lastfmFactory.similarArtists(artist)
+          lastfmFactory.similarArtists(artistname)
           .then(function(results) {
             var similarArtists = [];
             _.each(results.similarartists.artist, function(artist) {
@@ -46,7 +48,7 @@
             scope.similarArtists = similarArtists;
           });
 
-          SearchFactory.getJoinedAlbums(artist)
+          SearchFactory.getJoinedAlbums(artistname)
           .then(function(results) {
             scope.joinedAlbums = results;
           });

@@ -22,7 +22,7 @@
             i.fa.fa-play
             |  play all
       .clear
-      album-directive(ng-repeat="(key, album) in joinedAlbums", album="album")
+      album-directive(ng-repeat="(key, album) in joinedAlbums", album="album", artistname="artistinfo.name")
       .clear
     hr
     .similar

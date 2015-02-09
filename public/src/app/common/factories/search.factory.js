@@ -2,7 +2,7 @@
 (function () {
   
   angular.module('app')
-    .factory('SearchFactory', Searchfactory);
+    .factory('SearchFactory', SearchFactory);
 
 
 
@@ -84,24 +84,30 @@
 
       return deferred.promise;
     }
+
     
     function getAlbumByName(artist, album) {
+
       var deferred = $q.defer();
-      
+
       if (!artist || !artist.length > 0 || !album || !album.length > 0) {
         return deferred.reject('argument error');
-      }
-      
-      getAlbums(artist).then(function(albums) {
-        if (albums) {
-          var filteredAlbum = _.filter(albums, function(album) {
-            return album.Title = album;
-          });
-          if (filteredAlbum) {
-            return deferred.resolve(filterAlbum);
-          } else return deferred.reject('album not found');
-        } else return deferred.reject('no albums found');
+      }     
+
+      getAlbums(artist).then(function(results) {
+        if (results.albums) {
+          var albums = results.albums;
+          var albumname = album.toLowerCase();
+          
+          if(_.has(albums, albumname)) {
+            deferred.resolve(albums[albumname]);
+          } else deferred.reject('album not found');
+
+        } else deferred.reject('no albums found');
+
       });
+      
+      return deferred.promise;
     }
 
   }

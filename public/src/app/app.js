@@ -29,7 +29,7 @@
     $rootScope.playlistsParams = false;
     $rootScope.browseParams = false;
     
-    $rootScope.searchUrlSuffix = '';
+    $rootScope.searchPath = 'search';
 
     $rootScope.$on('$locationChangeSuccess', locationChange);
 
@@ -55,7 +55,8 @@
                 $rootScope.$broadcast('search:displayDetails:artist', {
                   artistname: route[3]
                 });
-                $rootScope.searchUrlSuffix = '/#' + $location.path();
+                $rootScope.searchPath = $location.path();
+                console.log($rootScope.searchPath);
                 break;
               
               case 'album':
@@ -64,17 +65,17 @@
                   artistname: route[3],
                   albumname: route[4]
                 });
-                $rootScope.searchUrlSuffix = '/#' + $location.path();
+                $rootScope.searchPath = $location.path();
                 break;
             }
           } else { // no search mode specified
             $rootScope.$broadcast('search:displayDetails:none'); // empty out
-            $rootScope.searchUrlSuffix = '';
+            $rootScope.searchPath = $location.path();
           }
           break;
 
         default:
-          $location.path('/queue');
+          $location.path('queue');
       }
     }
 

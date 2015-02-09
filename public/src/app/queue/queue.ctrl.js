@@ -22,7 +22,6 @@
 
     $scope.$on('change:player', function(e, data) {
       vm.currentSongId = data[1].song.Id;
-      console.log(vm.currentSongId);
     });
 
     vm.dialogs = {

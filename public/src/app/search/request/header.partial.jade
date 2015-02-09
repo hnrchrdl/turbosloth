@@ -1,31 +1,31 @@
 input#search-input.long(
-      type='text', placeholder='search for {{searchCtrl.searchRequestParams.type}}', 
+      type='text', placeholder='search for {{searchCtrl.searchRequest.type}}', 
       value='search', 
-      ng-model='searchCtrl.searchRequestParams.name', 
-      ng-focus='searchCtrl.searchRequestParams.isFocused=true', 
-      ng-blur='search.isFocused=false'
+      ng-model='searchCtrl.searchRequest.name', 
+      ng-focus='searchCtrl.searchRequest.isFocused=true', 
+      ng-blur='searchCtrl.searchRequest.blur()'
 )
 i.fa.fa-search.input-fa
 .toolbar
   .button-wrapper.right
     .button.text.search-type(
-          ng-class="{active: searchCtrl.searchRequestParams.type==='Artist'}", 
-          ng-click="searchCtrl.searchRequestParams.type='Artist'"
+          ng-class="{active: searchCtrl.searchRequest.type==='Artist'}", 
+          ng-click="searchCtrl.searchRequest.type='Artist'"
     )
       | Artist
     .button.text.search-type(
-          ng-class="{active: searchCtrl.searchRequestParams.type==='Album'}", 
-          ng-click="searchCtrl.searchRequestParams.type='Album'"
+          ng-class="{active: searchCtrl.searchRequest.type==='Album'}", 
+          ng-click="searchCtrl.searchRequest.type='Album'"
     )
       | Album
     .button.text.search-type(
-          ng-class="{active: searchCtrl.searchRequestParams.type==='Title'}", 
-          ng-click="searchCtrl.searchRequestParams.type='Title'"
+          ng-class="{active: searchCtrl.searchRequest.type==='Title'}", 
+          ng-click="searchCtrl.searchRequest.type='Title'"
     )
       | Title
     .button.text.search-type(
-          ng-class="{active: searchCtrl.searchRequestParams.type==='Genre'}", 
-          ng-click="searchCtrl.searchRequestParams.type='Genre'"
+          ng-class="{active: searchCtrl.searchRequest.type==='Genre'}", 
+          ng-click="searchCtrl.searchRequest.type='Genre'"
     )
       | Genre
 .clear
