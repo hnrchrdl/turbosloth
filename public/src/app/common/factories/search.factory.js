@@ -11,19 +11,19 @@
   function SearchFactory($http, $q) {
 
     return {
-      getArtist: getArtist,
+      getArtistsByType: getArtistsByType,
       getAlbums: getAlbums,
       getJoinedAlbums: getJoinedAlbums,
       getAlbumByName: getAlbumByName
     }
 
-    ///////////////////////////////////////////////7
+    ///////////////////////////////////////////////
 
-    function getArtist(type, name) {
+    function getArtistsByType(artistname, type) {
 
       var deferred = $q.defer();
 
-      $http.get('api/search/artist/' + type + '/' + name)
+      $http.get('api/search/artist/' + type + '/' + artistname)
         .success(function(data) { deferred.resolve(data); })
         .error(function(err) { deferred.reject(err); });
 
