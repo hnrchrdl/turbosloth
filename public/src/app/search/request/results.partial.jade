@@ -1,7 +1,8 @@
-#searchResults(ng-show='searchCtrl.search.name.length > 0 && searchCtrl.search.isFocused === true')
-  .error(ng-show='searchCtrl.search.error')  
-    |  {{searchCtrl.search.error}}
-  .artist(ng-repeat='artist in searchCtrl.search.results', ng-class='{active:searchCtrl.search.selected===$index}', ng-mouseenter='searchCtrl.search.select($index)', ng-click='searchCtrl.processResults()')
+#searchResults(ng-show='searchCtrl.searchRequest.name.length > 0 && searchCtrl.searchRequest.isFocused === true')
+  .error(ng-show='searchCtrl.searchRequest.error')  
+    |  {{searchCtrl.searchRequest.error}}
+  .artist(ng-repeat='artist in searchCtrl.searchRequest.results', ng-class='{active:searchCtrl.searchRequest.selected===$index}',
+  ng-mouseenter='searchCtrl.searchRequest.select($index)', ng-click='searchCtrl.processResults()')
     .name  {{artist.name}}
     .genre.muted
       span(ng-repeat='genre in artist.genres')
