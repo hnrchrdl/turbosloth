@@ -5,11 +5,7 @@
 
   ///////////////////////////////////////
 
-  function searchArtistDirective(
-          ArtistInfoFactory
-        , SearchFactory
-        , TopAlbumsFactory
-        , SimilarArtistsFactory) {
+  function searchArtistDirective(SearchFactory, lastfmFactory) {
 
     return {
       restrict: 'E',
@@ -32,13 +28,13 @@
           
           scope.artistinfo.name = artist;
 
-          ArtistInfoFactory.getArtistInfo(artist)
+          lastfmFactory.artistInfo(artist)
           .then(function(results) {
             scope.artistinfo = results.artist;
             scope.artistinfo.imageurl = results.artist.image[4]['#text'];
           });
 
-          SimilarArtistsFactory.getArtists(artist)
+          lastfmFactory.similarArtists(artist)
           .then(function(results) {
             var similarArtists = [];
             _.each(results.similarartists.artist, function(artist) {
