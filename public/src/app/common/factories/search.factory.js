@@ -2,22 +2,24 @@
 (function () {
   
   angular.module('app')
-    .factory('SearchRequestFactory', SearchRequest)
-    .factory('SearchAlbumsFactory', SearchAlbums);
+    .factory('SearchFactory', Searchfactory);
 
 
 
   /* Search Request Factory */
 
-  function SearchRequest($http, $q) {
+  function SearchFactory($http, $q) {
 
     return {
-      getArtistSearch: getArtistSearch
+      getArtist: getArtist,
+      getAlbums: getAlbums,
+      getJoinedAlbums: getJoinedAlbums,
+      getAlbumByName: getAlbumByName
     }
 
     ///////////////////////////////////////////////7
 
-    function getArtistSearch(type, name) {
+    function getArtist(type, name) {
 
       var deferred = $q.defer();
 
@@ -28,21 +30,6 @@
       return deferred.promise;
     }
 
-  }
-
-
-
-  /* Search Albums from Artist */
-
-  function SearchAlbums($http, $q, TopAlbumsFactory) {
-
-    return {
-      getAlbums: getAlbums,
-      getJoinedAlbums: getJoinedAlbums,
-      getAlbumByName: getAlbumByName
-    };
-
-    ///////////////////////////////////////////////7
 
     function getAlbums(artistname) {
       var deferred = $q.defer();
