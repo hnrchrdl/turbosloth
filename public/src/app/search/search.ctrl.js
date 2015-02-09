@@ -1,10 +1,10 @@
 (function() { 'use strict';
 
 
-  /* Search Request Controller */
+  /* Search Controller */
 
   angular.module('app')
-    .controller( 'SearchRequestController', SearchRequestController);
+    .controller( 'SearchController', SearchController);
 
   function SearchRequestController($scope
         , SearchRequestFactory
