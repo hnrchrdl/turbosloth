@@ -24,7 +24,8 @@
       pause: pause,
       toggleRandom: toggleRandom,
       toggleRepeat: toggleRepeat,
-      toggleStream: toggleStream
+      toggleStream: toggleStream,
+      setLocation: setLocation
     };
 
     function play (argument) {
