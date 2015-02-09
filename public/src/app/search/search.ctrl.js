@@ -13,101 +13,101 @@
 
     var vm = this;
 
-    vm.search = { 
+    vm.searchRequestParams = { 
       name: '',
       type: 'Artist',
       isFocused: false,
-      selected: 0, // defaults to first item
-      select: select
     };
     
-    vm.processSearch = processSearch;
+    vm.searchRequest = {
+      results: null,
+      error: null,
+      selected: 0, // defaults to first item
+      select: select,
+    }
+    
+    processSearch = processSearch;
 
     vm.artist = false;
     vm.album = false;
     vm.mode = false;
 
-    $scope.$watch(getSearchName, searchRequest);
-    $scope.$watch(getSearchType, searchRequest);
+    //watch the search request parameters, and execute a search Request when something changes
+    $scope.$watch(function() { return vm.searchRequestParams; }, searchRequest);
+
 
     ////////////////////////////////////////////
 
-    function getSearchName() { 
-      return vm.search.name;
-    }
-
-    function getSearchType() {
-      return vm.search.type;
-    }
     
-    function searchRequest() {
+    function searchRequest(searchRequestParams) {
 
-      if (vm.search.name.length > 0) {
+      if (searchRequestParams.name.length > 0) {
         
-        var type = vm.search.type;
-        var name = vm.search.name;
+        var type = searchRequestParams.type;
+        var name = searchRequestParams.name;
 
         SearchRequestFactory.getArtistSearch(type, name).then(function(data) {
-          vm.search.results = data.results;
-          vm.search.error = data.error;
-          vm.selected = 0;
+          vm.searchRequest.results = data.results;
+          vm.searchRequest.error = data.error;
+          vm.searchRequest.selected = 0;
         });
 
       } else {
-        vm.search.results = null; //blank search field
+        vm.searchRequest.results = null; //blank search field
       }
     }
 
     function select (index) {
-      vm.search.selected = index;
+      vm.searchRequest.selected = index;
     }
 
     $scope.$on('keydown:40', function() {
 
-      if (vm.search.results && vm.search.isFocused &&
-      vm.search.selected < vm.search.results.length - 1) {
+      if (vm.searchRequest.results && vm.searchRequestParams.isFocused &&
+      vm.searchRequest.selected < vm.search.results.length - 1) {
         
         $scope.$apply(function() {
-          vm.search.selected++; // select next
+          vm.searchRequest.selected++; // select next
         });
       }
     });
       
     $scope.$on('keydown:38', function() {
       
-      if (vm.search.results && vm.search.isFocused &&
-      vm.search.selected > 0) {
+      if (vm.searchRequest.results && vm.searchRequestParams.isFocused &&
+      vm.searchRequest.selected > 0) {
         
         $scope.$apply(function() {
-          vm.search.selected--; // select next
+          vm.searchRequest.selected--; // select next
         });
       }
     });
 
     $scope.$on('keydown:13', function() {
 
-      if (vm.search.results && vm.search.isFocused) {        
+      if (vm.searchRequest.results && vm.searchRequestParams.isFocused) {
         $location.path('/search/' + 'artist' + '/' + vm.search.results[vm.search.selected].name);
       }
     });
 
     $scope.$on('keydown:27', function() {
 
-      if (vm.search.isFocused) {
-        vm.search.isFocused = false;
+      if (vm.searchRequestParams.isFocused) {
+        vm.searchRequestParams.isFocused = false;
         $('#search-input').blur();
       }
     });
+    
+    
+    //------------------------------------------
 
 
     $scope.$on('search:artist', function(e, params) {
-      
       processSearch(params);
     });
 
 
     $scope.$on('search:album', function(e, params) {
-      
       processSearch(params);
     });
 
