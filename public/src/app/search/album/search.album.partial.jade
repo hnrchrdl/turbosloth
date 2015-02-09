@@ -1,6 +1,6 @@
 .album-container
   .leftside
-    .albumart(albumart, album="album.title")
+    .albumart(albumart, album="album.Title")
       .album {{album.title}}
   .rightside
     .header
@@ -8,17 +8,17 @@
       .artist {{album.Artist}}
       .releasedate {{album.Year}}
     .button-wrapper.left()
-      .button.text.addall(title="add album to queue")
+      .button.text.addall(title="add album to queue", ng-click="mainCtrl.cmd.addAllFromAlbums(album)")
         i.fa.fa-plus
         |  add all
-      .button.text.playall(title="play album and replace queue")
+      .button.text.playall(title="play album and replace queue", ng-click="mainCtrl.cmd.playAllFromAlbums(album)")
         i.fa.fa-play
         |  play all
     .clear
 
     .song(ng-repeat="song in album.songs")
       .button-wrapper.left
-        .button.add(title="add to queue")
+        .button.add(title="add to queue", ng-click="mainCtrl.cmd.addSongs(song)")
           i.fa.fa-plus
       .attr.muted.track {{song.Track}}
       .attr {{song.Title}}
