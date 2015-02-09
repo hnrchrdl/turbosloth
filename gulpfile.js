@@ -19,6 +19,7 @@ gulp.task('clean', function(){
 gulp.task('less', function() {
   gulp.src('./public/src/less/styles.less')
     .pipe(less())
+    .on('error', function(err){ console.log(err.message); })
     .pipe(gulp.dest('./public/dist'));
 });
 
@@ -27,8 +28,9 @@ gulp.task('js:app', function() {
   gulp.src([
     './public/src/app/app,js',
     './public/src/app/**/*.js'
-  ])  
+  ])
     .pipe(ngAnnotate())
+    .on('error', function(err){ console.log(err.message); })
     .pipe(concat('app.js'))
     //.pipe(uglify())
     .pipe(gulp.dest('./public/dist'));
@@ -39,7 +41,7 @@ gulp.task('js:app', function() {
 gulp.task('partials:html', function() {
   gulp.src('./public/src/app/**/*.partial.html')
     .pipe(templateCache({module: 'app'}))
-    //.pipe(concat('partials.js'))
+    .on('error', function(err){ console.log(err.message); })
     .pipe(gulp.dest('./public/dist'));
 });
 
@@ -47,7 +49,9 @@ gulp.task('partials:html', function() {
 gulp.task('partials:jade', function() {
   gulp.src('./public/src/app/**/*.partial.jade')
     .pipe(jade())
+    .on('error', function(err){ console.log(err.message); })
     .pipe(templateCache({module: 'app'}))
+    .on('error', function(err){ console.log(err.message); })
     .pipe(concat('partials.js'))
     .pipe(gulp.dest('./public/dist'));
 });
