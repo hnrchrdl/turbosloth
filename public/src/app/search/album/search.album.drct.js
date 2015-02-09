@@ -34,7 +34,26 @@
         if (artist && album) {
 
           console.log(artist, album);
-          scope.album = {};
+          
+          // get the album from Mpd
+          SearchAlbumsFactory.getAlbumByName(artist, album)
+          .then(function(album) {
+            console.log(album);
+            scope.album = album;
+          }, function(reason) {
+            console.log(reason);
+            scope.album = null;
+          });
+          
+          // get the album details from lastFm
+          AlbumInfoFactory.getDetails(artist, album)
+          .then(function(albumDetails) {
+            console.log(albumDetails);
+            scope.albumDetails = albumDetails;
+          }, function(reason) {
+            console.log(reason);
+            scope.albumDetails = {};
+          });
         }
       });
     }
