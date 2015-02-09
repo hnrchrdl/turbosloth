@@ -6,7 +6,7 @@
   angular.module('app')
     .controller( 'SearchController', SearchController);
 
-  function SearchRequestController($scope
+  function SearchController($scope
         , SearchRequestFactory
         , MpdFactory
         , $location) {
