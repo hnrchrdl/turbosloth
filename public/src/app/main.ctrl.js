@@ -25,7 +25,10 @@
       toggleRandom: toggleRandom,
       toggleRepeat: toggleRepeat,
       toggleStream: toggleStream,
-      setLocation: setLocation
+      addAllFromArtists: addAllFromArtists,
+      playAllFromArtists: playAllFromArtists,
+      addAllFromAlbums: addAllFromAlbums,
+      playAllFromAlbums: playAllFromAlbums
     };
 
     function play (argument) {
@@ -60,6 +63,26 @@
     function toggleRandom(status) {
       var newStatus = 1 - parseInt(status); // set to opposite
       MpdFactory.sendCommand('random', [newStatus]);
+    }
+    
+    function addAllFromArtists(artists) {
+      console.log('this should add artists ', artists);
+    }
+    
+    function playAllFromArtists(artists) {
+      console.log('this should add and replace artists: '. artists);
+    }
+    
+    function addAllFromAlbums(albums) {
+      console.log('this should add albums: ', albums);
+    }
+    
+    function playAllFromAlbums(albums) {
+      console.log('this should add and replace albums: ', albums);
+    }
+    
+    function addSongs(songs) {
+      console.log('this should add song(s): ', songs);
     }
 
 
