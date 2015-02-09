@@ -8,7 +8,7 @@
 
   function searchAlbumDirective(
           AlbumInfoFactory
-        , SearchAlbumsFactory) {
+        , SearchFactory) {
 
     return {
       restrict: 'E',
@@ -36,7 +36,7 @@
           console.log(artist, album);
           
           // get the album from Mpd
-          SearchAlbumsFactory.getAlbumByName(artist, album)
+          SearchFactory.getAlbumByName(artist, album)
           .then(function(album) {
             console.log(album);
             scope.album = album;
