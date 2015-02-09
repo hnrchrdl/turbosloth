@@ -8,7 +8,7 @@
         //|  Queue
     .clear
     .button-wrapper.left
-      .button.text.search(title="SEARCH", ng-class="{active: location=='search'}" ng-click="setLocation('search')")
+      .button.text.search(title="SEARCH", ng-class="{active: location=='search'}" ng-click="setLocation('search + {{searchUrlSuffix}}')")
         i.fa.fa-search
         //|  Search
     .clear
