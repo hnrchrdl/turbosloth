@@ -38,8 +38,8 @@
 
     return {
       getAlbums: getAlbums,
-      getAlbumsPro: getAlbumsPro,
-      getJoinedAlbums: getJoinedAlbums
+      getJoinedAlbums: getJoinedAlbums,
+      getAlbumByName: getAlbumByName
     };
 
     ///////////////////////////////////////////////7
@@ -54,17 +54,6 @@
         .error(function(err) { deferred.reject(err); });
 
       return deferred.promise;
-    }
-
-
-    function getAlbumsPro(artistname) {
-      //var deferred = $q.defer();
-
-      if (!artistname || artistname.length === 0) return deferred.reject(null);
-
-      var promises = [SearchAlbumsFactory.getAlbums];
-
-      return $q.all(promises);
     }
 
 
@@ -107,6 +96,25 @@
       });
 
       return deferred.promise;
+    }
+    
+    function getAlbumByName(artist, album) {
+      var deferred = $q.defer();
+      
+      if (!artist || !artist.length > 0 || !album || !album.length > 0) {
+        return deferred.reject('argument error');
+      }
+      
+      getAlbums(artist).then(function(albums) {
+        if (albums) {
+          var filteredAlbum = _.filter(albums, function(album) {
+            return album.Title = album;
+          });
+          if (filteredAlbum) {
+            return deferred.resolve(filterAlbum);
+          } else return deferred.reject('album not found');
+        } else return deferred.reject('no albums found');
+      });
     }
 
   }
