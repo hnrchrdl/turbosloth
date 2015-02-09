@@ -38,35 +38,4 @@
       .clear
       artist-directive(ng-repeat="(key, artist) in similarArtists", artist="artist")
       .clear
-  .cover
-    //if albums
-      //for album in albums
-    .album-container(data-name)
-      .leftside
-        .album-art
-          .album
-      .rightside
-        .header
-          .album
-          .artist
-          .releasedate
-        .button-wrapper.left(data-album, data-artist)
-          .button.text.addall
-            i.fa.fa-plus
-            |  add all
-          .button.text.playall
-            i.fa.fa-play
-            |  play all
-        .clear
-
-        .songs
-          //for song in album.songs
-          .song
-            .button-wrapper.left
-              .button.add(data-file, title)
-                i.fa.fa-plus
-            .attr.muted.track
-            .attr
-            .attr.muted
-          .clear
 
