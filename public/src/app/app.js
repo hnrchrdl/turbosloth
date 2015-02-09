@@ -50,23 +50,23 @@
               
               case 'artist':
                 // artist search
-                $rootScope.$broadcast('search:artist', {
-                  mode: 'artist',
-                  artist: route[3]
+                $rootScope.$broadcast('search:displayDetails:artist', {
+                  artistname: route[3]
                 }); // artist searched
                 break;
               
               case 'album':
                 // album search
+                $rootScope.$broadcast('search:displayDetails:album', {
+                  artistname: route[3],
+                  albumname: route[4]
+                }); // artist searched
+                break;
                 console.log('album search');
                 break;
             }
           } else { // no search mode specified
-
-            $rootScope.$broadcast('search:artist', {
-              mode: false,
-              artist: ''
-            }); // artist searched
+            $rootScope.$broadcast('search:displayDetails:none'); // empty out
           }
           break;
 
