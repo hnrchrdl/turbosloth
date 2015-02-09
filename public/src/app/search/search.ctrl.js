@@ -43,7 +43,7 @@
         var type = vm.searchRequest.type;
         var name = vm.searchRequest.name;
 
-        SearchFactory.getArtist(type, name).then(function(data) {
+        SearchFactory.getArtistsByType(artist, type).then(function(data) {
           vm.searchRequest.results = data.results;
           vm.searchRequest.error = data.error;
           vm.searchRequest.selected = 0;
