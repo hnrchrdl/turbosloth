@@ -7,7 +7,7 @@
 
   function searchArtistDirective(
           ArtistInfoFactory
-        , SearchAlbumsFactory
+        , SearchFactory
         , TopAlbumsFactory
         , SimilarArtistsFactory) {
 
@@ -50,7 +50,7 @@
             scope.similarArtists = similarArtists;
           });
 
-          SearchAlbumsFactory.getJoinedAlbums(artist)
+          SearchFactory.getJoinedAlbums(artist)
           .then(function(results) {
             scope.joinedAlbums = results;
           });
