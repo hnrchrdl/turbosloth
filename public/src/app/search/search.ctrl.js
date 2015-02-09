@@ -23,9 +23,13 @@
       select: select,
     };
     
-    processSearch = processSearch;
-
-
+    vm.displayDetails = {
+      type: false,
+      artist: null,
+      album: null
+    };
+    
+    
     //watch the search request parameters, and execute a search Request when something changes
     $scope.$watch(function() { return vm.searchRequest.name, vm.searchRequest.type; }, searchRequest);
 
@@ -72,7 +76,7 @@
       vm.searchRequest.selected > 0) {
         
         $scope.$apply(function() {
-          vm.searchRequest.selected--; // select next
+          vm.searchRequest.selected--; // select previous
         });
       }
     });
@@ -96,31 +100,29 @@
     //------------------------------------------
 
 
-    $scope.$on('search:artist', function(e, params) {
-      processSearch(params);
-    });
-
-
-    $scope.$on('search:album', function(e, params) {
-      processSearch(params);
-    });
-
-
-
-
-    function processSearch(params) {
-
-      vm.search.isFocused = false;
+    $scope.$on('search:displayDetails:artist', function(e, searchParams) {
+      vm.searchRequest.isFocused = false;
       $('#search-input').blur();
+      vm.displayDetails.type = 'artist';
+      vm.displayDetails.artist.name = searchParams.artistname;
+    });
+    
+     $scope.$on('search:displayDetails:album', function(e, searchParams) {
+      vm.searchRequest.isFocused = false;
+      $('#search-input').blur();
+      vm.displayDetails.type = 'album';
+      vm.displayDetails.album.name = searchParams.albumname;
+      vm.displayDetails.album.artist = searchParams.artistname;
+    });
+    
+    $scope.$on('search:displayDetails:none', function(e, searchParams) {
+      vm.searchRequest.isFocused = true;
+      $('#search-input').blur();
+      vm.displayDetails.type = false;
+     }
+    
 
-      vm.mode = params.mode;
-      vm.artist = params.artist;
-      if (vm.mode === 'album')  {
-        vm.album = params.album;
-      }
-
-
-    }
+    
 
     function addAll() {
       MpdFactory.addAlbumsToQueue(vm.results.albums);
