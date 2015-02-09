@@ -15,10 +15,10 @@
       .head  
         |  {{artistDetailsCtrl.albums | objectlength}} Albums
         .button-wrapper.right
-          .button.text.addall(ng-click="mainCtrl.addAllFromAlbums(joinedAlbums)")
+          .button.text.addall(ng-click="mainCtrl.cmd.addAllFromAlbums(joinedAlbums)")
             i.fa.fa-plus
             |  add all
-          .button.text.playall(ng-click="mainCtrl.playAllFromAlbums(joinedAlbums)")
+          .button.text.playall(ng-click="mainCtrl.cmd.playAllFromAlbums(joinedAlbums)")
             i.fa.fa-play
             |  play all
       .clear
@@ -26,11 +26,11 @@
       .clear
     hr
     .similar
-      .button-wrapper.right(title="add similar artists to queue", ng-click="mainCtrl.addAllFromArtists(similarArtists)")
+      .button-wrapper.right(title="add similar artists to queue", ng-click="mainCtrl.cmd.addAllFromArtists(similarArtists)")
         .button.text.addall
           i.fa.fa-plus
           |  add all
-        .button.text.playall(title="replace queue with similar artist", ng-click="mainCtrl.playAllFromArtists(similarArtists)")
+        .button.text.playall(title="replace queue with similar artist", ng-click="mainCtrl.cmd.playAllFromArtists(similarArtists)")
           i.fa.fa-play
           |  play all
       .head 
