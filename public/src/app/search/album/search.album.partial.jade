@@ -1,0 +1,26 @@
+.album-container
+  .leftside
+    .albumart(albumart, album="album.title")
+      .album {{album.title}}
+  .rightside
+    .header
+      .album {{album.Title}}
+      .artist {{album.Artist}}
+      .releasedate {{album.Year}}
+    .button-wrapper.left()
+      .button.text.addall(title="add album to queue")
+        i.fa.fa-plus
+        |  add all
+      .button.text.playall(title="play album and replace queue")
+        i.fa.fa-play
+        |  play all
+    .clear
+
+    .song(ng-repeat="song in album.songs")
+      .button-wrapper.left
+        .button.add(title="add to queue")
+          i.fa.fa-plus
+      .attr.muted.track {{song.Track}}
+      .attr {{song.Title}}
+      .attr.muted {{song.Time | time}}
+    .clear
