@@ -119,20 +119,8 @@
       vm.searchRequest.isFocused = true;
       $('#search-input').blur();
       vm.displayDetails.type = false;
-     }
-    
+     });
 
-    
-
-    function addAll() {
-      MpdFactory.addAlbumsToQueue(vm.results.albums);
-    }
-
-    function playAll() {
-      MpdFactory.emitCommand('clear', [], function() {
-        MpdFactory.addAlbumsToQueue(vm.results.albums);
-      });
-    }
 
   }
 
