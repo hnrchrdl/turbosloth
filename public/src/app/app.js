@@ -29,7 +29,7 @@
     $rootScope.playlistsParams = false;
     $rootScope.browseParams = false;
     
-    $rootScope.searchPathSuffix = "";
+    $rootScope.searchUrlSuffix = "";
 
     $rootScope.$on('$locationChangeSuccess', locationChange);
 
@@ -55,7 +55,7 @@
                 $rootScope.$broadcast('search:displayDetails:artist', {
                   artistname: route[3]
                 }); // artist searched
-                $rootScope.searchPathSuffix = $location.path();
+                $rootScope.searchUrlSuffix = '/#' + $location.path();
                 break;
               
               case 'album':
