@@ -28,9 +28,9 @@
         .success(function(data) { deferred.resolve(data); })
         .error(function(err) { deferred.reject(err); });
 
-      deferred.promise.then(function(data) {
-        data = data;
-      });
+      //deferred.promise.then(function(data) {
+      //  data = data;
+      //});
 
       return deferred.promise;
     }
