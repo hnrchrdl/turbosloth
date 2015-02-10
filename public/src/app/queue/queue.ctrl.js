@@ -16,14 +16,6 @@
 
     vm.currentSongId = '16824';
 
-    $scope.$on('change:queue', function() {
-      vm.update();
-    });
-
-    $scope.$on('change:player', function(e, data) {
-      vm.currentSongId = data[1].song.Id;
-    });
-
     vm.dialogs = {
       id: false,
       show: showDialog,
@@ -49,16 +41,20 @@
     vm.clear = clear;
 
     vm.hasSelection = hasSelection;
+    
+    //----------------------------
+    
+    
+    $scope.$on('change:queue', function(data) {
+      vm.queue = data;
+    });
 
-    vm.update();
+    $scope.$on('change:player', function(e, data) {
+      vm.currentSongId = data[1].song.Id;
+    });
 
     //////////////////////////////////
 
-    function update() {
-      QueueFactory.getQueue().then(function(data) {
-        vm.queue = data
-      });
-    }
 
     function getSongsFromSelection(state) {
       var selected = _.filter(getQueue(), function(song) {
