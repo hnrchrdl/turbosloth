@@ -41,7 +41,12 @@
 
     function emitMpdCommand(cmd, data, cb) {
       socket.emit('mpd', cmd, data, function() {
-        if (cb) return cb;
+        var args = arguments;
+        $rootScope.apply(function() {
+          if (callback) {
+            callback.apply(socket, args);
+          }
+        });
       });
     }
 
