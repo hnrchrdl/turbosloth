@@ -22,8 +22,6 @@
 
       scope.$watch('artistname', function(artistname) {
 
-        console.log(artistname);
-
         if (artistname) {
 
           scope.artistinfo = {};

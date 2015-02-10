@@ -13,7 +13,7 @@
       scope: {
         artist: '=',
         album: '=',
-        size: '='
+        size: '@'
       },
       link: link
     };

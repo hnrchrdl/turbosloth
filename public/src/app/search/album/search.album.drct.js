@@ -27,8 +27,6 @@
         var artistname = data[0];
         var albumname = data[1];
 
-        console.log(data);
-
         if (artistname && albumname) {
 
           // get the album from Mpd

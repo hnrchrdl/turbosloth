@@ -1,9 +1,9 @@
 div shuffle queue?
   hr
   .button-wrapper
-    .button.text.ok(ng-click='queueCtrl.shuffle()')
-      i.fa.fa-check
-      |  ok 
     .button.text.cancel(ng-click='queueCtrl.dialogs.hideAll()')
       i.fa.fa-close
       |  cancel
+    .button.text.ok(ng-click='queueCtrl.dialogs.hideAll()', mpd, cmd="shuffleQueue")
+      i.fa.fa-check
+      |  ok 

@@ -6,7 +6,7 @@
   /////////////////////////////////////
   
   
-  function mpdCommandDirective() {
+  function mpdCommandDirective($rootScope) {
     return {
       restrict: 'A',
       scope: {
@@ -168,7 +168,7 @@
         },
         playAllFromArtists: function(artists) {
           if (_.isArray(artists)) { // array of artists
-            socket.emitMpdCommand('command_list_ok_begin', [], handleMsg);
+            socket.emitMpdCommand('command_list_begin', [], handleMsg);
             socket.emitMpdCommand('clear', [], handleMsg); //clear playlist
             _.each(artists, function(artist) {
               if (_.isObject(artist) && _.has(artist, 'name')) {
@@ -196,14 +196,21 @@
     }
     
     function link(scope, element) {
-      element.bind(scope.boundTo, function() {
-        console.log('execute: ', cmd, args);
-        scope.mpdCommands[scope.cmd](scope.args); // execute command
+
+      element.bind(scope.boundTo || 'click', function() {
+        if (scope.argsfunc) {
+          //console.log(scope.argsfunc());
+        }
+        console.log('execute: ', scope.cmd, scope.args);
+        scope.mpdCommands[scope.cmd](scope.args || null);
       });
     }
     
-    function handleMsg(msg) {
-      console.log(msg);
+    function handleMsg(err, msg) {
+      if (_.has(msg, 'changed') {
+        var changed = msg.changed;
+        console.log(changed);
+      }):
     }
     
   }

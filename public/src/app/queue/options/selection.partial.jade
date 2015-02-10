@@ -1,15 +1,15 @@
 .button-wrapper
-  .button.text.playnext(ng-click='queueCtrl.select.playNext()')
+  .button.text.playnext(mpd, cmd="playNext", args="queueCtrl.selected")
     i.fa.fa-arrow-down
     |  play next
 .button-wrapper
-  .button.text.addtoplaylist(ng-click="queueCtrl.dialogs.show('playlistselect')")
+  .button.text.addtoplaylist(title='choose playlist...', ng-click="queueCtrl.dialogs.show('playlistselect')")
     i.fa.fa-share
     |  add to playlist
 .button-wrapper
-  .button.text.crop(ng-click='queueCtrl.select.crop()')
+  .button.text.crop(mpd, cmd="removeFromQueue", args="queueCtrl.getSongsFromSelection(false)")
     i.fa.fa-cut
     |  crop
-  .button.text.remove(ng-click='queueCtrl.select.remove()')
+  .button.text.remove(mpd, cmd="removeFromQueue", args="queueCtrl.getSongsFromSelection(true)")
     i.fa.fa-remove
     |  remove

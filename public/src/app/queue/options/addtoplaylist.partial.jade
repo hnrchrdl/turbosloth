@@ -1,11 +1,13 @@
 div add selection to playlist
   hr
-  .playlists
-    .button-wrapper(ng-repeat='playlist in playlists')
-      .button.text.save(ng-click='addSelectionToPlaylist(playlist.playlist)')
-        |  {{playlist.playlist}}
+  select(ng-model="queueCtrl.saveToPlaylistName")
+    option
+    option
   hr
   .button-wrapper
     .button.text.cancel(ng-click='queueCtrl.dialogs.hideAll()')
       i.fa.fa-close
       |  cancel
+    .button.text.ok(ng-click='queueCtrl.dialogs.hideAll()', mpd, cmd="savePlaylist", args="queueCtrl.saveToPlaylistName")
+      i.fa.fa-check
+      |  ok

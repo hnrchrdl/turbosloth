@@ -7,9 +7,9 @@ div save queue as new playlist
           ng-model='queueCtrl.newplaylistname'
     )
   .button-wrapper
-    .button.text.ok(ng-click='queueCtrl.save()')
-      i.fa.fa-check
-      |  ok
     .button.text.cancel(ng-click='queueCtrl.dialogs.hideAll()')
       i.fa.fa-close
       |  cancel
+    .button.text.ok(ng-click='queueCtrl.dialogs.hideAll()', mpd, cmd="savePlaylist", args="queueCtrl.newplaylistname")
+      i.fa.fa-check
+      |  ok

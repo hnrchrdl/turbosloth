@@ -114,7 +114,6 @@
         case 'playlist':
           console.log('queue changed. broadcasting to rootScope...');
           QueueFactory.getQueue().then(function(data) {
-            vm.queue = data;
             $rootScope.$broadcast('change:queue', data);
           });
           break;

@@ -1,10 +1,10 @@
 .nav-main
   .button-wrapper.left
-    .button.selecthelper(title='check all', ng-click='queueCtrl.select.batchSelect(true)')
+    .button.selecthelper(title='check all', ng-click="queueCtrl.select.batchSelect(true)")
       i.fa.fa-check-square-o
-    .button.selecthelper(title='uncheck all', ng-click='queueCtrl.select.batchSelect(false)')
+    .button.selecthelper(title='uncheck all', ng-click="queueCtrl.select.batchSelect(false)")
       i.fa.fa-square-o
-    .button.selecthelper(title='find current song', ng-click='queueCtrl.scrollToCurrent()')
+    .button.selecthelper(title='find current song', ng-click="")
       i.fa.fa-music
   .button-wrapper.right
     .button.text.sloth-mode(title='sloth mode', ng-click="queueCtrl.dialogs.show('sloth')")
@@ -22,12 +22,10 @@
 hr.prime
 .clear
 .scrollable
-  .item.muted(
-  ng-hide='queueCtrl.queue.data.length>0')
+  .item.muted(ng-hide='queueCtrl.queue.data.length>0')
     | queue is empty
-  .item(
-  ng-repeat='song in queueCtrl.queue.data',
-  ng-dblclick='queueCtrl.playSong(song.Id)',
+  .item(ng-repeat='song in queueCtrl.queue.data',
+  mpd, bind="dblclick", cmd="playSong", args="song.Id",
   ng-class="{active: queueCtrl.currentSongId===song.Id}")
     .attr.selector(
     ng-class='{active: song.selected}',

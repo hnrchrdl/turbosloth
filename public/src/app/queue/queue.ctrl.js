@@ -8,13 +8,12 @@
 
   /* Queue Controller */
 
-  function QueueController($scope, QueueFactory, MpdFactory, MsgFactory) {
+  function QueueController($scope, MsgFactory) {
     var vm = this;
 
     vm.queue = [];
-    vm.update = update;
 
-    vm.currentSongId = '16824';
+    vm.currentSongId = false;
 
     vm.dialogs = {
       id: false,
@@ -29,24 +28,18 @@
       start: start,
       end: end,
       batchSelect: batchSelect,
-      playNext: playNext,
-      addToPlaylist: addToPlaylist,
-      crop: crop,
-      remove: remove
     };
 
-    vm.playSong = playSong;
-    vm.save = save;
-    vm.shuffle = shuffle;
-    vm.clear = clear;
-
     vm.hasSelection = hasSelection;
-    
+    vm.selected = [];
+
+
     //----------------------------
     
     
-    $scope.$on('change:queue', function(data) {
-      vm.queue = data;
+    $scope.$on('change:queue', function(e, data) {
+      if (data.err || !_.has(data.data[0], 'file')) vm.queue = null; 
+      else vm.queue = data;
     });
 
     $scope.$on('change:player', function(e, data) {
@@ -56,15 +49,13 @@
     //////////////////////////////////
 
 
-    function getSongsFromSelection(state) {
-      var selected = _.filter(getQueue(), function(song) {
-        return song.selected === state;
-      });
-      return selected;
-    }
+    $scope.$watch(function() { return vm.selected; }, function(c) {
+      console.log(c);
+    });
+
 
     function hasSelection() {
-      return getSongsFromSelection(true).length > 0;
+      return vm.selected.length > 0;
     }
 
     function hideAllDialogs() {
@@ -77,7 +68,7 @@
     }
 
     function batchSelect(mode) {
-      _.map(getQueue(), function(song){
+      _.map(vm.queue.data, function(song){
         return song.selected = mode;
       });
     }
@@ -120,52 +111,17 @@
     }
 
     function processSelection(options) {
-      var select = true;
-      if (options.mode === 'unselect') { select = false };
+      var select = options.mode === 'unselect' ?
+        false:
+        true;
 
       for (var i = options.startPos; i <= options.endPos; i++) {
-        getQueue()[i].selected = select;
+        vm.queue.data[i].selected = select;
       }
-    }
-
-    function getQueue() {
-      return vm.queue.data;
-    }
-
-    function playSong(id){
-      MpdFactory.playSong(id);
-    }
-
-    function save() {
-      MpdFactory.savePlaylist(vm.newplaylistname);
-    }
-
-    function shuffle() {
-      MpdFactory.shufflePlaylist();
-    }
-
-    function clear() {
-      MpdFactory.clearPlaylist();
-    }
-
-    function playNext() {
-      var songsToPlayNext = getSongsFromSelection(true);
-      _.sortBy(songsToPlayNext, function(song){ return -song.Pos; });
-      MpdFactory.playNext(songsToPlayNext);
-    }
-
-    function addToPlaylist() {
-
-    }
-
-    function crop() {
-      var songsToRemove = getSongsFromSelection(false);
-      MpdFactory.removeFromPlaylist(songsToRemove);
-    }
-
-    function remove() {
-      var songsToRemove = getSongsFromSelection(true);
-      MpdFactory.removeFromPlaylist(songsToRemove);
+      
+      vm.selected = _.filter(vm.queue.data, function(song) {
+        return song.selected === true ;
+      });
     }
 
   }
