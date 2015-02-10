@@ -11,10 +11,15 @@
   /////////////////////////////////////////
 
 
-  function init($rootScope, CurrentSong) {
+  function init($rootScope, CurrentSong, QueueFactory) {
     CurrentSong.getSongAndStatus().then(function(results) {
       $rootScope.$broadcast('change:player', results);
     });
+    
+    QueueFactory.getQueue().then(function(results) {
+      $rootScope.$broadcast('change:queue', results);
+    });
+    
   }
 
 
