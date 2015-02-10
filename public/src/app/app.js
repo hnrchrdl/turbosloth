@@ -81,7 +81,7 @@
 
   }
 
-  function socketWatcher($rootScope, socket, CurrentSong) {
+  function socketWatcher($rootScope, socket, CurrentSong, QueueFactory) {
 
     socket.on('connect', function () {
       console.log('established socket connection');
@@ -108,7 +108,10 @@
 
         case 'playlist':
           console.log('queue changed. broadcasting to rootScope...');
-          $rootScope.$broadcast('change:queue');
+          QueueFactory.getQueue().then(function(data) {
+            vm.queue = data;
+            $rootScope.$broadcast('change:queue', data);
+          });
           break;
       
         case 'stored_playlist':
