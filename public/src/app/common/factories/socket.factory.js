@@ -39,8 +39,12 @@
     }
     
 
-    function emitMpdCommand(cmd, data, callback) {
-      socket.emit('mpd', cmd, data, function(err, msg) {
+    function emitMpdCommand(command_or_list, callback) {
+      // command_or_list can be a single command object with
+      // cmd and args
+      // or an array with list of command objects
+      console.log(command_or_list);
+      socket.emit('mpd', command_or_list, function(err, msg) {
         if (callback) {
           callback(err, msg);
         }

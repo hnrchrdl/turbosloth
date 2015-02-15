@@ -7,9 +7,6 @@
     i.fa.fa-share
     |  add to playlist
 .button-wrapper
-  .button.text.crop(mpd, cmd="removeFromQueue", args="queueCtrl.getSongsFromSelection(false)")
-    i.fa.fa-cut
-    |  crop
-  .button.text.remove(mpd, cmd="removeFromQueue", args="queueCtrl.getSongsFromSelection(true)")
+  .button.text.remove(mpd, cmd="removeFromQueue", args="queueCtrl.selected")
     i.fa.fa-remove
     |  remove

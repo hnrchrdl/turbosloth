@@ -30,8 +30,9 @@
       batchSelect: batchSelect,
     };
 
-    vm.hasSelection = hasSelection;
+    //vm.hasSelection = hasSelection;
     vm.selected = [];
+    vm.clearSelection = clearSelection;
 
 
     //----------------------------
@@ -49,15 +50,6 @@
     //////////////////////////////////
 
 
-    $scope.$watch(function() { return vm.selected; }, function(c) {
-      console.log(c);
-    });
-
-
-    function hasSelection() {
-      return vm.selected.length > 0;
-    }
-
     function hideAllDialogs() {
       vm.dialogs.id = false;
     }
@@ -71,6 +63,13 @@
       _.map(vm.queue.data, function(song){
         return song.selected = mode;
       });
+      vm.selected = _.filter(vm.queue.data, function(song) {
+        return song.selected === true ;
+      });
+    }
+
+    function clearSelection() {
+      vm.selected = [];
     }
 
     function start(pos, isSelected) {

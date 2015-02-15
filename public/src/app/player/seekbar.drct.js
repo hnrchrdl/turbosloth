@@ -6,7 +6,7 @@
 
   ///////////////////////7
 
-  function seekbarDirective($interval, MpdFactory) {
+  function seekbarDirective($rootScope, $interval) {
     
     return {
       restrict: 'A',
@@ -71,8 +71,8 @@
       seekcontainer.on('click', function(e) {
         var seekRatio = e.offsetX / seekcontainer.width() * 100;
         if (scope.time) {
-          var seekTime = time * seekRatio / 100;
-          MpdFactory.seekToTime(seekTime);
+          var seekTime = parseFloat(time * seekRatio / 100);
+          $rootScope.$broadcast('mpdCommand', {cmd: 'seekToTime', args: seekTime});
         }
       });
     }

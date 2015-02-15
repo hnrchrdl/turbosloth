@@ -63,7 +63,7 @@ hr.prime
 
 #option-selectoptions.options-box(
 ng-include="'queue/options/selection.partial.html'",
-ng-show="queueCtrl.hasSelection()")
+ng-show="queueCtrl.selected.length > 0")
 
 #option-savequeue.options-box.question(
 ng-include="'queue/options/save.partial.html'",
@@ -77,6 +77,6 @@ ng-show="queueCtrl.dialogs.id==='shuffle'")
 ng-include="'queue/options/clear.partial.html'",
 ng-show="queueCtrl.dialogs.id==='clear'")
 
-#option-clearqueue.options-box.question.full-height(
+#option-playlistselect.options-box.question.full-height(
 ng-include="'queue/options/addtoplaylist.partial.html'",
 ng-show="queueCtrl.dialogs.id==='playlistselect'")

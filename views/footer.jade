@@ -9,15 +9,15 @@
 
   #control-menu.control-menu
     .button-wrapper.left
-      #previous.left.button(title="previous", ng-click="mainCtrl.cmd.previous()")
+      #previous.left.button(title="previous", mpd, cmd="previous")
         i.fa.fa-step-backward
-      #pause.left.button(title="pause", ng-click="mainCtrl.cmd.pause()", ng-class="{active: playerCtrl.status.state==='pause'}")
+      #pause.left.button(title="pause",  mpd, cmd="pause", ng-class="{active: playerCtrl.status.state==='pause'}")
         i.fa.fa-pause
-      #play.left.button(title="play", ng-click="mainCtrl.cmd.play()", ng-class="{active: playerCtrl.status.state==='play'}")
+      #play.left.button(title="play",  mpd, cmd="play", ng-class="{active: playerCtrl.status.state==='play'}")
         i.fa.fa-play
-      #stop.left.button(title="stop", ng-click="mainCtrl.cmd.stop()", ng-class="{active: playerCtrl.status.state==='stop'}")
+      #stop.left.button(title="stop",  mpd, cmd="stop", ng-class="{active: playerCtrl.status.state==='stop'}")
         i.fa.fa-stop
-      #next.left.button(title="next", ng-click="mainCtrl.cmd.next()")
+      #next.left.button(title="next",  mpd, cmd="next")
         i.fa.fa-step-forward
   #seek-current.seek-time {{playerCtrl.elapsed | time}}
   #seek-bar-container
@@ -26,9 +26,9 @@
 
   #control-menu2.control-menu
     .button-wrapper.left
-      #stream.left.button(title="stream", ng-click="mainCtrl.cmd.toggleStream()")
+      #stream.left.button(title="stream")
         i.fa.fa-volume-up
-      #random.left.button(title="random", ng-click="mainCtrl.cmd.toggleRandom(playerCtrl.status.random)", ng-class="{active: playerCtrl.status.random==='1'}")
+      #random.left.button(title="random",  mpd, cmd="toggleRandom", args="playerCtrl.status.random", ng-class="{active: playerCtrl.status.random==='1'}")
         i.fa.fa-random
-      #repeat.left.button(title="repeat", ng-click="mainCtrl.cmd.toggleRepeat(playerCtrl.status.repeat)", ng-class="{active: playerCtrl.status.repeat==='1'}")
+      #repeat.left.button(title="repeat", mpd, cmd="toggleRepeat", args="playerCtrl.status.repeat", ng-class="{active: playerCtrl.status.repeat==='1'}")
         i.fa.fa-repeat
