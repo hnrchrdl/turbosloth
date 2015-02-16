@@ -99,20 +99,24 @@ hr {
 }
 
 input, select {
-	display: 						inline-block;
-	height: 						@long;
-	box-sizing: 				border-box;
-  -moz-box-sizing: 		border-box;
-  -webkit-box-sizing: border-box;
+	display: 		inline-block;
+	height: 		@long;
+	box-sizing: 		border-box;
+ 	-moz-box-sizing: 	border-box;
+  	-webkit-box-sizing: 	border-box;
 	background-color: 	@background;
-	color: 							@fontPrimary;
-	border: 						1px solid @subtle;
-	padding: 						0 @medium;
-	margin-bottom: 			@short;
+	color: 			@fontPrimary;
+	border: 		1px solid @subtle;
+	padding: 		0 @medium;
+	margin-bottom: 		@short;
 	&:focus {
-		border: 						1px solid @primary;
-		outline: 0;
+		border: 		1px solid @primary;
+		outline: 		0;
 	}
+}
+
+loading {
+	background-color: @transDark;
 }
 
 
