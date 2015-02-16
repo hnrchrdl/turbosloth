@@ -1,5 +1,5 @@
 main()
   #queue(ng-controller="QueueController as queueCtrl" ng-include="'queue/queue.partial.html'" ng-show="location==='queue'")
   #search(ng-controller="SearchController as searchCtrl" ng-include="'search/search.partial.html'" ng-show="location==='search'")
-  #playlists(ng-controller="PlaylistsController" ng-show="location==='playlists'")
-  #browse(ng-controller="BrowseController" ng-show="location==='browse'")
+  #playlists(ng-controller="PlaylistsController as playlistCtrl" ng-include="'playlists/playlists.partial.html'" ng-show="location==='playlists'")
+  #browse(ng-controller="BrowseController as browseCtrl" ng-include="'browse/browse.partial.html'" ng-show="location==='browse'")
