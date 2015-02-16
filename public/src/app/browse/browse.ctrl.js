@@ -11,8 +11,12 @@
   *** Browse Controller
   ***
   **/
-  function BrowseController($scope) {
-    
+  function BrowseController($scope, BrowseFactory) {
+    $scope.$on('browse', function(e, folder) {
+      BrowseFactory.getPlaylist(folder).then(function(data) {
+        console.log(data);
+      });
+    });
   }
 
 })();
