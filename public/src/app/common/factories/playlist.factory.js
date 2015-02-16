@@ -14,7 +14,7 @@
 
     function getPLaylists(playlistname) {
       
-      var playlistname = (typeof(playlist) != 'undefined') ?
+      var playlistname = (typeof(playlistname) != 'undefined') ?
         playlistname :
         null;
       
