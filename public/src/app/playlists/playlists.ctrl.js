@@ -13,8 +13,12 @@
   *** Playlists Controller
   ***
   **/
-  function PlaylistsController($scope) {
-    
+  function PlaylistsController($scope, PlaylistFactory) {
+    $scope.$on('playlists', function(e, playlistname) {
+      PlaylistFactory.getPlaylist(playlistname).then(function(data) {
+        console.log(data);
+      });
+    });
     
   }
 
