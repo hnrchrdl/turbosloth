@@ -21,7 +21,7 @@
       var deferred = $q.defer();
       
       if (playlistname) {
-        var http = $http.get('/api/playlist/' + playlistname);
+        var http = $http.get('/api/playlists/' + playlistname);
       } else {
         var http = $http.get('/api/playlists')
       }
