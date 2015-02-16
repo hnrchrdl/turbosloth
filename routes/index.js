@@ -58,7 +58,7 @@ router.get('/api/search/albums/:artist', searchCtrl.albumSearch);
 //router.get('/playlists', playlistsCtrl.renderPlaylists);
 //router.get('/playlist-details/:playlist', playlistsCtrl.renderPlaylistDetails);
 router.get('/api/playlists', playlistsCtrl.getAll);
-router.get('/api/playlist/:name', playlistsCtrl.getByName);
+router.get('/api/playlists/:name', playlistsCtrl.getByName);
 
 
 
