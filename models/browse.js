@@ -1,12 +1,24 @@
 var mpd = require('../lib/mpd');
 
 
+
+module.exports.fetchFromMpd = function(options, callback) {
+  console.log('get browse: ', options.args);
+  mpd.fireCommand(options, function(err, data) {
+    return callback(err, data);
+  });
+}
+
+
+
+
+/// old stuff /////
 /**
 * fetch the browse contents from mpd
 * @param options {Object} 
 * @param callback {Function}
 */
-module.exports.fetchFromMpd = function(options, callback) {
+module.exports.fetchFromMpd_old = function(options, callback) {
   console.log('get browse from mpd. url: ' + options.args[0]);
   mpd.fireCommand(options, function(err, data) {
     if (err) return res.render('browse', {dirs:[], files:[], breadcrumbs:false});
