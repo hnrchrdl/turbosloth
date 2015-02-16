@@ -82,12 +82,12 @@
           $rootScope.location = 'playlists'; //show playlists
           if (route.length > 2) { // playlists has params
             $rootScope.$broadcast('playlists', {
-              playlistname: route[3]
+              route[3] // playlistname goes here
             });
           }
           else {
             $rootScope.$broadcast('playlists', {
-              playlistname: false
+              false // no playlistname. display all playlists
             });
           }
           $rootScope.playlistsPath = $location.path();
