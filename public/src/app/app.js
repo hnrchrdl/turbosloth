@@ -97,12 +97,12 @@
           $rootScope.location = 'browse'; //show playlists
           if (route.length > 2) { // browse has params
             $rootScope.$broadcast('browse', {
-              folder: route[3]
+              route[3] // name of the folder goes here
             });
           }
           else {
             $rootScope.$broadcast('playlists', {
-              folder: false
+              false // no folder specified. get root
             });
           }
           $rootScope.browsePath = $location.path();
