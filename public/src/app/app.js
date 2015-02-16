@@ -70,13 +70,42 @@
                   artistname: route[3],
                   albumname: route[4]
                 });
-                $rootScope.searchPath = $location.path();
                 break;
             }
           } else { // no search mode specified
             $rootScope.$broadcast('search:displayDetails:none'); // empty out
-            $rootScope.searchPath = $location.path();
           }
+          $rootScope.searchPath = $location.path();
+          break;
+        
+        case 'playlists':,
+          $rootScope.location = 'playlists'; //show playlists
+          if (route.length > 2) { // playlists has params
+            $rootScope.$broadcast('playlists', {
+              playlistname: route[3]
+            });
+          }
+          else {
+            $rootScope.$broadcast('playlists', {
+              playlistname: false
+            });
+          }
+          $rootScope.playlistsPath = $location.path();
+          break;
+        
+        case 'browse':
+          $rootScope.location = 'browse'; //show playlists
+          if (route.length > 2) { // browse has params
+            $rootScope.$broadcast('browse', {
+              folder: route[3]
+            });
+          }
+          else {
+            $rootScope.$broadcast('playlists', {
+              folder: false
+            });
+          }
+          $rootScope.browsePath = $location.path();
           break;
 
         default:
