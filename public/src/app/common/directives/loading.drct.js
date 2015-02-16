@@ -11,7 +11,7 @@
       restrict: 'E',
       scope: true,
       link: link,
-      template: '<i class='fa fa-spinner fa-spin></i>'
+      template: '<i class="fa fa-spinner fa-spin"></i>'
     };
     
     //---------------------------

@@ -26,7 +26,7 @@
       }
     }
 
-    function artistDirectiveController($rootScope, MpdFactory) {
+    function artistDirectiveController($rootScope) {
       var vm = this;
 
       vm.goToArtist = goToArtist;

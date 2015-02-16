@@ -1,1 +1,8 @@
-check
+.scrollable
+  .index-container(ng-repeat="(key, folders) in browseCtrl.directories")
+    .index  {{key}}
+    .folders
+      .folder(ng-repeat="item in folders") {{item.directory}}
+    .clear
+
+      

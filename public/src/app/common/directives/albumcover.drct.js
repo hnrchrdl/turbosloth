@@ -25,17 +25,17 @@
       }
     }
 
-    function albumCoverController($rootScope, $scope, MpdFactory) {
+    function albumCoverController($rootScope, $scope) {
       $scope.addAlbum = addSongs;
       $scope.playAlbum = playSongs;
       $scope.goToAlbum = goToAlbum;
 
       function addSongs(songs) {
-        MpdFactory.addSongs(songs);
+        $rootScope.$broadcast({cmd: 'addSongs', args: songs});
       }
 
       function playSongs(songs) {
-        MpdFactory.addSongsAndReplace(songs);
+        $rootScope.$broadcast({cmd: 'playSongs', args: songs});
       }
 
       function goToAlbum(albumname, artistname) {

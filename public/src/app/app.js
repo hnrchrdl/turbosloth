@@ -35,6 +35,9 @@
     $rootScope.browseParams = false;
     
     $rootScope.searchPath = 'search';
+    $rootScope.playlistsPath = false;
+    $rootScope.browsePath = false;
+
 
     $rootScope.$on('$locationChangeSuccess', locationChange);
 
@@ -51,61 +54,68 @@
         case 'search':
           $rootScope.location = 'search'; //show search
 
-          if (route.length > 2) { // search has params
+          if ($rootScope.searchPath !== $location.path()) {
+            
+            if (route.length > 2) { // search has params
 
-            switch (route[2]) {
-              
-              case 'artist':
-                // artist search
-                $rootScope.$broadcast('search:displayDetails:artist', {
-                  artistname: route[3]
-                });
-                $rootScope.searchPath = $location.path();
-                console.log($rootScope.searchPath);
-                break;
-              
-              case 'album':
-                // album search
-                $rootScope.$broadcast('search:displayDetails:album', {
-                  artistname: route[3],
-                  albumname: route[4]
-                });
-                break;
+              switch (route[2]) {
+                
+                case 'artist':
+                  // artist search
+                  $rootScope.$broadcast('search:displayDetails:artist', {
+                    artistname: route[3]
+                  });
+                  $rootScope.searchPath = $location.path();
+                  break;
+                
+                case 'album':
+                  // album search
+                  $rootScope.$broadcast('search:displayDetails:album', {
+                    artistname: route[3],
+                    albumname: route[4]
+                  });
+                  break;
+              }
+            } else { // no search mode specified
+              $rootScope.$broadcast('search:displayDetails:none'); // empty out
             }
-          } else { // no search mode specified
-            $rootScope.$broadcast('search:displayDetails:none'); // empty out
+            $rootScope.searchPath = $location.path();
           }
-          $rootScope.searchPath = $location.path();
           break;
         
-        case 'playlists':,
+        case 'playlists':
           $rootScope.location = 'playlists'; //show playlists
-          if (route.length > 2) { // playlists has params
-            $rootScope.$broadcast('playlists', {
-              route[3] // playlistname goes here
-            });
+          if ($rootScope.playlistsPath !== $location.path()) {
+            if (route.length > 2) { // playlists has params
+              $rootScope.$broadcast('playlists', 
+                route[3] // playlistname goes here
+              );
+            }
+            else {
+              $rootScope.$broadcast('playlists', 
+                false // no playlistname. display all playlists
+              );
+            }
+            $rootScope.playlistsPath = $location.path();
           }
-          else {
-            $rootScope.$broadcast('playlists', {
-              false // no playlistname. display all playlists
-            });
-          }
-          $rootScope.playlistsPath = $location.path();
           break;
         
         case 'browse':
-          $rootScope.location = 'browse'; //show playlists
-          if (route.length > 2) { // browse has params
-            $rootScope.$broadcast('browse', {
-              route[3] // name of the folder goes here
-            });
+          $rootScope.location = 'browse'; //show browse
+          if ($rootScope.browsePath !== $location.path()) {
+            if (route.length > 2) { // browse has params
+              $rootScope.$broadcast('browse', 
+                route[3] // name of the folder goes here
+              );
+            }
+            else {
+              $rootScope.$broadcast('browse', 
+                false // no folder specified. get root
+              );
+            }
+            $rootScope.browsePath = $location.path();
           }
-          else {
-            $rootScope.$broadcast('playlists', {
-              false // no folder specified. get root
-            });
-          }
-          $rootScope.browsePath = $location.path();
+          
           break;
 
         default:

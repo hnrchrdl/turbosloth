@@ -1,18 +1,18 @@
 (function(){ 'use strict';
   
   angular.module('app')
-    .factory('PlaylistsFactory', PlaylistsFactory);
+    .factory('PlaylistFactory', PlaylistFactory);
     
-  function PlaylistsFactory($http, $q) {
+  function PlaylistFactory($http, $q) {
     /* Queue Factory */
     
     return {
-      getPlaylists: getPlaylists
+      getPlaylist: getPlaylist
     };
 
     ///////////////////////////////
 
-    function getPLaylists(playlistname) {
+    function getPlaylist(playlistname) {
       
       var playlistname = (typeof(playlistname) != 'undefined') ?
         playlistname :

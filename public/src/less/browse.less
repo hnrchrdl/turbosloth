@@ -1,31 +1,24 @@
 #browse {
-    .breadcrumb {
-        .button {
-          border: none;
-          &:hover {
-            color: @primary;
-            background-color: @background;
+      .index-container {
+        border-bottom: 1px solid @extraSubtle;
+        .index {
+          float: left;
+          width: 10%;
+          text-align: center;
+          font-size: @long;
+          color: @muted;
+        }
+        .folders {
+          margin: @short 0 @short 0;
+          float:left;
+          width: 90%;
+          .folder {
+            float: left;
+            margin: @short; 
           }
         }
-        float:          left;
-        line-height:    @buttonHeight;
-        .item {
-            float: left;
-            margin: 0 @medium 0 0;
-        }
       }
-      .item {
-        cursor:     pointer;
-        &:hover {
-          color:      @primary;
-        }
-    }
-    .nav-main {
-      margin:   0 0 @medium 0;
-      .button {
-          margin:   0 0 0 @short;
-      }
-    }
 }
+   
 
 

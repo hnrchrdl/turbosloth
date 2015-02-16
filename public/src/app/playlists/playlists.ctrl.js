@@ -5,7 +5,7 @@
   //angular.module('app.controller', [])
   
   angular.module('app')
-    .controller( 'PlaylistsController', PlaylistsController); 
+    .controller( 'PlaylistController', PlaylistController); 
 
 
 
@@ -13,7 +13,7 @@
   *** Playlists Controller
   ***
   **/
-  function PlaylistsController($scope, PlaylistFactory) {
+  function PlaylistController($scope, PlaylistFactory) {
     $scope.$on('playlists', function(e, playlistname) {
       PlaylistFactory.getPlaylist(playlistname).then(function(data) {
         console.log(data);
