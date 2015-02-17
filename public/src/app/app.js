@@ -13,13 +13,32 @@
 
   function routeConfig($rootScope, $routeProvider) {
     $routeProvider
-      .when('/queue', function() { $rootScope.location = 'queue'; })
-      .when('artist/:artist', function() { $rootScope.location = 'artist'; })
-      .when('/artist/:artist/album/:album', function() { $rootScope.location = 'album'; })
-      .when('playlists', function() { $rootScope.location = 'playlists'; })
-      .when('playlists/:playlist', function() { $rootScope.location = 'playlists'; })
-      .when('browse', function() { $rootScope.location = 'browse'; })
-      .when('browse:folder', function() { $rootScope.location = 'browse'; });
+      .when('/queue', function() { 
+        $rootScope.location = 'queue'; 
+      })
+      .when('artist/:artist', function() { 
+        $rootScope.location = 'artist';
+        $rootScope.artistParams.artistname = artist;
+      })
+      .when('/artist/:artist/album/:album', function() { 
+        $rootScope.location = 'album';
+        $rootScope.albumParams.artistname = artist;
+        $rootScope.albumParams.albumname= album;
+      })
+      .when('playlists', function() { 
+        $rootScope.location = 'playlists';
+      })
+      .when('playlists/:playlist', function() { 
+        $rootScope.location = 'playlists';
+        $rootScope.playlistParams.playlistname = playlist;
+      })
+      .when('browse', function() { 
+        $rootScope.location = 'browse'; 
+      })
+      .when('browse:folder', function() { 
+        $rootScope.location = 'browse';
+        $rootScope.browseParams.folder = folder;
+      });
   }
 
 
