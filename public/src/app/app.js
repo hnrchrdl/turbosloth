@@ -18,28 +18,40 @@
       })
       .when('artist/:artist', function() { 
         $rootScope.location = 'artist';
-        $rootScope.artistParams.artistname = artist;
+        $rootScope.artistParams = {
+          artistname: artist
+        };
       })
       .when('/artist/:artist/album/:album', function() { 
         $rootScope.location = 'album';
-        $rootScope.albumParams.artistname = artist;
-        $rootScope.albumParams.albumname= album;
+        $rootScope.albumParams = {
+          artistname: artist,
+          albumname: album
+        };
       })
       .when('playlists', function() { 
         $rootScope.location = 'playlists';
-        $rootScope.playlistParams.playlistname = false;
+        $rootScope.playlistParams = {
+          playlistname: false
+        };
       })
       .when('playlists/:playlist', function() { 
         $rootScope.location = 'playlists';
-        $rootScope.playlistParams.playlistname = playlist;
+        $rootScope.playlistParams = {
+          playlistname: playlist
+        };
       })
       .when('browse', function() { 
         $rootScope.location = 'browse';
-        $rootScope.browseParams.foldername = false;
+        $rootScope.browseParams = {
+          foldername: false
+        };
       })
       .when('browse:folder', function() { 
         $rootScope.location = 'browse';
-        $rootScope.browseParams.foldername = folder;
+        $rootScope.browseParams = {
+          foldername: folder
+        };
       });
   }
 
