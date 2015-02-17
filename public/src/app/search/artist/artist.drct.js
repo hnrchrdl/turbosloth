@@ -1,11 +1,11 @@
 (function() { 'use strict';
   
   angular.module('app')
-    .directive('searchArtistDirective', searchArtistDirective);
+    .directive('artistDirective', artistDirective);
 
   ///////////////////////////////////////
 
-  function searchArtistDirective(SearchFactory, lastfmFactory) {
+  function artistDirective(SearchFactory, lastfmFactory) {
 
     return {
       restrict: 'E',
