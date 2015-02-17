@@ -11,7 +11,7 @@
 
   /////////////////////////////////////////
 
-  function routeConfig($rootScope, $routeProvider) {
+  function routeConfig($rootScope, $location, $routeProvider) {
     $routeProvider
       .when('/queue', function() { 
         $rootScope.location = 'queue'; 
@@ -53,6 +53,18 @@
           foldername: folder
         };
       });
+
+
+
+    $rootScope.setLocation = setLocation;
+    function setLocation(location) {
+      if (location) {
+        console.log('set location: ', location);
+        $location.path(location);
+      }
+    }
+
+
   }
 
 

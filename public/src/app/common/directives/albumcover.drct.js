@@ -39,7 +39,7 @@
       }
 
       function goToAlbum(albumname, artistname) {
-        var url = 'search/album/' + artistname + '/' + albumname;
+        var url = '/artist/' + artistname + '/album/' + albumname;
         console.log(url);
         $rootScope.setLocation(url);
       }
