@@ -2,11 +2,11 @@
   
 
   angular.module('app')
-    .directive('searchAlbumDirective', searchAlbumDirective);
+    .directive('albumDirective', albumDirective);
 
   ///////////////////////////////////////
 
-  function searchAlbumDirective(SearchFactory, lastfmFactory) {
+  function albumDirective(SearchFactory, lastfmFactory) {
 
     return {
       restrict: 'E',
