@@ -1,5 +1,7 @@
 main()
+  #search(ng-controller="SearchController as searchCtrl" ng-include="'search/search.partial.html'")
   #queue(ng-controller="QueueController as queueCtrl" ng-include="'queue/queue.partial.html'" ng-show="location==='queue'")
-  #search(ng-controller="SearchController as searchCtrl" ng-include="'search/search.partial.html'" ng-show="location==='search'")
+  #artist(ng-controller="ArtistController as artistCtrl" ng-include="'artist/artist.partial.html'" ng-show="location==='artist'")
+  #album(ng-controller="AlbumController as albumCtrl" ng-include="'album/album.partial.html'" ng-show="location==='album'")
   #playlists(ng-controller="PlaylistController as playlistCtrl" ng-include="'playlists/playlists.partial.html'" ng-show="location==='playlists'")
   #browse(ng-controller="BrowseController as browseCtrl" ng-include="'browse/browse.partial.html'" ng-show="location==='browse'")
