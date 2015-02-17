@@ -4,8 +4,6 @@ main {
   bottom:           @footerHeight + @medium *2 ;
   left:             @leftWidth + @short;
   right:            @short;
-  //border-bottom:  1px solid @subtle;
-  //padding:			    @medium 0 0;
   margin:          @medium 0 0;
 	.item {
   	height: 	      @buttonHeight;
@@ -57,13 +55,13 @@ main {
     }
   }
   
-	.scrollable {
-    position: absolute;
+.scrollable {
+    position: relative;
     bottom: 0;
-    top:46px;
+    top: 0;
     right: 0;
     left: 0;
-	  overflow-y: scroll;
+    overflow-y: scroll;
   }
 
 	.nav-main {
@@ -144,24 +142,6 @@ main {
     }
     &.full-height {
       top: 20%;
-    }
-  }
-}
-
-.contextmenu {
-  display: none;
-  z-index: 1000;
-  position: absolute;
-  padding: 0;
-  overflow: hidden;
-  border: 1px solid @subtle;
-  background-color: @background;
-  .button-wrapper {
-    width:  100%;
-    text-align:  left;
-    .button {
-      border: none;
-      width:  100%;
     }
   }
 }
