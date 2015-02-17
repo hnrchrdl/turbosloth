@@ -68,6 +68,8 @@
         vm.searchRequest.isFocused = false;
       }, 50);
     }
+    
+    //---------- key events ----------
 
     // on arrow down
     $scope.$on('keydown:40', function() {
