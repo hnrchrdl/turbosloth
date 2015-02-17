@@ -32,7 +32,8 @@
       vm.goToArtist = goToArtist;
 
       function goToArtist(name) {
-        $rootScope.setLocation('/search/artist/' + name);
+        var url = '/artist/' + name;
+        $rootScope.setLocation(url);
       }
     }
 
