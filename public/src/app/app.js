@@ -27,17 +27,19 @@
       })
       .when('playlists', function() { 
         $rootScope.location = 'playlists';
+        $rootScope.playlistParams.playlistname = false;
       })
       .when('playlists/:playlist', function() { 
         $rootScope.location = 'playlists';
         $rootScope.playlistParams.playlistname = playlist;
       })
       .when('browse', function() { 
-        $rootScope.location = 'browse'; 
+        $rootScope.location = 'browse';
+        $rootScope.browseParams.foldername = false;
       })
       .when('browse:folder', function() { 
         $rootScope.location = 'browse';
-        $rootScope.browseParams.folder = folder;
+        $rootScope.browseParams.foldername = folder;
       });
   }
 
