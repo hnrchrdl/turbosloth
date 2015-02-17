@@ -66,7 +66,7 @@
     function processResults() {
       vm.searchRequest.isFocused = false;
       $('#search-input').blur();
-      $location.path('/search/' + 'artist' + '/' + vm.searchRequest.results[vm.searchRequest.selected].name);
+      $location.path('/artist/' + vm.searchRequest.results[vm.searchRequest.selected].name);
     }
 
     $scope.$on('keydown:40', function() {
@@ -100,7 +100,7 @@
     $scope.$on('keydown:13', function() {
 
       if (vm.searchRequest.results && vm.searchRequest.isFocused) {
-        $location.path('/search/' + 'artist' + '/' + vm.searchRequest.results[vm.searchRequest.selected].name);
+        $location.path('/artist/' + vm.searchRequest.results[vm.searchRequest.selected].name);
       }
     });
 
@@ -112,31 +112,6 @@
       }
     });
     
-    
-    //------------------------------------------
-
-
-    $scope.$on('search:displayDetails:artist', function(e, searchParams) {
-      vm.displayDetails.type = 'artist';
-      vm.displayDetails.artist.name = searchParams.artistname;
-    });
-    
-     $scope.$on('search:displayDetails:album', function(e, searchParams) {
-      vm.searchRequest.isFocused = false;
-      $('#search-input').blur();
-      vm.displayDetails.type = 'album';
-      vm.displayDetails.album.name = searchParams.albumname;
-      vm.displayDetails.album.artist = searchParams.artistname;
-    });
-    
-    $scope.$on('search:displayDetails:none', function(e, searchParams) {
-      vm.searchRequest.isFocused = true;
-      $('#search-input').blur();
-      vm.displayDetails.type = false;
-     });
-
-    
-
   }
 
 })();
