@@ -17,10 +17,11 @@
     //---------------------------
     
     function link(scope, element, attr) {
-      scope.$on('loading', function(e, state) {
-        state ?
-          element.show() :
-          element.hide();
+      scope.$on('loading:on', function() {
+        element.show() :
+      });
+      scope.$on('loading:off', function() {
+        element.hide() :
       });
     }
   }
