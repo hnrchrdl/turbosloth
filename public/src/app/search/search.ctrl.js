@@ -21,12 +21,6 @@
       blur: blur
     };
     
-    vm.displayDetails = {
-      type: false,
-      artist: {},
-      album: {}
-    };
-
     vm.processResults = processResults;
     
     
@@ -68,6 +62,12 @@
       $('#search-input').blur();
       $location.path('/artist/' + vm.searchRequest.results[vm.searchRequest.selected].name);
     }
+    
+    function blur() {
+      $timeout(function(){
+        vm.searchRequest.isFocused = false;
+      }, 50);
+    }
 
     $scope.$on('keydown:40', function() {
 
@@ -79,12 +79,6 @@
         });
       }
     });
-
-    function blur() {
-      $timeout(function(){
-        vm.searchRequest.isFocused = false;
-      }, 50);
-    }
       
     $scope.$on('keydown:38', function() {
       
