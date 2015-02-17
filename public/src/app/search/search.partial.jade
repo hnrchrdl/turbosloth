@@ -1,5 +1,3 @@
 #search-header(ng-include="'search/request/header.partial.html'")
 hr.prime
-search-artist-directive(artistname="searchCtrl.displayDetails.artist.name", ng-show="searchCtrl.displayDetails.type==='artist'")
-search-album-directive(albumname="searchCtrl.displayDetails.album.name", artistname="searchCtrl.displayDetails.album.artist", ng-show="searchCtrl.displayDetails.type==='album'")
 #search-results(ng-include="'search/request/results.partial.html'", ng-show="searchCtrl.searchRequest.name.length > 0 && searchCtrl.searchRequest.isFocused")
