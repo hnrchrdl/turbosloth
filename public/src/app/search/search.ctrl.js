@@ -69,6 +69,7 @@
       }, 50);
     }
 
+    // on arrow down
     $scope.$on('keydown:40', function() {
 
       if (vm.searchRequest.results && vm.searchRequest.isFocused &&
@@ -79,7 +80,8 @@
         });
       }
     });
-      
+    
+    // on arrow up
     $scope.$on('keydown:38', function() {
       
       if (vm.searchRequest.results && vm.searchRequest.isFocused &&
@@ -90,14 +92,16 @@
         });
       }
     });
-
+  
+    // on enter
     $scope.$on('keydown:13', function() {
 
       if (vm.searchRequest.results && vm.searchRequest.isFocused) {
         $location.path('/artist/' + vm.searchRequest.results[vm.searchRequest.selected].name);
       }
     });
-
+  
+    // on escape
     $scope.$on('keydown:27', function() {
 
       if (vm.searchRequest.isFocused) {
