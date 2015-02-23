@@ -28,19 +28,8 @@ html, body {
 
 a {
 	color: @primary;
-	text-decoration: none;
 	&:hover {
-		text-decoration: underline;
-	}
-}
-
-hr {
-	border:none;
-	background-color: @subtle;
-	height: 1px;
-	margin: 0;
-	&.prime {
-		background-color: @primary;
+		color: darken(@primary, 6.5%);
 	}
 }
 
@@ -49,75 +38,100 @@ hr {
 }
 
 .muted {
-	color: 			lighten(@fontPrimary, 50%);
+	color: 			lighten(@fontPrimary, 20%);
+  &.inverse {
+    color:      darken(@clouds, 20%);
+  }
 }
 
-.button-wrapper {
-	//height: 				@buttonHeight;
-	min-width:  		@buttonHeight;
-	line-height: 		@buttonHeight;
-	text-align:			center;
-  -webkit-touch-callout: none;
-	-webkit-user-select: none;
-	-khtml-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
-	user-select: none;
-	cursor: pointer; 
-	&.left {
-		float: 					left;
-	}
-	&.right {
-		float: 					right;
-	}
-
-	.button {
-		height: 		@buttonHeight;
-		min-width:  @buttonHeight;
-		display: 		inline-block;
-		border:			1px solid @primary;
-		&.text {
-	  	padding-left: 		@medium;
-	   	padding-right: 		@medium; 
-	  }
-	  &:hover {
-			background-color:	@primary;
-			color: 						@clouds;
-			
-		}
-		&.active {
-			background-color: @primary;
-			color: @clouds;
-		}
-		&.disabled {
-			color: 						@muted;
-			&:hover {
-				cursor:					default;
-			}
-		}
-	}
-}
-
-input, select {
-	display: 		inline-block;
-	height: 		@long;
-	box-sizing: 		border-box;
- 	-moz-box-sizing: 	border-box;
-  	-webkit-box-sizing: 	border-box;
-	background-color: 	@background;
-	color: 			@fontPrimary;
-	border: 		1px solid @subtle;
-	padding: 		0 @medium;
-	margin-bottom: 		@short;
-	&:focus {
-		border: 		1px solid @primary;
-		outline: 		0;
-	}
-}
 
 loading {
 	background-color: @transDark;
+	display: none;
 }
+
+
+a, button {
+	&.btn-default {
+  	background-color: transparent;
+  	color: @clouds;
+  	border: none;
+  	&:hover {
+  		background-color: transparent;
+  		color: darken(@clouds,15%);
+  		
+  	}
+  	&:focus {
+  		background-color: transparent;
+  		outline: 0;
+  		color: @clouds;
+  	}
+  	&.active {
+  		background-color: transparent;
+  		color: @primary;
+  		box-shadow: none;
+  		-webkit-box-shadow: none;
+  		&:focus {
+  			background-color: transparent;
+  			outline: 0;
+  			color: @primary;
+  		}
+  	}
+  }
+  &.btn-ok {
+		background-color: @primary;
+		color: @clouds;
+		border: none;
+		&:hover {
+			background-color: darken(@primary, 6.5%);
+			color: @clouds;
+			border: none;
+		}
+		&:focus {
+  		background-color: @primary;
+			color: @clouds;
+  		outline: 0;
+  	}
+	}
+	&.btn-warning {
+		background-color: @alizarin;
+		color: @clouds;
+		border: none;
+		&:hover {
+			background-color: darken(@alizarin, 6.5%);
+			color: @clouds;
+			border: none;
+		}
+		&:focus {
+  		background-color: @alizarin;
+			color: @clouds;
+  		outline: 0;
+  	}
+	}
+	&.btn-minimal {
+		background-color: @concrete;
+		border: none;
+		color: @clouds;
+		&:hover {
+			background-color: darken(@concrete, 6.5%);
+			border: none;
+			color: @clouds;
+		}
+		&:focus {
+  		background-color: @concrete;
+			color: @clouds;
+  		outline: 0;
+  	}
+	}
+}
+
+.short-left {
+	margin-left: @medium;
+}
+.short-right {
+	margin-right: @medium;
+}
+
 
 
 //pseudo-classes
@@ -143,5 +157,6 @@ loading {
 	background: @primary; 
 	color: 		#fff; 
 }
+
 
 

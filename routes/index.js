@@ -47,8 +47,8 @@ router.get('/api/queue', queueCtrl.get);
 
 //router.get('/search-request', searchCtrl.renderRequest);
 //router.get('/artist-details', searchCtrl.renderArtistDetails);
-router.get('/api/search/artist/:type/:name', searchCtrl.artistSearch);
 router.get('/api/search/albums/:artist', searchCtrl.albumSearch);
+router.get('/api/search/:type/:name', searchCtrl.search);
 
 
 

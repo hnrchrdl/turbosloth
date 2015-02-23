@@ -11,19 +11,20 @@
   function SearchFactory($http, $q, lastfmFactory) {
 
     return {
-      getArtistsByType: getArtistsByType,
+      search: search,
       getAlbums: getAlbums,
       getJoinedAlbums: getJoinedAlbums,
-      getAlbumByName: getAlbumByName
+      getAlbumByName: getAlbumByName,
+      getArtistsAndAlbums: getArtistsAndAlbums
     }
 
     ///////////////////////////////////////////////
 
-    function getArtistsByType(artistname, type) {
+    function search(artistname, type) {
 
       var deferred = $q.defer();
 
-      $http.get('api/search/artist/' + type + '/' + artistname)
+      $http.get('api/search/' + type + '/' + artistname)
         .success(function(data) { deferred.resolve(data); })
         .error(function(err) { deferred.reject(err); });
 
@@ -107,6 +108,22 @@
 
       });
       
+      return deferred.promise;
+    }
+
+
+    function getArtistsAndAlbums(name) {
+
+      var deferred = $q.defer();
+
+      $q.all([
+        search(name, 'Artist'),
+        search(name, 'Album')
+      ]).then(function(data) {
+        console.log(data);
+        deferred.resolve(data);
+      });
+
       return deferred.promise;
     }
 

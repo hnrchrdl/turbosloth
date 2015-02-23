@@ -19,11 +19,11 @@
     function link(scope, element, attr) {
       scope.$on('loading:on', function() {
         console.log('loading:on');
-        element.show() :
+        element.show();
       });
       scope.$on('loading:off', function() {
         console.log('loading:off');
-        element.hide() :
+        element.hide();
       });
     }
   }

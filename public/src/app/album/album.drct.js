@@ -2,11 +2,11 @@
   
 
   angular.module('app')
-    .directive('albumDirective', albumDirective);
+    .directive('showAlbumDirective', showAlbumDirective);
 
   ///////////////////////////////////////
 
-  function albumDirective(SearchFactory, lastfmFactory) {
+  function showAlbumDirective(SearchFactory, lastfmFactory) {
 
     return {
       restrict: 'E',
@@ -14,7 +14,7 @@
         artistname: '=',
         albumname: '='
       },
-      templateUrl: 'search/album/search.album.partial.html',
+      templateUrl: 'album/album.partial.html',
       link: link
     };
 

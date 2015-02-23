@@ -5,11 +5,95 @@ doctype html
 html(lang='en')
   include ./head.jade
 
-  body(ng-app='app', keypress-events, ng-view)
-    include ./left.jade
+  body(ng-app='app', keypress-events, ng-controller="MainController")
+    include ./modals.jade
+    div(ng-view) //empty ng-view to make routeProvider work
+    .search-wrapper(ng-controller="SearchController as searchCtrl")
+      nav.navbar.navbar-default
+        .container
+          .navbar-header
+            button.navbar-toggle.collapsed(type="button", data-toggle="collapse", data-target="#navbar")
+              span.sr-only Toggle navigation
+              span.icon-bar
+              span.icon-bar
+              span.icon-bar
+            a.navbar-brand(href="#") turbosloth
+          .collapse.navbar-collapse#navbar
+            ul.nav.navbar-nav
+              li(ng-class="{active: location==='queue'}")
+                a(href="/#/queue") Queue
+              li(ng-class="{active: location==='playlists'}")
+                a(href="/#/playlists") Playlists
+              li(ng-class="{active: location==='browse'}")
+                a(href="/#/browse") Browse
+
+            ul.nav.navbar-nav.navbar-right
+              li(ng-class="{active: location==='settings'}")
+                a(href="/#settings") Settings
+              li
+                a(href="/logout") Logout
+
+            form.navbar-form#searchform(ng-submit="searchCtrl.searchRequest()")
+              .form-group
+                .input-group#search-input-group
+                  span.input-group-addon
+                    i.fa.fa-search
+                  input.form-control#searchinput(type="text", placeholder="search", 
+                  ng-model="searchCtrl.input", 
+                  ng-focus="searchCtrl.focus=true", 
+                  ng-blur="searchCtrl.focus=false")
+                  span.input-group-btn
+                    button.btn.btn-ok(type="submit") OK
+      search-results(artists="searchCtrl.artists", albums="searchCtrl.albums", 
+      ng-show="searchCtrl.input!=='' && searchCtrl.focus")
+
+
+
+
+    //include ./left.jade
     include ./main.jade
     //include ./options.jade
-    include ./footer.jade
+    //include ./footer.jade
+
+
+    #footer(ng-controller="PlayerController as playerCtrl")
+      .container-fluid
+        .row
+          .col-xs-3
+            .btn-group.btn-group-lg
+              button.btn.btn-default(title="previous", mpd, cmd="previous")
+                i.fa.fa-step-backward
+              button.btn.btn-default(title="pause",  mpd, cmd="pause", ng-class="{active: playerCtrl.status.state==='pause'}")
+                i.fa.fa-pause
+              button.btn.btn-default(title="play",  mpd, cmd="play", ng-class="{active: playerCtrl.status.state==='play'}")
+                i.fa.fa-play
+              button.btn.btn-default(title="stop",  mpd, cmd="stop", ng-class="{active: playerCtrl.status.state==='stop'}")
+                i.fa.fa-stop
+              button.btn.btn-default(title="next",  mpd, cmd="next")
+                i.fa.fa-step-forward
+          .col-xs-6
+            .row
+              .col-xs-12#current-song-info
+                | {{playerCtrl.currentsong.Artist}} - {{playerCtrl.currentsong.Title}}
+            .row
+              .col-xs-2.elapsed
+                | {{playerCtrl.elapsed | time}}
+              .col-xs-8
+                #seek-bar-container
+                  #seek-bar(seekbar, currentsong="playerCtrl.currentsong", status="playerCtrl.status", elapsed="playerCtrl.elapsed")
+              .col-sm-2.songtime
+                | {{playerCtrl.currentsong.Time | time}}
+
+          .col-xs-3
+            btn-group.btn-group-lg.pull-right
+              button.btn.btn-default(title="random",  mpd, cmd="toggleRandom", args="playerCtrl.status.random", ng-class="{active: playerCtrl.status.random==='1'}")
+                i.fa.fa-random
+              button.btn.btn-default(title="repeat", mpd, cmd="toggleRepeat", args="playerCtrl.status.repeat", ng-class="{active: playerCtrl.status.repeat==='1'}")
+                i.fa.fa-repeat
+            btn-group.btn-group-lg.pull-right.short-right
+              button.btn.btn-default(title="stream")
+                i.fa.fa-volume-up
+
     //include ./info.jade
     loading
 

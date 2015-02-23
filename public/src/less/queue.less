@@ -1,69 +1,24 @@
 #queue {
-	.nav-main {
-		margin:		0 0 @medium 0;
-	
-		.button {
-			margin:    0 0 0 @short;
-	  }		
-		.selecthelper {
-			border: none;
-			margin: 0;
-			&:hover {
-				color: @primary;
-				background: none;
-			}
-		}
-	}
-	.item {
+	position:absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+
+	a {
+		color: @fontPrimary;
+		text-decoration: none;
 		&:hover {
-			//font-style: italic;
-			background-color: lighten(@extraSubtle, 80%);
-		}
-		&.active {
-			color: @primary;
+			text-decoration: underline;
 		}
 	}
-	.attr.selector {
-		color: @subtle;
-		width: 2%;
-		min-width:	20px;
-		&.active {
-			color: @primary;
-		}
+	.selector {
+		cursor: pointer;
 	}
-	.attr.songpos {
-		text-align: right;
-		width: 2%;
-		min-width:	10px;
+	&.active {
+		color: @primary;
 	}
-	.attr.artist {
-		text-align: left;
-		width: 22%;
-		min-width:	40px;
-	}
-	.attr.title {
-		text-align: left;
-		width: 26%;
-		min-width:	40px;
-	}
-	.attr.track {
-		text-align: right;
-		width: 3%;
-		min-width:	10px;
-	}
-	.attr.album {
-		text-align: left;
-		width: 23%;
-		min-width:	40px;
-	}
-	.attr.genre {
-		text-align: left;
-		width: 15%;
-		min-width:	30px;
-	}
-	.attr.date {
-		text-align: right;
-		width: 3%;
-		min-width:	20px;
+	.playindicator {
+		color: @primary;
 	}
 }

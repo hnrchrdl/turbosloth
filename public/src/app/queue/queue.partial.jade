@@ -1,69 +1,81 @@
-.nav-main
-  .button-wrapper.left
-    .button.selecthelper(title='check all', ng-click="queueCtrl.select.batchSelect(true)")
-      i.fa.fa-check-square-o
-    .button.selecthelper(title='uncheck all', ng-click="queueCtrl.select.batchSelect(false)")
-      i.fa.fa-square-o
-    .button.selecthelper(title='find current song', ng-click="")
-      i.fa.fa-music
-  .button-wrapper.right
-    .button.text.sloth-mode(title='sloth mode', ng-click="queueCtrl.dialogs.show('sloth')")
-      i.fa.fa-rocket
-      |  sloth mode
-    .button.text.save-playlist(title='save queue as new playlist', ng-click="queueCtrl.dialogs.show('save')")
-      i.fa.fa-save
-      |  save
-    .button.text.shuffle(title='shuffle queue', ng-click="queueCtrl.dialogs.show('shuffle')")
-      i.fa.fa-random
-      |  shuffle
-    .button.text.clear(title='clear queue', ng-click="queueCtrl.dialogs.show('clear')")
-      i.fa.fa-eraser
-      |  clear
-hr.prime
-.clear
-.scrollable
-  .item.muted(ng-hide='queueCtrl.queue.data.length>0')
-    | queue is empty
-  .item(ng-repeat='song in queueCtrl.queue.data',
-  mpd, bind="dblclick", cmd="playSong", args="song.Id",
-  ng-class="{active: queueCtrl.currentSongId===song.Id}")
-    .attr.selector(
-    ng-class='{active: song.selected}',
-    ng-mousedown='queueCtrl.select.start(song.Pos, song.selected)',
-    ng-mouseup='queueCtrl.select.end(song.Pos)')
-      .inner
-        i.fa.fa-check
-    .attr.songpos
-      .inner
-        i.fa.fa-play(ng-show="queueCtrl.currentSongId===song.Id")
-        span.muted(ng-show="queueCtrl.currentSongId!==song.Id")
-          | {{song.Pos | plusOne}}
-    .attr.artist
-      .inner
-        a(ng-href="/#/search/artist/{{song.Artist}}") {{song.Artist}}
-    .attr.title
-      .inner
-        |  {{song.Title}}
-    .attr.track
-      .inner
-        span.muted
-          | {{song.Track}}
-    .attr.album
-      .inner
-        a(ng-href='/#/search/album/{{song.Artist}}/{{song.Album}}') {{song.Album}}
-        span.muted  {{song.Date}}
-    .attr.genre
-      .inner
-        span.muted
-          | {{song.Genre}}
-    .attr.time
-      .inner
-        span.muted
-          | {{song.Time | time}}
+.sub-nav
+  .container-fluid
+    .row
+      .col-xs-4
+        .btn-group.btn-group-sm
+          button.btn.btn-default(title='check all', ng-click="queueCtrl.select.batchSelect(true)")
+            i.fa.fa-check-square-o
+          button.btn.btn-default.btn-navbar-invers(title='uncheck all', ng-click="queueCtrl.select.batchSelect(false)")
+            i.fa.fa-square-o
+      .col-xs-4
+        span(style="line-height: 26px", ng-show="queueCtrl.selected.length > 0") selection:
+        .btn-group.btn-group-sm.short-left(ng-show="queueCtrl.selected.length > 0")
+          button.btn.btn-default(title='play next', mpd, cmd="playNext", args="queueCtrl.selected")
+            i.fa.fa-arrow-down
+          button.btn.btn-default(title='add to playlist', ng-click="queueCtrl.dialogs.show('playlistselect')")
+            i.fa.fa-share
+          button.btn.btn-default(title='remove from playlist', mpd, cmd="removeFromQueue", args="queueCtrl.selected")
+            i.fa.fa-remove
+      .col-xs-4
+        .btn-group.btn-group-sm.pull-right
+          button.btn.btn-default.btn-navbar-invers(title='save queue as new playlist', ng-click="queueCtrl.dialogs.show('save')")
+            i.fa.fa-save
+            
+          button.btn.btn-default.btn-navbar-invers(title='shuffle queue', ng-click="queueCtrl.dialogs.show('shuffle')")
+            i.fa.fa-random
+            
+          button.btn.btn-default.btn-navbar-invers(title='clear queue', 
+          data-toggle="modal", data-target="#clear-queue-modal")
+            i.fa.fa-eraser
+        .btn-group.btn-group-sm.short-right.pull-right
+          button.btn.btn-default.btn-navbar-invers(title='sloth mode', ng-click="queueCtrl.dialogs.show('sloth')")
+            i.fa.fa-rocket
+       
 
-#option-selectoptions.options-box(
-ng-include="'queue/options/selection.partial.html'",
-ng-show="queueCtrl.selected.length > 0")
+.scrollable
+  .div-centered(ng-hide='queueCtrl.queue.data.length>0')
+    | queue is empty
+  .container-fluid(ng-hide="queueCtrl.queue.data.length<1")
+    table.table.table-hover.table-striped
+      thead
+        tr
+          th
+          th #
+          th Artist
+          th Title
+          th Track
+          th Album
+          th Year
+          th Genre
+          th Time
+      tbody
+        tr(ng-repeat='song in queueCtrl.queue.data',
+        mpd, bind="dblclick", cmd="playSong", args="song.Id",
+        ng-class="{active: queueCtrl.currentSongId===song.Id}")
+          td.muted(ng-mousedown='queueCtrl.select.start(song.Pos, song.selected)',
+          ng-mouseup='queueCtrl.select.end(song.Pos)')
+            i.fa.fa-check.selector(ng-class="{active: song.selected}")
+          td
+            i.fa.fa-play-circle-o.playindicator(ng-show="queueCtrl.currentSongId===song.Id")
+            span.muted(ng-show="queueCtrl.currentSongId!==song.Id")
+              | {{song.Pos | plusOne}}
+          td
+            a(ng-href="/#/artist/{{song.Artist}}") {{song.Artist}}
+          td
+            | {{song.Title}}
+          td
+            span.muted
+              | {{song.Track}}
+          td
+            a(ng-href='/#/artist/{{song.Artist}}/album/{{song.Album}}') {{song.Album}}
+          td
+            span.muted  {{song.Date}}
+          td
+            span.muted
+              | {{song.Genre}}
+          td
+            span.muted
+              | {{song.Time | time}}
 
 #option-savequeue.options-box.question(
 ng-include="'queue/options/save.partial.html'",

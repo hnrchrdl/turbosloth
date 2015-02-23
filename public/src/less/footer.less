@@ -1,100 +1,40 @@
 #footer {
-  position:             absolute;
+  position:             fixed;
   bottom:               0;
-  height:               @footerHeight;
+  min-height:           @footerHeight;
   right:                0;
   left:                 0;
   color:                @clouds;
-  text-align:           center;
-  background-color:     darken(@background2,30%);
-  //background-color:     @transWhite;
-  padding:              @medium;
+  background-color:     darken(@background2, 20%);
+  border:               1px solid darken(@background2, 26.5%);
+  padding: 8px;
   overflow:             hidden;
 
-  .control-menu {
-    position:       absolute;
-    line-height:    @long;
-    .button {
-        border:       none;
-        height:       @footerHeight;
-        width:        @footerHeight;
-        line-height:  @footerHeight;
-        font-size:    @bigger + @short;
-        &.active {
-          color:              @primary;
-          background: none;
-        }
-        &:hover {
-          background-color:   darken(@background2,20%);
-        }
-      }
-  }
-  #control-menu {
-      left:         @footerHeight + (@long * 6) + (@medium * 4); 
-    }
-    #control-menu2 {
-      right:    0;  
-    }
-  #albumart {
-    position:         absolute;
-    bottom:           0;
-    left:             0;
-    height:           @footerHeight + @medium * 2;
-    width:            @footerHeight  + @medium * 2;      
-    background: no-repeat center center; 
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover;
-    i {
-      line-height: @footerHeight + @medium * 2;
-    }
-  }
+}
 
-  #currentsong-wrapper {
-    position:         absolute;
-    left:             @footerHeight + @medium * 2;
-    width:            @long * 6;
-    text-align:       left;
-    padding:          0 @medium;
-    .muted {
-      color: @concrete;
-    }
-  }
-  .seek-time {
-    position:     absolute;
-    bottom:       0;
-    width:        @long * 2;
-    line-height:  @footerHeight + @medium * 2;
-  }
-  #seek-current {
-    left:         @footerHeight + (@long * 6) + (@medium * 4) + (@footerHeight * 5);
-    text-align:   right;
-  }
-  #seek-songtime {
-    right:        @footerHeight * 3; 
-    text-align:   left;
-  }
-  #seek-bar-container {
-    position:       absolute;
-    bottom:         ((@footerHeight + @medium * 2) / 2) - @seekBarHeight / 2;
-    height:         @seekBarHeight;
-    left:           @footerHeight * 6 + (@long * 8) + @medium * 4 + @short; 
-    right:          @footerHeight * 3 + @long * 2 + @short;
-    cursor:         pointer;
-    overflow:       hidden;
-    background-color:   @concrete;
-    &:hover {
-      //background-color:   lighten(@concrete,20%);
-      background-color:   @clouds;
-    }
-    #seek-bar {
-      height:             @seekBarHeight;
-      width:              0;
-      background-color:   @primary;
-    }
-  }
-  
+#current-song-info {
+  padding: 0 8px 8px 8px;
+  text-align: center;
+}
 
+.elapsed {
+  text-align:   right;
+}
 
+.songtime {
+  text-align:   left;
+}
+
+#seek-bar-container {
+  cursor:             pointer;
+  overflow:           hidden;
+  background-color:   @concrete;
+  &:hover {
+    background-color:   @clouds;
+  }
+  #seek-bar {
+    height:             15px;
+    width:              0;
+    background-color:   @primary;
+  }
 }

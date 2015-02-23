@@ -1,41 +1,72 @@
-#artistdetails
-  .scrollable()
-    .artist-image(ng-style="{'background-image': 'url(' + artistinfo.imageurl + ')'}")
-    .artist-name
-      |  {{artistinfo.name}}
-    .artist-info
-      .artist-genre 
-        span(ng-repeat='genre in artistinfo.tags.tag')
-          |  {{genre.name}}{{{true: '', false: ', '}[$last]}}
-      .artist-bio(ng-bind-html="artistinfo.bio.content | trustAsHtml")
-    .clear
-    hr
-    .albums
-      .album
-      .head  
-        |  {{artistDetailsCtrl.albums | objectlength}} Albums
-        .button-wrapper.right
-          .button.text.addall(ng-click="mainCtrl.cmd.addAllFromAlbums(joinedAlbums)")
-            i.fa.fa-plus
-            |  add all
-          .button.text.playall(ng-click="mainCtrl.cmd.playAllFromAlbums(joinedAlbums)")
-            i.fa.fa-play
-            |  play all
-      .clear
-      album-directive(ng-repeat="(key, album) in joinedAlbums", album="album", artistname="artistinfo.name")
-      .clear
-    hr
-    .similar
-      .button-wrapper.right(title="add similar artists to queue", ng-click="mainCtrl.cmd.addAllFromArtists(similarArtists)")
-        .button.text.addall
-          i.fa.fa-plus
-          |  add all
-        .button.text.playall(title="replace queue with similar artist", ng-click="mainCtrl.cmd.playAllFromArtists(similarArtists)")
-          i.fa.fa-play
-          |  play all
-      .head 
-        |  Similar Artists
-      .clear
-      artist-directive(ng-repeat="(key, artist) in similarArtists", artist="artist")
-      .clear
+#artist
+  .scrollable
+    .container-fluid
+      .row
+        .col-sm-9 
+          // artist
+          .row
+            .col-sm-7
+              .btn-group.pull-right
+                button.btn.btn-minimal(ng-click="mainCtrl.cmd.addAllFromAlbums(joinedAlbums)")
+                  i.fa.fa-plus
+                  |  add all
+                button.btn.btn-minimal(ng-click="mainCtrl.cmd.playAllFromAlbums(joinedAlbums)")
+                  i.fa.fa-play
+                  |  play all
+              h2 {{artistinfo.name}}
+              hr
+              .artist-genre
+                span(ng-repeat='genre in artistinfo.tags.tag')
+                 | {{genre.name}}{{{true: '', false: ', '}[$last]}}
+              hr
+              .artist-bio(ng-bind-html="artistinfo.bio.content | trustAsHtml")
+            .col-sm-5
+              img.img-responsive(src="{{artistinfo.imageurl}}")
+          .row
+            .col-xs-12
+              hr
+              h4 Albums
+              .row
+                .album-container(ng-repeat="(key, album) in joinedAlbums")
+                  .col-xs-6.col-sm-3.col-lg-2
+                    .album
+                      .name
+                        h5 {{album.name}}
+                      a(ng-if="album.songs", ng-href="/#/artist/{{artistinfo.name}}/album/{{album.name}}")
+                        img.img-responsive(src="{{album.imageUrl}}")
+                      .no-link(ng-if="!album.songs")  
+                        img.img-responsive.img-blur(src="{{album.imageUrl}}")
+                      button.btn.btn-ok.btn-sm.btn-block(ng-if="album.songs")
+                        i.fa.fa-plus
+                        |  add {{album.songs.length}} song
+                        span(ng-if="album.songs.length>1") s
+                      button.btn.disabled.btn-minimal.btn-sm.btn-block(ng-if="!album.songs")
+                        i.fa.fa-flag-o
+                        |  request
+                      hr
+                  .clearfix.visible-lg(ng-if="( $index + 1 ) % 6 === 0 || $last")
+                  .clearfix.visible-sm(ng-if="( $index + 1 ) % 4 === 0 || $last")
+                  .clearfix.visible-xs(ng-if="( $index + 1 ) % 2 === 0 || $last")
 
+          
+
+
+        .col-sm-3
+          // similar artists
+          .row
+            .col-xs-12
+              h4 Similar Artists
+          .row
+            .artist(ng-repeat="(key, artist) in similarArtists", artist="artist")
+              .col-lg-6.col-xs-12
+                h5(ng-click="setLocation('/artist/' + artist.name)") {{artist.name}}
+                img.img-responsive(src="{{artist.imageUrl}}")
+                hr
+              .clearfix(ng-if="( $index + 1 ) % 2 === 0 || $last")
+            .button-wrapper.right(title="add similar artists to queue", ng-click="mainCtrl.cmd.addAllFromArtists(similarArtists)")
+              .button.text.addall
+              i.fa.fa-plus
+              |  add all
+            .button.text.playall(title="replace queue with similar artist", ng-click="mainCtrl.cmd.playAllFromArtists(similarArtists)")
+              i.fa.fa-play
+              |  play all

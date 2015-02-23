@@ -1,0 +1,10 @@
+.modal.fade#clear-queue-modal(role="dialog", aria-labelledby="myModalLabel", aria-hidden="true")
+  .modal-dialog.modal-sm
+    .modal-content
+      .modal-header
+        button.close(type="button", data-dismiss="modal", aria-label="Close")
+          span(aria-hidden="true")&times;
+        h4.modal-title#myModalLabel Clear Playlist?
+      .modal-footer
+        button.btn.btn-default.btn-minimal(type="button", data-dismiss="modal") Cancel
+        button.btn.btn-default.btn-ok(mpd, cmd="clearQueue", type="button", data-dismiss="modal") OK

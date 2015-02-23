@@ -25,11 +25,14 @@
         if (scope.artist && scope.album) {
           var artist = scope.artist;
           var album = scope.album;
+          console.log(artist, album, scope.size);
           if (artist && album) {
             lastfmFactory.albumInfo(artist, album).then(function(results) {
               try {
-                element.css('background-image', 'url(' + results.album.image[scope.size]['#text'] + ')');
-              } catch(e) {}
+                element.attr('src', results.album.image[scope.size]['#text']);
+              } catch(e) {
+                element.attr('src', 'http://static.last.fm/flatness/catalogue/noimage/noalbum_g3.png');
+              }
             });
           }
         }

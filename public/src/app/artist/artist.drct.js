@@ -1,18 +1,18 @@
 (function() { 'use strict';
   
   angular.module('app')
-    .directive('artistDirective', artistDirective);
+    .directive('showArtistDirective', showArtistDirective);
 
   ///////////////////////////////////////
 
-  function artistDirective(SearchFactory, lastfmFactory) {
+  function showArtistDirective(SearchFactory, lastfmFactory) {
 
     return {
       restrict: 'E',
       scope: {
         artistname: '='
       },
-      templateUrl: 'search/artist/search.artist.partial.html',
+      templateUrl: 'artist/artist.partial.html',
       link: link
     };
 
@@ -31,17 +31,25 @@
           lastfmFactory.artistInfo(artistname)
           .then(function(results) {
             scope.artistinfo = results.artist;
-            scope.artistinfo.imageurl = results.artist.image[4]['#text'];
+            try {
+              scope.artistinfo.imageurl = results.artist.image[4]['#text'];
+            } catch(e) {
+              console.log('no artist image with size 4!');
+            }
           });
 
           lastfmFactory.similarArtists(artistname)
           .then(function(results) {
             var similarArtists = [];
             _.each(results.similarartists.artist, function(artist) {
-              similarArtists.push({
-                name: artist.name,
-                imageUrl: artist.image[3]['#text']
-              });
+              try {
+                similarArtists.push({
+                  name: artist.name,
+                  imageUrl: artist.image[3]['#text']
+                });
+              } catch(e) {
+                console.log('failed to get artist image for ' + artist.name);
+              }
             });
             scope.similarArtists = similarArtists;
           });

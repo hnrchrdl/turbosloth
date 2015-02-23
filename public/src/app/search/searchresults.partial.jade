@@ -1,0 +1,41 @@
+.container
+  .row
+    .col-sm-6
+      h4 Artists
+      .error(ng-show='artists.error')  
+        |   {{artists.error}}
+      .row(ng-repeat='artist in artists.results')
+        .col-xs-2
+          | img
+        .col-xs-10
+          h5 {{artist.name}}
+          .genre
+            span(ng-repeat='genre in artist.genres')
+              |  {{genre}}{{{true: '', false: ', '}[$last]}}        
+            .muted.inverse {{artist.songcount}} song
+              span(ng-show="artist.songcount>1") s
+        .clearfix
+        .col-xs-12
+          hr(ng-show="!$last")
+
+
+    .col-sm-6
+      h4 Albums
+      .error(ng-show='albums.error')  
+        |   {{albums.error}}
+      .row(ng-repeat='album in albums.results')
+        .col-xs-2
+          img.img-responsive(albumart, artist="album.artist", 
+          album="album.name", size="1")
+        .col-xs-10
+          h5 {{album.name}}
+          .artist
+            | by {{album.artist}}
+          .genre
+            span(ng-repeat='genre in album.genres')
+              |  {{genre}}{{{true: '', false: ', '}[$last]}}        
+            .muted.inverse {{album.songcount}} song
+              span(ng-show="album.songcount>1") s
+        .clearfix
+        .col-xs-12
+          hr(ng-show="!$last")

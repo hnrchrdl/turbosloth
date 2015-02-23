@@ -3,7 +3,7 @@
 
 
   angular.module('app', ['ngRoute'])
-    .config(routeConfig);
+    .config(routeConfig)
     .run(init)
     //.run(locationWatcher)
     .run(socketWatcher);
@@ -11,64 +11,75 @@
 
   /////////////////////////////////////////
 
-  function routeConfig($rootScope, $location, $routeProvider) {
+  function routeConfig($routeProvider) {
     $routeProvider
-      .when('/queue', function() { 
-        $rootScope.location = 'queue'; 
+      .when('/queue', {
+        resolve: {
+          location: function($rootScope) { 
+            $rootScope.location = 'queue';
+          }
+        }
       })
-      .when('artist/:artist', function() { 
-        $rootScope.location = 'artist';
-        $rootScope.artistParams = {
-          artistname: artist
-        };
+      .when('/artist/:artist', {
+        resolve: {
+          location: function($rootScope) { 
+            $rootScope.location = 'artist';
+          },
+          params: function($rootScope) {
+            $rootScope.$broadcast('browse:artist');
+          }
+        }
       })
-      .when('/artist/:artist/album/:album', function() { 
-        $rootScope.location = 'album';
-        $rootScope.albumParams = {
-          artistname: artist,
-          albumname: album
-        };
+      .when('/artist/:artist/album/:album', {
+        resolve: {
+          location: function($rootScope) { 
+            $rootScope.location = 'album';
+          },
+          params: function($rootScope) {
+            $rootScope.$broadcast('browse:album');
+          }
+        }
       })
-      .when('playlists', function() { 
-        $rootScope.location = 'playlists';
-        $rootScope.playlistParams = {
-          playlistname: false
-        };
+      .when('/playlists', {
+        resolve: {
+          location: function($rootScope) { 
+            $rootScope.location = 'playlists';
+          }
+        }
       })
-      .when('playlists/:playlist', function() { 
-        $rootScope.location = 'playlists';
-        $rootScope.playlistParams = {
-          playlistname: playlist
-        };
+      .when('/playlist/:playlist', {
+        resolve: {
+          location: function($rootScope) { 
+            $rootScope.location = 'playlist';
+          },
+          params: function($rootScope) {
+            $rootScope.$broadcast('browse:playlist');
+          }
+        }
       })
-      .when('browse', function() { 
-        $rootScope.location = 'browse';
-        $rootScope.browseParams = {
-          foldername: false
-        };
+      .when('/browse', {
+        resolve: {
+          location: function($rootScope) { 
+            $rootScope.location = 'browse';
+          }
+        }
       })
-      .when('browse:folder', function() { 
-        $rootScope.location = 'browse';
-        $rootScope.browseParams = {
-          foldername: folder
-        };
+      .when('/browse:folder', {
+        resolve: {
+          location: function($rootScope) { 
+            $rootScope.location = 'browsefolder';
+          },
+          params: function($rootScope) {
+            $rootScope.$broadcast('browse:folder');
+          }
+        }
       });
-
-
-
-    $rootScope.setLocation = setLocation;
-    function setLocation(location) {
-      if (location) {
-        console.log('set location: ', location);
-        $location.path(location);
-      }
-    }
 
 
   }
 
 
-  function init($rootScope, CurrentSong, QueueFactory) {
+  function init($rootScope, $routeParams, $location, CurrentSong, QueueFactory) {
     CurrentSong.getSongAndStatus().then(function(results) {
       $rootScope.$broadcast('change:player', results);
     });
@@ -76,112 +87,18 @@
     QueueFactory.getQueue().then(function(results) {
       $rootScope.$broadcast('change:queue', results);
     });
+
+
+    // working around nasty button focus issues 
+    //$(document).on('mouseup', '.btn' , function(){
+    //  $(this).blur();
+    //});
+
     
   }
 
 
-  /**
-  *** instantiate app
-  *** listen for location changes on $rootScope
-  **/
-  function locationWatcher($rootScope, $location, $routeParams) {
-
-    $rootScope.queueParams = false;
-    $rootScope.searchParams = false;
-    $rootScope.playlistsParams = false;
-    $rootScope.browseParams = false;
-    
-    $rootScope.searchPath = 'search';
-    $rootScope.playlistsPath = false;
-    $rootScope.browsePath = false;
-
-
-    $rootScope.$on('$locationChangeSuccess', locationChange);
-
-    function locationChange() {
-
-      var route = $location.path().split('/');
-
-      switch(route[1]) {
-
-        case 'queue':
-          $rootScope.location = 'queue'; //show queue
-          break;
-
-        case 'search':
-          $rootScope.location = 'search'; //show search
-
-          if ($rootScope.searchPath !== $location.path()) {
-            
-            if (route.length > 2) { // search has params
-
-              switch (route[2]) {
-                
-                case 'artist':
-                  // artist search
-                  $rootScope.$broadcast('search:displayDetails:artist', {
-                    artistname: route[3]
-                  });
-                  $rootScope.searchPath = $location.path();
-                  break;
-                
-                case 'album':
-                  // album search
-                  $rootScope.$broadcast('search:displayDetails:album', {
-                    artistname: route[3],
-                    albumname: route[4]
-                  });
-                  break;
-              }
-            } else { // no search mode specified
-              $rootScope.$broadcast('search:displayDetails:none'); // empty out
-            }
-            $rootScope.searchPath = $location.path();
-          }
-          break;
-        
-        case 'playlists':
-          $rootScope.location = 'playlists'; //show playlists
-          if ($rootScope.playlistsPath !== $location.path()) {
-            if (route.length > 2) { // playlists has params
-              $rootScope.$broadcast('playlists', 
-                route[3] // playlistname goes here
-              );
-            }
-            else {
-              $rootScope.$broadcast('playlists', 
-                false // no playlistname. display all playlists
-              );
-            }
-            $rootScope.playlistsPath = $location.path();
-          }
-          break;
-        
-        case 'browse':
-          $rootScope.location = 'browse'; //show browse
-          if ($rootScope.browsePath !== $location.path()) {
-            if (route.length > 2) { // browse has params
-              $rootScope.$broadcast('browse', 
-                route[3] // name of the folder goes here
-              );
-            }
-            else {
-              $rootScope.$broadcast('browse', 
-                false // no folder specified. get root
-              );
-            }
-            $rootScope.browsePath = $location.path();
-          }
-          
-          break;
-
-        default:
-          $location.path('queue');
-      }
-    }
-
-  }
-
+  
   function socketWatcher($rootScope, socket, CurrentSong, QueueFactory) {
 
     socket.on('connect', function () {

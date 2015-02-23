@@ -1,8 +1,8 @@
-var search = require('../models/search');
+var searchmodel = require('../models/search');
 
 
 module.exports = {
-  artistSearch: artistSearch,
+  search: search,
   albumSearch: albumSearch
 };
 
@@ -11,7 +11,7 @@ module.exports = {
 
 /* search Artist by Type */
 
-function artistSearch(req, res) {
+function search(req, res) {
   var type = req.params.type;
   var name = req.params.name;
 
@@ -31,7 +31,7 @@ function artistSearch(req, res) {
     args: [type, name]
   }
 
-  search.searchRequest( options, function(err, data) {
+  searchmodel.searchRequest( options, function(err, data) {
     return res.json({error: err, results: data});
   });
 };
@@ -51,7 +51,7 @@ function albumSearch(req, res) {
     args: ['artist', artist]
   }
   
-  search.getAlbumsFromArtist(options, function(err, data) {
+  searchmodel.getAlbumsFromArtist(options, function(err, data) {
     return res.json({error: err, albums: data});
   });
 }
@@ -78,7 +78,7 @@ function renderRequest(req, res) {
     args: [ searchtype, searchstring ]
   }
 
-  search.searchRequest( options, function( err, data ) {
+  searchmodel.searchRequest( options, function( err, data ) {
     res.render( 'searchrequest', {
       result: data,
       searchstring: searchstring, 
@@ -101,7 +101,7 @@ function renderArtistDetails( req, res ) {
     cmd: 'find',
     args: [ 'artist', artist ]
   }
-  search.getArtistDetails( options, function( err, data ) {
+  searchmodel.getArtistDetails( options, function( err, data ) {
     res.render( 'artistdetails', {
       songs: data.songs,
       albums: data.albums, 

@@ -1,82 +1,29 @@
 main {
 	position: absolute;
-	top: 50px;
-	bottom: @footerHeight + @medium *2 ;
-	left: @leftWidth + @short;
-	right: @short;
-	margin: @medium 0 0;
-	.item {
-  		height: @buttonHeight;
-  		line-height: 	  @buttonHeight;
-  		overflow: 	    hidden;
-  		border-bottom: 	1px solid @subtle;
-    		// no text select
-    		-webkit-touch-callout: none;
-    		-webkit-user-select: none;
-    		-khtml-user-select: none;
-    		-moz-user-select: none;
-    		-ms-user-select: none;
-    		user-select: none;
-    		cursor: default;
-    		a {
-      		color: @fontPrimary;
-      		&:hover {
-        		text-decoration: underline;
-      		}
-    	}
-  	&.active {
-      		color:  @primary;
-      		.muted {
-        		color:  @primary;
-      		}
-      		a {
-        		color: @primary;
-      		}
-	}
-    	&.selected {
-      		background-color: @extraSubtle;
-    	}
-    	.attr {
-      		height: @buttonHeight;
-      		display: inline-block;
-      		overflow: hidden;
-      		.inner {
-        		padding: 0 @short 0;
-      		}
-      		&.left {
-        		float: left;
-      		}
-      		&.right {
-        		float: 	right;
-      		}
-      		&.songpos.active {
-        		color: @primary;
-      		}
-    	}
-  }
-  
-	.scrollable {
-	    position: relative;
-	    bottom: 0;
-	    top: 0;
-	    right: 0;
-	    left: 0;
-	    overflow-y: scroll;
-	  }
+	top: @navbar-height + 2;
+	bottom: @footerHeight;
+	left: 0;
+	right: 0;
 
-	.nav-main {
-		height: @buttonHeight;
-		//border-bottom: @lightBorder;
-	}
-
-  .loading-wrapper {
-    font-size: 1000%;
-    line-height: 400px;
-    text-align: center;
-    i.loading {
-      color: @clouds;
-    }
+  .sub-nav {
+    padding: 8px 0;
+    background-color: darken(@background2, 20%);
+    border: 1px solid darken(@background2, 26.5%);
   }
+
+
+  .scrollable {
+    position: absolute;
+    bottom: 0;
+    top: 46px;
+    right: 0;
+    left: 0;
+    overflow-y: scroll;
+    padding-top: @medium;
+  }
+
+
+	
 
   .options-box {
     //display: none;
