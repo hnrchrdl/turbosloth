@@ -6,7 +6,7 @@ html(lang='en')
   include ./head.jade
 
   body(ng-app='app', keypress-events, ng-controller="MainController")
-    include ./modals.jade
+    
     div(ng-view) //empty ng-view to make routeProvider work
     .search-wrapper(ng-controller="SearchController as searchCtrl")
       nav.navbar.navbar-default
@@ -28,8 +28,8 @@ html(lang='en')
                 a(href="/#/browse") Browse
 
             ul.nav.navbar-nav.navbar-right
-              li(ng-class="{active: location==='settings'}")
-                a(href="/#settings") Settings
+              //li(ng-class="{active: location==='settings'}")
+                a(href="/#/settings") Settings
               li
                 a(href="/logout") Logout
 
@@ -40,20 +40,33 @@ html(lang='en')
                     i.fa.fa-search
                   input.form-control#searchinput(type="text", placeholder="search", 
                   ng-model="searchCtrl.input", 
-                  ng-focus="searchCtrl.focus=true", 
-                  ng-blur="searchCtrl.focus=false")
-                  span.input-group-btn
-                    button.btn.btn-ok(type="submit") OK
+                  ng-focus="searchCtrl.focus(true)",
+                  ng-click="searchCtrl.focus(true)",
+                  ng-blur="searchCtrl.focus(false)")
+                  span.input-group-btn(ng-show="searchCtrl.isFocused")
+                    button.btn.btn-warning(type="reset", 
+                    ng-click="searchCtrl.focus(false); searchCtrl.reset()")
+                      i.fa.fa-close
       search-results(artists="searchCtrl.artists", albums="searchCtrl.albums", 
-      ng-show="searchCtrl.input!=='' && searchCtrl.focus")
+      ng-show="searchCtrl.input.length > 2 && searchCtrl.isFocused", loading="searchCtrl.loading")
 
 
 
 
-    //include ./left.jade
-    include ./main.jade
-    //include ./options.jade
-    //include ./footer.jade
+    main
+  
+      #queue(ng-controller="QueueController as queueCtrl", ng-include="'queue/queue.partial.html'" ng-show="location==='queue'")
+      
+      show-artist-directive(artistname="artistParams.artistname", ng-show="location==='artist'")     
+      show-album-directive(albumname="albumParams.albumname", artistname="albumParams.artistname", ng-show="location==='album'")
+      
+      #playlists(ng-controller="PlaylistController as playlistCtrl", ng-show="location==='playlists'")
+        #playlists-base(ng-include="'playlists/playlists.base.partial.html'", ng-hide="playlistsParams.playlistname")
+        #playlist-details(ng-include="'playlists/playlists.details.partial.html'", ng-show="playlistsParams.playlistname")
+
+      #browse(ng-controller="browseController as browseCtrl", ng-show="location==='browse'")
+        #browse-base(ng-include="'browse/browse.partial.html'", ng-hide="browseParams.folder")
+        #browse-folder(ng-include="'browse/browse.folder.partial.html'", ng-show="browseParams.folder")
 
 
     #footer(ng-controller="PlayerController as playerCtrl")
@@ -63,11 +76,14 @@ html(lang='en')
             .btn-group.btn-group-lg
               button.btn.btn-default(title="previous", mpd, cmd="previous")
                 i.fa.fa-step-backward
-              button.btn.btn-default(title="pause",  mpd, cmd="pause", ng-class="{active: playerCtrl.status.state==='pause'}")
+              button.btn.btn-default(title="pause",  mpd, cmd="pause", 
+              ng-class="{active: playerCtrl.status.state==='pause'}")
                 i.fa.fa-pause
-              button.btn.btn-default(title="play",  mpd, cmd="play", ng-class="{active: playerCtrl.status.state==='play'}")
+              button.btn.btn-default(title="play",  mpd, cmd="play", 
+              ng-class="{active: playerCtrl.status.state==='play'}")
                 i.fa.fa-play
-              button.btn.btn-default(title="stop",  mpd, cmd="stop", ng-class="{active: playerCtrl.status.state==='stop'}")
+              button.btn.btn-default(title="stop",  mpd, cmd="stop", 
+              ng-class="{active: playerCtrl.status.state==='stop'}")
                 i.fa.fa-stop
               button.btn.btn-default(title="next",  mpd, cmd="next")
                 i.fa.fa-step-forward
@@ -96,6 +112,8 @@ html(lang='en')
 
     //include ./info.jade
     loading
+    .modal-container
+      include ./modals.jade
 
     audio(src= stream, preload='none')
     include ./scripts.jade

@@ -24,7 +24,7 @@
 
       var deferred = $q.defer();
 
-      $http.get('api/search/' + type + '/' + artistname)
+      $http.get('api/search/' + type + '/' + encodeURIComponent(artistname))
         .success(function(data) { deferred.resolve(data); })
         .error(function(err) { deferred.reject(err); });
 
@@ -37,7 +37,7 @@
 
       if (!artistname || artistname.length === 0) return deferred.reject(null);
 
-      $http.get('api/search/albums/' + artistname)
+      $http.get('api/search/albums/' + encodeURIComponent(artistname))
         .success(function(data) { deferred.resolve(data); })
         .error(function(err) { deferred.reject(err); });
 
@@ -52,22 +52,40 @@
         getAlbums(artistname),
         lastfmFactory.topAlbums(artistname)
       ]).then(function(results) {
+        console.log(results[1]);
         var joined = [];
         var albums = results[0].albums;
-        var topalbums = results[1].topalbums.album;
+        try {
+          var topalbums = results[1].topalbums.album;
+        } catch(e) {
+          var topalbums = [];
+        }
         // top albums
+        if (!_.isArray(topalbums)) {
+          topalbums = [topalbums];
+        }
         _.each(topalbums,function(topalbum) {
-          topalbum.imageUrl = topalbum.image[3]['#text'];
-          var topalbumname = topalbum.name.toLowerCase();
-          if (_.has(albums, topalbumname)) {
-            topalbum.songs = albums[topalbumname];
-            topalbum.inDatabase = true;
-            delete albums[topalbumname];
-          } else {
-            topalbum.songs = null;
-            topalbum.inDatabase = false;
+          if (topalbum) {
+            try {
+              topalbum.imageUrl = topalbum.image[3]['#text'];
+            } catch(e) {
+              topalbum.imageUrl = '/img/no_img_avail_250.png';
+            }
+            try {
+              var topalbumname = topalbum.name.toLowerCase();
+            } catch(e) {
+              var topalbumname = "";
+            }          
+            if (_.has(albums, topalbumname)) {
+              topalbum.songs = albums[topalbumname];
+              topalbum.inDatabase = true;
+              delete albums[topalbumname];
+            } else {
+              topalbum.songs = null;
+              topalbum.inDatabase = false;
+            }
+            joined.push(topalbum);
           }
-          joined.push(topalbum);
         });
         //other albums
         _.each(albums, function(album, key) {
@@ -76,7 +94,7 @@
               name: key,
               songs: album,
               inDatabase: true,
-              imageUrl: 'http://static.last.fm/flatness/catalogue/noimage/noalbum_g3.png'
+              imageUrl: '/img/no_img_avail_500.png'
             });
           }
         });

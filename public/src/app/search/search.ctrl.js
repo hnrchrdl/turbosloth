@@ -9,30 +9,71 @@
 
 
 
-  function SearchController($scope, SearchFactory) {
+  function SearchController($scope, $timeout, SearchFactory) {
     var vm = this;
 
-    vm.artists = {};
-    vm.albums = {};
-
     vm.searchRequest = searchRequest;
+    vm.reset = reset;
+    vm.focus = focus;
+
+    vm.reset();
+
+    $scope.$watch(function() { return vm.input; }, _.debounce(function() {
+        searchRequest();
+      }, 500));
 
     //--------------------------------
 
     function searchRequest() {
-      if (vm.input.length > 0) {
-        //SearchFactory.getArtistsByType(vm.input, 'Artist').then(function(data) {
-        //  vm.results = data.results;
-        //  vm.error = data.error;
-        //});
+
+      vm.loading = true;
+
+      if (vm.input.length === 0) {
+        //vm.isFocused = false;
+      } else if (vm.input.length < 3) {
+        //vm.isFocused = false;
+      } else {
+        
+        $timeout(function() {
+          vm.isFocused = true;
+        });
+        //$('#searchinput').focus();
+
         SearchFactory.getArtistsAndAlbums(vm.input).then(function(data) {
-          vm.artists.results = data[0].results;
-          vm.artists.error = data[0].error;
-          vm.albums.results = data[1].results;
-          vm.albums.error = data[1].error;
+
+          vm.loading = false;
+          
+          vm.artists = {
+            results: data[0].results,
+            error: data[0].error
+          };
+          vm.albums = {
+            results: data[1].results,
+            error: data[1].error
+          };
         });
       }
     }
+
+    function reset() {
+      vm.artists = {};
+      vm.albums = {};
+      vm.isFocused = false;
+      vm.input = '';
+      vm.loading = false;
+    }
+
+    function focus(state) {
+      if (state === true) {
+        vm.isFocused = true;
+      } else {
+        $timeout(function() {
+          vm.isFocused = false;
+          //$('#searchinput').blur();
+        },150);
+      }
+    }
+
   }
 
 

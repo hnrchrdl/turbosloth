@@ -26,7 +26,7 @@
       $timeout(function() {
         $scope.artistParams = {
           artistname: $routeParams.artist
-        }
+        };
       });
     });
 
@@ -35,7 +35,24 @@
         $scope.albumParams = {
           artistname: $routeParams.artist,
           albumname: $routeParams.album
-        }
+        };
+      });
+    });
+
+    $scope.$on('browse:playlists', function() {
+      $timeout(function() {
+        $rootScope.playlistsParams = {
+          playlistname: $routeParams.playlist
+        };
+      });
+    });
+
+
+    $scope.$on('browse:browse', function() {
+      $timeout(function() {
+        $rootScope.browseParams = {
+          folder: $routeParams.folder
+        };
       });
     });
 

@@ -2,9 +2,15 @@
   .scrollable {
     top: 0;
   }
+  .artist-info {
+    text-align: right;
+  }
 }
-.album {
-  margin-bottom: 30px;
+
+.album-wrapper {
+  a {
+    color: @fontPrimary;
+  }
   .name {
     height: 35px;
   }
@@ -15,4 +21,8 @@
     -o-filter: opacity(0.4);
     filter: opacity(0.4);
   }
+}
+
+.similar-artists-container {
+  border-left: 1px solid @background2;
 }

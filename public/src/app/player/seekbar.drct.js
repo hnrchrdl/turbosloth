@@ -6,7 +6,7 @@
 
   ///////////////////////7
 
-  function seekbarDirective($rootScope, $interval) {
+  function seekbarDirective($rootScope, $interval, socket) {
     
     return {
       restrict: 'A',
@@ -69,10 +69,12 @@
       // seekbarContainer click behaviour
       var seekcontainer = element.parent();
       seekcontainer.on('click', function(e) {
+        console.log('click');
         var seekRatio = e.offsetX / seekcontainer.width() * 100;
         if (scope.time) {
           var seekTime = parseFloat(time * seekRatio / 100);
-          $rootScope.$broadcast('mpdCommand', {cmd: 'seekToTime', args: seekTime});
+          console.log('broadcast');
+          socket.emitMpdCommand({cmd: 'seekcur', args: seekTime});
         }
       });
     }

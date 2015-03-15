@@ -66,7 +66,7 @@ router.get('/api/playlists/:name', playlistsCtrl.getByName);
 /* Browse */
 
 //router.get('/browse', browseCtrl.render);
-router.get('/api/browse/:path', browseCtrl.browse);
+//router.get('/api/browse/:path', browseCtrl.browse);
 router.get('/api/browse', browseCtrl.browse);
 
 

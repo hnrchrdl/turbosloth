@@ -8,39 +8,34 @@
 
   /* Queue Controller */
 
-  function QueueController($scope, MsgFactory) {
+  function QueueController($rootScope, $scope, MsgFactory) {
     var vm = this;
 
-    vm.queue = [];
+    vm.queue = null;
 
     vm.currentSongId = false;
 
-    vm.dialogs = {
-      id: false,
-      show: showDialog,
-      hideAll: hideAllDialogs
-    };
-
     vm.select = {
-      startPos : -1,
-      endPos : -1,
-      mode: 'select',
       start: start,
       end: end,
       batchSelect: batchSelect,
+      get: get
     };
 
-    //vm.hasSelection = hasSelection;
-    vm.selected = [];
-    vm.clearSelection = clearSelection;
+    var startPos = -1;
+    var endPos = -1;
+    var mode = "select";
+
 
 
     //----------------------------
     
     
     $scope.$on('change:queue', function(e, data) {
-      if (data.err || !_.has(data.data[0], 'file')) vm.queue = null; 
+      console.log(vm.queue);
+      if (data.err || !_.has(data.data[0], 'file')) vm.queue = []; 
       else vm.queue = data;
+      console.log(vm.queue);
     });
 
     $scope.$on('change:player', function(e, data) {
@@ -50,58 +45,42 @@
     //////////////////////////////////
 
 
-    function hideAllDialogs() {
-      vm.dialogs.id = false;
-    }
-
-    function showDialog(id) {
-      vm.dialogs.hideAll();
-      vm.dialogs.id = id;
-    }
-
     function batchSelect(mode) {
       _.map(vm.queue.data, function(song){
         return song.selected = mode;
       });
-      vm.selected = _.filter(vm.queue.data, function(song) {
-        return song.selected === true ;
-      });
-    }
-
-    function clearSelection() {
-      vm.selected = [];
     }
 
     function start(pos, isSelected) {
       try {
-        vm.select.startPos = parseInt(pos);
-        vm.select.mode = isSelected ? 'unselect' : 'select';
+        startPos = parseInt(pos);
+        mode = isSelected ? 'unselect' : 'select';
       } catch(e) {
-        vm.select.startPos = -1;
+
+        startPos = -1;
       }
     }
 
     function end(pos) {
-
       try {
-        vm.select.endPos = parseInt(pos);
+        endPos = parseInt(pos);
       } catch(e) {
-        vm.select.endPos = -1;
+        endPos = -1;
       }
 
-      if (vm.select.startPos > -1 && vm.select.endPos > -1) {
+      if (startPos > -1 && endPos > -1) {
 
-        if (vm.select.startPos > vm.select.endPos) { 
+        if (startPos > endPos) { 
           // if start is greater than end, swap them
-          var tmpPos = vm.select.startPos;
-          vm.select.startPos = vm.select.endPos;
-          vm.select.endPos = tmpPos;
+          var tmpPos = startPos;
+          startPos = endPos;
+          endPos = tmpPos;
         }
 
         processSelection({
-          startPos: vm.select.startPos, 
-          endPos: vm.select.endPos, 
-          mode: vm.select.mode
+          startPos: startPos, 
+          endPos: endPos, 
+          mode: mode
         });
      
       } else {
@@ -117,10 +96,18 @@
       for (var i = options.startPos; i <= options.endPos; i++) {
         vm.queue.data[i].selected = select;
       }
-      
-      vm.selected = _.filter(vm.queue.data, function(song) {
-        return song.selected === true ;
+      $rootScope.selected = _.filter(vm.queue.data, function(song) {
+        return song.selected;
       });
+      console.log($rootScope.selected);
+    }
+
+    function get() {
+      if (vm.queue) {
+        return _.filter(vm.queue.data, function(song) {
+          return song.selected;
+        });
+      } else return false;
     }
 
   }

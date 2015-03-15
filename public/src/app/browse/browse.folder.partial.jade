@@ -1,0 +1,66 @@
+.col-xs-12
+  ol.breadcrumb
+    li
+      a(ng-href="/#/browse") Home
+    li(ng-repeat="crumb in browseCtrl.breadcrumbs", ng-class="{active: $last}")
+      a(ng-href="/#/browse?folder={{crumb.path | urlencode}}", ng-if="!$last") {{crumb.name}}
+      span(ng-if="$last") {{crumb.name}}  
+        .btn-group.btn-group-xs
+          button.btn.btn-default.dark.dropdown-toggle(type="button", 
+          data-toggle="dropdown", aria-expanded="false")
+            span.caret 
+          ul.dropdown-menu(role="menu", aria-labelledby="dLabel")
+            li
+              a(ng-href="", mpd, cmd="addSongsToQueue", args="{file:browseCtrl.folder}")
+                |  add folder to queue
+
+#browse-folder
+  .scrollable
+    .container-fluid
+      .row.dir(ng-repeat="folder in browseCtrl.directories", 
+      ng-show="browseCtrl.directories.length > 0")
+        .col-xs-2.col-sm-1
+          .row
+            .col-xs-6
+              i.fa.fa-folder-o.short-right
+            .col-xs-6
+              .btn-group.btn-group-xs
+                button.btn.btn-default.dark.dropdown-toggle(type="button", 
+                data-toggle="dropdown", aria-expanded="false")
+                  i.fa.fa-caret-down
+                  //| Options  
+                ul.dropdown-menu(role="menu", aria-labelledby="dLabel")
+                  li
+                    a(ng-href="", mpd, cmd="addSongsToQueue", 
+                    args="{file:folder.directory}")
+                      |  add song to queue
+        .col-xs-10.col-sm-11
+          .row
+            .col-xs-12
+              a(ng-href="/#/browse/?folder={{folder.directory | urlencode}}")
+                | {{folder.directory | browseItem}}        
+
+      hr(ng-show="browseCtrl.directories.length > 0 && browseCtrl.files.length > 0")
+      
+      .row.dir(ng-repeat="file in browseCtrl.files", 
+      ng-show="browseCtrl.files.length > 0")
+        .col-xs-2.col-sm-1
+          .row
+            .col-xs-6
+              i.fa.fa-file-o
+            .col-xs-6
+              .btn-group.btn-group-xs
+                button.btn.btn-default.dark.dropdown-toggle(type="button", 
+                data-toggle="dropdown", aria-expanded="false")
+                  i.fa.fa-caret-down
+                  //| Options  
+                ul.dropdown-menu(role="menu", aria-labelledby="dLabel")
+                  li
+                    a(ng-href="", mpd, cmd="addSongsToQueue", 
+                    args="{file:file.file}")
+                      |  add song to queue
+        .col-xs-10.col-sm-11
+          .row
+            .col-xs-12
+              | {{file.file | browseItem}}  
+          

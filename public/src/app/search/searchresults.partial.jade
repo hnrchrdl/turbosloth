@@ -1,14 +1,20 @@
 .container
-  .row
+  .row(ng-show="loading")
+    .col-xs-4.col-xs-offset-4.loading
+      i.fa.fa-circle-o-notch.fa-spin
+  .row(ng-hide="loading")
     .col-sm-6
       h4 Artists
       .error(ng-show='artists.error')  
         |   {{artists.error}}
       .row(ng-repeat='artist in artists.results')
         .col-xs-2
-          | img
+          a(ng-href="/#/artist/{{artist.name}}")
+            img.img-responsive(src="/img/no_img_avail_100.png", 
+            artistimage, artist="artist.name", size="1")
         .col-xs-10
-          h5 {{artist.name}}
+          a(ng-href="/#/artist/{{artist.name}}")
+            h5 {{artist.name}}
           .genre
             span(ng-repeat='genre in artist.genres')
               |  {{genre}}{{{true: '', false: ', '}[$last]}}        
@@ -24,18 +30,21 @@
       .error(ng-show='albums.error')  
         |   {{albums.error}}
       .row(ng-repeat='album in albums.results')
-        .col-xs-2
-          img.img-responsive(albumart, artist="album.artist", 
-          album="album.name", size="1")
-        .col-xs-10
-          h5 {{album.name}}
-          .artist
-            | by {{album.artist}}
-          .genre
-            span(ng-repeat='genre in album.genres')
-              |  {{genre}}{{{true: '', false: ', '}[$last]}}        
-            .muted.inverse {{album.songcount}} song
-              span(ng-show="album.songcount>1") s
-        .clearfix
-        .col-xs-12
-          hr(ng-show="!$last")
+          .col-xs-2
+            a(ng-href="/#/artist/{{album.artist}}/album/{{album.name}}")
+              img.img-responsive(src="/img/no_img_avail_100.png", 
+              albumart, artist="album.artist", album="album.name", size="1")
+          .col-xs-10
+            a(ng-href="/#/artist/{{album.artist}}/album/{{album.name}}")
+              h5 {{album.name}}
+            .artist by 
+              a(ng-href="/#/artist/{{album.artist}}")
+                | {{album.artist}}
+            .genre
+              span(ng-repeat='genre in album.genres')
+                |  {{genre}}{{{true: '', false: ', '}[$last]}}        
+              .muted.inverse {{album.songcount}} song
+                span(ng-show="album.songcount>1") s
+          .clearfix
+          .col-xs-12
+            hr(ng-show="!$last")

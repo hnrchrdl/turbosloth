@@ -1,9 +1,4 @@
 #queue {
-	position:absolute;
-	top: 0;
-	bottom: 0;
-	left: 0;
-	right: 0;
 
 	a {
 		color: @fontPrimary;
@@ -15,10 +10,13 @@
 	.selector {
 		cursor: pointer;
 	}
-	&.active {
+	.active {
 		color: @primary;
 	}
 	.playindicator {
 		color: @primary;
+	}
+	table {
+		.Unselectable();
 	}
 }

@@ -1,0 +1,24 @@
+#playlists
+  .sub-nav
+    .container-fluid
+      .row
+        .col-xs-12
+          .btn-group.btn-group-sm.pull-right
+            button.btn.btn-default(ng-click="sort('playlist')")
+              | sort by name
+            button.btn.btn-default(ng-click="sort('Last-Modified')")
+              | sort by date
+  .scrollable
+    .container-fluid
+      .row
+        .col-xs-12.col-sm-4.col-md-3.col-lg-2(ng-repeat="playlist in playlists")
+          .row
+            .col-xs-12
+              a(ng-href="/#/playlists/{{playlist.playlist}}")
+                h4 {{playlist.playlist}}
+          .row
+            .col-xs-12.muted
+              | {{playlist['Last-Modified'] | date}}
+          .row
+            .col-xs-12
+              hr

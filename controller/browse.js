@@ -11,9 +11,11 @@ module.exports = {
 /* browse mpd server */
 
 function browse(req,res) {
-  var path = (typeof req.params.path != 'undefined') ? 
-    req.params.path :
+  var path = (typeof req.query.path != 'undefined') ? 
+    req.query.path :
     ""; // if url contains no path variable
+
+  console.log(path);
   
   var options = {
     sessionID: req.sessionID,
@@ -24,6 +26,9 @@ function browse(req,res) {
     args: [path]
   }
   browseModel.fetchFromMpd(options, function(err, data) {
+    if (path != "") {
+      console.log(options, err, data);
+    }
     return res.json({err: err, contents: data});
   });
 }

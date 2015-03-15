@@ -20,26 +20,48 @@
 
     function link(scope, element, attr) {
 
+
+
       scope.$watch('artistname', function(artistname) {
+
+        scope.artistinfo = null;
+        scope.joinedAlbums = null;
+        scope.similarArtists = null;
 
         if (artistname) {
 
-          scope.artistinfo = {};
+          //console.log(artistname);
           
-          scope.artistinfo.name = artistname;
+          //scope.artistinfo.name = artistname;
 
-          lastfmFactory.artistInfo(artistname)
-          .then(function(results) {
+          lastfmFactory.artistInfo(artistname).then(function(results) {
+
             scope.artistinfo = results.artist;
+            scope.artistinfo.name = artistname;
+
             try {
               scope.artistinfo.imageurl = results.artist.image[4]['#text'];
             } catch(e) {
-              console.log('no artist image with size 4!');
+              scope.artistinfo.imageurl = '/img/no_img_avail_500.png';
             }
+
+          }, function(reason) { //failure
+            console.log('failed to get artist info: ', reason);
+            scope.artistinfo = {
+              name: artistname
+            };
           });
 
-          lastfmFactory.similarArtists(artistname)
-          .then(function(results) {
+
+          SearchFactory.getJoinedAlbums(artistname).then(function(results) {
+            scope.joinedAlbums = results;
+          }, function(reason) {
+            console.log('failed to get albums: ', reason);
+            scope.joinedAlbums = [];
+          });
+          
+
+          lastfmFactory.similarArtists(artistname).then(function(results) {
             var similarArtists = [];
             _.each(results.similarartists.artist, function(artist) {
               try {
@@ -50,13 +72,11 @@
               } catch(e) {
                 console.log('failed to get artist image for ' + artist.name);
               }
+            }, function(reason) { //failure
+              console.log('failed to get similar artists: ', reason);
+              scope.similarArtists = [];
             });
             scope.similarArtists = similarArtists;
-          });
-
-          SearchFactory.getJoinedAlbums(artistname)
-          .then(function(results) {
-            scope.joinedAlbums = results;
           });
         
         }

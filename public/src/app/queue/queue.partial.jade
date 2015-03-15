@@ -4,39 +4,45 @@
       .col-xs-4
         .btn-group.btn-group-sm
           button.btn.btn-default(title='check all', ng-click="queueCtrl.select.batchSelect(true)")
-            i.fa.fa-check-square-o
+            //i.fa.fa-check-square-o
+            |  select all
           button.btn.btn-default.btn-navbar-invers(title='uncheck all', ng-click="queueCtrl.select.batchSelect(false)")
-            i.fa.fa-square-o
+            //i.fa.fa-square-o
+            |  select none
       .col-xs-4
-        span(style="line-height: 26px", ng-show="queueCtrl.selected.length > 0") selection:
-        .btn-group.btn-group-sm.short-left(ng-show="queueCtrl.selected.length > 0")
-          button.btn.btn-default(title='play next', mpd, cmd="playNext", args="queueCtrl.selected")
-            i.fa.fa-arrow-down
-          button.btn.btn-default(title='add to playlist', ng-click="queueCtrl.dialogs.show('playlistselect')")
-            i.fa.fa-share
-          button.btn.btn-default(title='remove from playlist', mpd, cmd="removeFromQueue", args="queueCtrl.selected")
-            i.fa.fa-remove
+        .btn-group.btn-group-sm.short-left(ng-show="queueCtrl.select.get().length > 0")
+          button.btn.btn-default(title='play songs next', mpd, cmd="playNext", args="selected")
+            |  play next
+          button.btn.btn-default(title='add songs to playlist', 
+          data-toggle="modal", data-target="#add-to-playlist-modal")
+            |  add to playlist
+          button.btn.btn-default(title='remove songs from playlist', mpd, cmd="removeFromQueue", args="selected")
+            |  remove from queue
       .col-xs-4
         .btn-group.btn-group-sm.pull-right
-          button.btn.btn-default.btn-navbar-invers(title='save queue as new playlist', ng-click="queueCtrl.dialogs.show('save')")
-            i.fa.fa-save
+          button.btn.btn-default.btn-navbar-invers(title='save queue as new playlist', 
+          data-toggle="modal", data-target="#save-queue-modal")
+            |  save
             
-          button.btn.btn-default.btn-navbar-invers(title='shuffle queue', ng-click="queueCtrl.dialogs.show('shuffle')")
-            i.fa.fa-random
+          button.btn.btn-default.btn-navbar-invers(title='shuffle queue', 
+          data-toggle="modal", data-target="#shuffle-queue-modal")
+            |  shuffle
             
           button.btn.btn-default.btn-navbar-invers(title='clear queue', 
           data-toggle="modal", data-target="#clear-queue-modal")
-            i.fa.fa-eraser
-        .btn-group.btn-group-sm.short-right.pull-right
+            |  clear
+        //.btn-group.btn-group-sm.short-right.pull-right
           button.btn.btn-default.btn-navbar-invers(title='sloth mode', ng-click="queueCtrl.dialogs.show('sloth')")
-            i.fa.fa-rocket
+            |  sloth mode
        
 
 .scrollable
-  .div-centered(ng-hide='queueCtrl.queue.data.length>0')
+  .loading(ng-hide="queueCtrl.queue")
+    | loading...
+  .div-centered(ng-show="queueCtrl.queue && queueCtrl.queue.data.length < 1")
     | queue is empty
-  .container-fluid(ng-hide="queueCtrl.queue.data.length<1")
-    table.table.table-hover.table-striped
+  .container-fluid(ng-show="queueCtrl.queue && queueCtrl.queue.data.length > 0")
+    table.table.table-hover
       thead
         tr
           th
@@ -52,27 +58,29 @@
         tr(ng-repeat='song in queueCtrl.queue.data',
         mpd, bind="dblclick", cmd="playSong", args="song.Id",
         ng-class="{active: queueCtrl.currentSongId===song.Id}")
-          td.muted(ng-mousedown='queueCtrl.select.start(song.Pos, song.selected)',
+          td.muted.selector(ng-class="{active: song.selected}", 
+          ng-mousedown='queueCtrl.select.start(song.Pos, song.selected)',
           ng-mouseup='queueCtrl.select.end(song.Pos)')
-            i.fa.fa-check.selector(ng-class="{active: song.selected}")
+            i.fa.fa-check
           td
             i.fa.fa-play-circle-o.playindicator(ng-show="queueCtrl.currentSongId===song.Id")
             span.muted(ng-show="queueCtrl.currentSongId!==song.Id")
               | {{song.Pos | plusOne}}
-          td
+          td(ng-if="song.Title")
             a(ng-href="/#/artist/{{song.Artist}}") {{song.Artist}}
-          td
+          td(ng-if="song.Title")
             | {{song.Title}}
-          td
+          td(ng-if="song.Title")
             span.muted
               | {{song.Track}}
-          td
+          td(ng-if="song.Title")
             a(ng-href='/#/artist/{{song.Artist}}/album/{{song.Album}}') {{song.Album}}
-          td
+          td(ng-if="song.Title")
             span.muted  {{song.Date}}
-          td
+          td(ng-if="song.Title")
             span.muted
               | {{song.Genre}}
+          td(ng-if="!song.Title", colspan="6") {{song.file}}
           td
             span.muted
               | {{song.Time | time}}

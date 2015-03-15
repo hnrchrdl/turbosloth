@@ -16,7 +16,7 @@
       var deferred = $q.defer();
       
       if (folder) {
-        var http = $http.get('/api/browse/' + folder);
+        var http = $http.get('/api/browse/?path=' + encodeURIComponent(folder));
       }
       else {
         var http = $http.get('/api/browse');

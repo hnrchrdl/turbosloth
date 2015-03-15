@@ -29,7 +29,7 @@
 
       var deferred = $q.defer();
       
-      $http.get('/api/lastfm/artist/' + artistname)
+      $http.get('/api/lastfm/artist/' + encodeURIComponent(artistname))
         .success(function(data) { deferred.resolve(data); })
         .error(function(err) { deferred.reject(err); });
 
@@ -43,7 +43,7 @@
       
       var deferred = $q.defer();
       
-      $http.get('/api/lastfm/album/' + artist + '/' + album)
+      $http.get('/api/lastfm/album/' + encodeURIComponent(artist) + '/' + encodeURIComponent(album))
         .success(function(data) { deferred.resolve(data); })
         .error(function(err) { deferred.reject(err); });
 
@@ -56,8 +56,8 @@
     function topAlbums(artistname) {
       
       var deferred = $q.defer();
-      
-      $http.get('/api/lastfm/topalbums/' + artistname + '/50')
+
+      $http.get('/api/lastfm/topalbums/' + encodeURIComponent(artistname) + '/50')
         .success(function(data) { deferred.resolve(data); })
         .error(function(err) { deferred.reject(err); });
 
@@ -71,7 +71,7 @@
       
       var deferred = $q.defer();
       
-      $http.get('/api/lastfm/similar/' + artistname)
+      $http.get('/api/lastfm/similar/' + encodeURIComponent(artistname))
         .success(function(data) { deferred.resolve(data); })
         .error(function(err) { deferred.reject(err); });
 

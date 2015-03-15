@@ -4,7 +4,74 @@
       .modal-header
         button.close(type="button", data-dismiss="modal", aria-label="Close")
           span(aria-hidden="true")&times;
-        h4.modal-title#myModalLabel Clear Playlist?
+        h4.modal-title#myModalLabel Clear Queue?
       .modal-footer
         button.btn.btn-default.btn-minimal(type="button", data-dismiss="modal") Cancel
         button.btn.btn-default.btn-ok(mpd, cmd="clearQueue", type="button", data-dismiss="modal") OK
+
+.modal.fade#shuffle-queue-modal(role="dialog", aria-hidden="true")
+  .modal-dialog.modal-sm
+    .modal-content
+      .modal-header
+        button.close(type="button", data-dismiss="modal", aria-label="Close")
+          span(aria-hidden="true")&times;
+        h4.modal-title Shuffle Queue?
+      .modal-footer
+        button.btn.btn-default.btn-minimal(type="button", data-dismiss="modal") Cancel
+        button.btn.btn-default.btn-ok(mpd, cmd="shuffleQueue", type="button", data-dismiss="modal") OK
+
+.modal.fade#save-queue-modal(role="dialog", aria-hidden="true")
+  .modal-dialog.modal-sm
+    .modal-content
+      .modal-header
+        button.close(type="button", data-dismiss="modal", aria-label="Close")
+          span(aria-hidden="true")&times;
+        h4.modal-title#myModalLabel Save Queue as Playlist?
+      .modal-body
+        input.form-control.light(ng-model="newplaylistname")
+      .modal-footer
+        button.btn.btn-default.btn-minimal(type="button", data-dismiss="modal") Cancel
+        button.btn.btn-default.btn-ok(mpd, cmd="savePlaylist", args="newplaylistname", type="button", data-dismiss="modal") OK
+
+
+.modal.fade#add-to-playlist-modal(role="dialog", aria-hidden="true")
+  .modal-dialog.modal-sm
+    .modal-content
+      .modal-header
+        button.close(type="button", data-dismiss="modal", aria-label="Close")
+          span(aria-hidden="true")&times;
+        h4.modal-title#myModalLabel Add selected songs to playlist?
+      .modal-body
+        select.form-control.light(ng-model="playlistname")
+          option(ng-repeat="playlist in playlists", value="{{playlist.playlist}}") 
+            |  {{playlist.playlist}}
+      .modal-footer
+        button.btn.btn-default.btn-minimal(type="button", data-dismiss="modal") Cancel
+        button.btn.btn-default.btn-ok(mpd, cmd="addSongsToPlaylist", args="[playlistname, selected]", type="button", data-dismiss="modal") OK
+
+
+
+.modal.fade#rename-playlist-modal(role="dialog", aria-hidden="true")
+  .modal-dialog.modal-sm
+    .modal-content
+      .modal-header
+        button.close(type="button", data-dismiss="modal", aria-label="Close")
+          span(aria-hidden="true")&times;
+        h4.modal-title#myModalLabel Rename playlist {{selectedPlaylist}}?
+      .modal-body
+        input.form-control.light(type="text", ng-model="playlistrename", )
+      .modal-footer
+        button.btn.btn-default.btn-minimal(type="button", data-dismiss="modal") Cancel
+        button.btn.btn-default.btn-ok(mpd, cmd="renamePlaylist", args="[selectedPlaylist, playlistrename]", type="button", data-dismiss="modal") OK
+
+
+.modal.fade#delete-playlist-modal(role="dialog", aria-hidden="true")
+  .modal-dialog.modal-sm
+    .modal-content
+      .modal-header
+        button.close(type="button", data-dismiss="modal", aria-label="Close")
+          span(aria-hidden="true")&times;
+        h4.modal-title#myModalLabel Delete playlist {{selectedPlaylist}}?
+      .modal-footer
+        button.btn.btn-default.btn-minimal(type="button", data-dismiss="modal") Cancel
+        button.btn.btn-default.btn-ok(mpd, cmd="deletePlaylist", args="selectedPlaylist", type="button", data-dismiss="modal") OK

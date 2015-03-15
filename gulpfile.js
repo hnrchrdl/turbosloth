@@ -71,7 +71,7 @@ gulp.task('js:vendor', function() {
 
 gulp.task('watch', function() {
   
-  var cssWatcher = gulp.watch('./public/src/less/**/*.less', ['less']);
+  var cssWatcher = gulp.watch('./public/src/**/*.less', ['less']);
   var jsWatcher = gulp.watch('./public/src/app/**/*.js', ['js:app']);
   var vendorWatcher = gulp.watch('./public/src/vendor/**/*.js', ['js:vendor']);
   var jadeWatcher = gulp.watch('./public/src/app/**/*.jade', ['partials:jade']);

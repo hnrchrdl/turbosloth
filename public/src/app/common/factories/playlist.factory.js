@@ -23,7 +23,7 @@
       if (playlistname) {
         var http = $http.get('/api/playlists/' + playlistname);
       } else {
-        var http = $http.get('/api/playlists')
+        var http = $http.get('/api/playlists');
       }
       http
         .success(function(data) { deferred.resolve(data); })

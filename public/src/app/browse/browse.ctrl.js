@@ -1,39 +1,89 @@
 
 (function() { 'use strict';
 
-  //angular.module('app.controller', [])
   
   angular.module('app')
-    .controller( 'BrowseController', BrowseController); 
+    .controller('browseController', browseController); 
 
 
   /**
-  *** Browse Controller
+  *** Browse Directive
   ***
   **/
-  function BrowseController($scope, BrowseFactory) {
+  function browseController($rootScope, $scope, BrowseFactory) {
+
     var vm = this;
+
+    vm.base_directories = [];
 
     vm.directories = [];
     vm.files = [];
 
-    $scope.$on('browse', function(e, folder) {
+    vm.folder = '';
+
+    vm.breadcrumbs = [];
+
+    update_base();
+
+    //------------------------
+
+
+    function update_base() {
+
+      var folder = '';
+
       BrowseFactory.browseFolder(folder).then(function(data) {
-        vm.directories = _.filter(data.contents, function(item) {
+        vm.base_directories = _.filter(data.contents, function(item) {
           return _.has(item, 'directory');
         });
-        vm.files = _.filter(data.contents, function(item) {
-          return _.has(item, 'file');
+        
+        vm.base_directories = _.groupBy(vm.base_directories, function(dir) {
+          if (dir && dir.directory[0] && dir.directory !== "") {
+            return dir.directory[0].toUpperCase();
+          }
         });
-        if (!folder) {
-          vm.directories = _.groupBy(vm.directories, function(dir) {
-            if (dir && dir.directory[0] && dir.directory !== "") return dir.directory[0].toUpperCase();
-          });
-        }
-        console.log(vm.directories);
-        console.log(vm.files);
+
       });
+    }
+    
+    $rootScope.$watch('browseParams.folder', function(folder) {
+      
+      if (folder) {
+
+        console.log(folder);
+        vm.folder = folder;
+
+        var foldersplit = folder.split('/');
+        var tmp = [];
+        vm.breadcrumbs = [];
+        _.each(foldersplit, function(folder) {
+          tmp.push(folder);
+          vm.breadcrumbs.push({
+            name: folder,
+            path: tmp.join('/')
+          });
+        });
+        BrowseFactory.browseFolder(folder).then(function(data) {
+
+          var contents = data.contents;
+          
+          if (!_.isArray(contents)) {
+            contents = [contents]; // wrap in Array
+          }
+
+          vm.directories = _.filter(contents, function(item) {
+            return _.has(item, 'directory');
+          });
+
+          vm.files = _.filter(contents, function(item) {
+            return _.has(item, 'file');
+          });
+    
+        });
+      }
+  
     });
+
   }
 
 })();

@@ -20,7 +20,7 @@
     
     //---------------------
     
-    function mpdCommandDrctController($scope, socket) {
+    function mpdCommandDrctController($rootScope, $scope, socket) {
       $scope.mpdCommands = {
         
         play: function() {
@@ -33,7 +33,6 @@
         
         playNext: function(songs) {
           var commandList = [];
-          console.log(songs);
           if (_.isArray(songs)) { // array of songs
             songs.reverse();
             _.each(songs, function(song) {
@@ -87,6 +86,33 @@
             }
           }
         },
+
+        addSongsToPlaylist: function(args) {
+          var playlist = args[0];
+          var songs = args[1];
+          var commandList = [];
+          if (_.isArray(songs)) { // array of songs
+            _.each(songs, function(song) { // iterate selection
+              if (_.has(song, 'file')) {
+                commandList.push({cmd: 'playlistadd', args: [playlist, song.file]}); // remove
+              }
+            });
+            socket.emitMpdCommand(commandList, handleMsg);
+          } else {
+            var song = songs; //just one song
+            if (_.has(song, 'file')) {
+              socket.emitMpdCommand({cmd: 'playlistadd', args: [playlist, song.Id]}, handleMsg); // remove
+            }
+          }
+        },
+
+        removeSongFromPlaylist: function(args) {
+          var playlist = args[0];
+          var index = args[1];
+          socket.emitMpdCommand({cmd: 'playlistdelete', args: [playlist, index]}, handleMsg); // remove
+        },
+
+
         
         clearQueue: function () {
           socket.emitMpdCommand({cmd: 'clear', args: []}, handleMsg);
@@ -94,7 +120,6 @@
         
         toggleRandom: function(status) {
           var newStatus = 1 - parseInt(status); // set to opposite
-          console.log('setRandomTo: ', newStatus);
           socket.emitMpdCommand({cmd: 'random', args: [newStatus]}, handleMsg);
         },
         
@@ -105,46 +130,33 @@
         
         // adds a list of songs to the queue
         addSongsToQueue: function(songs) {
+          console.log(songs);
+          var commandList = [];
           if (_.isArray(songs)) { // array of songs
-            var commandList = [];
             _.each(songs, function(song) { // iterate selection
               if (_.has(song, 'file')) {
-                commandList.push({cmd: 'add', args: [song.file]}, handleMsg); // add song
+                commandList.push({cmd: 'add', args: [song.file]}); // add song
               }
             });
           } else {
             var song = songs; //just one song
             if (_.has(song, 'file')) {
-              socket.emitMpdCommand({cmd: 'deleteid', args: [song.Id]}, handleMsg); // remove
-            }
-          }
-        },
-        
-        addSongsToQueueNext: function(songs) {
-          var commandList = [];
-          if (_.isArray(songs)) { // array of songs
-            songs.reverse(); // reverse the order of songs
-            _.each(songs, function(song) { // iterate selection
-              if (_.has(song, 'file') && _.has(song, 'Id')) {
-                commandList.push({cmd: 'add', args: [song.file]}); // add song
-                commandList.push({cmd: 'moveid', args: [song.Id, -1]}); // move to next
-              }
-            });
-          } else {
-            var song = songs; //just one song
-            if (_.has(song, 'file') && _.has(song, 'Id')) {
-              commandList.push({cmd: 'add', args: [song.file]}); // add song
-              commandList.push({cmd: 'moveid', args: [song.Id, -1]}); // move to next
+              commandList.push({cmd: 'add', args: [song.file]}); // remove
             }
           }
           socket.emit('mpd', commandList, handleMsg);
+        },
+
+         // adds a list of songs to the queue
+        addSongsToQueueFromFolder: function(folder) {
+          socket.emitMpdCommand({cmd: 'add', args: folder}, handleMsg);
         },
         
         playSongs: function(songs) {
           var commandList = [];
           commandList.push({cmd: 'clear', args: []}); //clear playlist
           if (_.isArray(songs)) { // array of songs
-            songs.reverse(); // reverse the order of songs
+            //songs.reverse(); // reverse the order of songs
             _.each(songs, function(song) { // iterate selection
               if (_.has(song, 'file')) {
                 commandList.push({cmd: 'add', args: [song.file]}); // add song
@@ -169,7 +181,7 @@
               } else if (_.isString(artist)) {
                 var artistname = artist;
               }
-              commandList.push({cmd: 'findadd', args: [artistname]}); // add song
+              commandList.push({cmd: 'findadd', args: ['artist', artistname]}); // add song
             });
           } else {
             var artist = artists; //only 1 artist to findadd
@@ -178,7 +190,7 @@
             } else if (_.isString(artist)) {
               var artistname = artist;
             }
-            commandList.push({cmd: 'findadd', args: [artistname]}); // add song
+            commandList.push({cmd: 'findadd', args: ['artist', artistname]}); // add song
           }
           socket.emit('mpd', commandList, handleMsg);
         },
@@ -193,7 +205,7 @@
               } else if (_.isString(artist)) {
                 var artistname = artist;
               }
-              commandList.push({cmd: 'findadd', args: [artistname]}); // add song
+              commandList.push({cmd: 'findadd', args: ['artist', artistname]}); // add song
             });
           } else {
             var artist = artists; //only 1 artist to findadd
@@ -202,14 +214,21 @@
             } else if (_.isString(artist)) {
               var artistname = artist;
             }
-            commandList.push({cmd: 'findadd', args: [artistname]}); // add song
+            commandList.push({cmd: 'findadd', args: ['artist', artistname]}); // add song
           }
           commandList.push({cmd: 'play', args: []});
           socket.emit('mpd', commandList, handleMsg);
         },
 
-        seekToTime: function(time) {
-          socket.emitMpdCommand({cmd: 'seekcur', args: [time]}, handleMsg);
+        renamePlaylist: function(args) {
+          var oldname = args[0];
+          var newname = args[1];
+          socket.emitMpdCommand({cmd: 'rename', args: [oldname, newname]}, handleMsg);
+        },
+
+        deletePlaylist: function(playlist) {
+          socket.emitMpdCommand({cmd: 'rm', args: playlist}, handleMsg);
+          $rootScope.setLocation('/playlists');
         }
 
       };

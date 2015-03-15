@@ -3,6 +3,9 @@
   .btn-ok {
     border: 1px solid @primary;
   }
+  .btn-warning {
+    border: 1px solid @alizarin;
+  }
 }
 
 search-results {
@@ -12,6 +15,8 @@ search-results {
     left: 0;
     right: 0;
     padding-bottom: 15px;
+    max-height: 70%;
+    overflow-y: auto;
     background-color: darken(@background2, 30%);
     opacity: 0.95;
     color: @clouds;
@@ -24,5 +29,11 @@ search-results {
   }
   h5 {
     margin: 0;
+  }
+  a {
+    color: @clouds;
+    &:hover {
+      color: @clouds;
+    }
   }
 }

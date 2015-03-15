@@ -1,8 +1,13 @@
 .scrollable
-  .index-container(ng-repeat="(key, folders) in browseCtrl.directories")
-    .index  {{key}}
-    .folders
-      .folder(ng-repeat="item in folders") {{item.directory}}
-    .clear
-
-      
+  .container-fluid
+    .row(ng-repeat="(key, folders) in browseCtrl.base_directories")
+      .col-xs-1
+        .row
+          .col-xs-6.col-xs-offset-6
+            h3 {{key}}
+      .col-xs-11
+        .col-xs-6.col-sm-4.col-md-3.col-lg-2.dir(ng-repeat="item in folders")
+          a(ng-href="/#/browse/?folder={{item.directory | urlencode}}")
+            | {{item.directory}}
+      .clearfix
+      hr

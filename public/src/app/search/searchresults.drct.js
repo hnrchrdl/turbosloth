@@ -15,17 +15,8 @@
         artists: '=',
         albums: "="
       },
-      templateUrl: 'search/searchresults.partial.html',
-      link: link
+      templateUrl: 'search/searchresults.partial.html'
     };
-
-    //---------------------
-
-    function link(scope, element, attr) {
-      scope.$watchGroup(['artists', 'albums'], function(results) {
-        console.log(results);
-      });
-    }
 
   }
 

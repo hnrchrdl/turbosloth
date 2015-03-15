@@ -1,0 +1,75 @@
+#playlistdetails
+  .scrollable
+    .container-fluid
+      
+      .row(ng-if="!playlistdetails.data")
+        .col-xs-12
+          | loading...
+      
+      .row(ng-if="playlistdetails.data")
+        
+        .col-sm-3.col-xs-12
+          .albumart-wrapper(ng-repeat="albumart in playlistdetails.albumarts")
+            .col-xs-3.col-sm-6.col-md-4.col-lg-3.mosaic
+              a(ng-href="/#/artist/{{albumart.Artist}}/album/{{albumart.Album}}")
+                img.img-responsive(albumart, artist="albumart.Artist", album="albumart.Album", size="2")
+            .clearfix.visible-xs-block(ng-if="($index + 1) % 4 === 0")
+            .clearfix.visible-sm-block(ng-if="($index + 1) % 2 === 0")
+            .clearfix.visible-md-block(ng-if="($index + 1) % 3 === 0")
+            .clearfix.visible-lg-block(ng-if="($index + 1) % 4 === 0")
+        
+        .col-sm-9.col-xs-12
+          .btn-group.btn-group-lg.pull-right
+            button.btn.btn-ok.dark.dropdown-toggle(type="button", 
+            data-toggle="dropdown", aria-expanded="false")
+              i.fa.fa-cog
+              //| Options  
+            ul.dropdown-menu(role="menu", aria-labelledby="dLabel")
+              li
+                a(ng-href="", mpd, cmd="addSongsToQueue", args="playlistdetails.data") add to queue
+              li
+                a(ng-href="", mpd, cmd="playSongs", args="playlistdetails.data") replace queue
+              li.divider
+              li
+                a(ng-href="", data-toggle="modal", data-target="#rename-playlist-modal") rename playlist
+              li.divider
+              li
+                a(ng-href="", data-toggle="modal", data-target="#delete-playlist-modal") delete playlist
+
+          h3 {{playlistdetails.playlistname}}
+           
+          table.table
+            thead
+              tr
+                th
+                th Artist
+                th Title
+                th Track
+                th Album
+                th Time
+            tbody
+              tr(ng-repeat="song in playlistdetails.data")
+                td
+                  .btn-group.btn-group-xs
+                    button.btn.btn-default.dark.dropdown-toggle(type="button", 
+                    data-toggle="dropdown", aria-expanded="false")
+                      i.fa.fa-caret-down
+                      //| Options  
+                    ul.dropdown-menu(role="menu", aria-labelledby="dLabel")
+                      li
+                        a(ng-href="", mpd, cmd="addSongsToQueue", args="song")
+                          |  add to queue
+                      li.divider
+                      li
+                        a(ng-href="", mpd, cmd="removeSongFromPlaylist", 
+                        args="[playlistdetails.playlistname, $index]")
+                          |  remove  from playlist
+                td(ng-if="song.Title") {{song.Artist}}
+                td(ng-if="song.Title") {{song.Title}}
+                td(ng-if="song.Title")
+                  span.muted {{song.Track}}
+                td(ng-if="song.Title") {{song.Album}}
+                td(ng-if="!song.Title", colspan="4") {{song.file}}
+                td(ng-if="song.Time")
+                  span.muted {{song.Time | time}}
+                

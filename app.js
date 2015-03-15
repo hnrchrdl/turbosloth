@@ -8,7 +8,9 @@ var express = require( 'express' )
   , cookieParser = require( 'cookie-parser' )
   , bodyParser = require( 'body-parser' )
   , session = require( 'express-session' )
-  , redis = require( './lib/redis' );
+  //, redis = require( './lib/redis' );
+  , redisClient = require( './lib/redis' );
+
 
 
 // passport = require("passport");
@@ -31,9 +33,9 @@ server.listen( config.appPort, config.appHost, function() {
   console.log( 'listening on ' + config.appHost + ': ' + config.appPort );
 });
 
-var io = require( './lib/sockets' ).listen( server );
+var io = require('./lib/sockets').listen(server);
 
-var routes = require( './routes/index' ).router;
+var routes = require('./routes/index').router;
 
 app.set( 'views', path.join( __dirname, 'views' ));
 app.set( 'view engine', 'jade' );

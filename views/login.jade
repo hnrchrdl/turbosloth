@@ -8,22 +8,20 @@ html(lang='en')
             
     .login
       h1 turbosloth
-      <br>
-      form#login(action="/login", method="post")
-        h4 MPD
-        input(name='mpd[host]', type="text", placeholder="mympdurl.com", value="") 
-        <br>
-        input(name='mpd[port]', type="text", placeholder="6600", value="")
-        <br>
-        input(name='mpd[password]', type="password", placeholder="mpd password", value="")
-        <br>
-        h4 STREAM
-        input(name='streamurl', type="text", placeholder="http://url.to.stream/from", value="")
-        
-        <br>
-        <br>
-        .button-wrapper
-          .button.text#enter(type='submit') S T A R T
+      .row
+        .col-xs-4.col-xs-offset-4
+          form#login(action="/login", method="post")
+            .form-group
+              label(for="")  MPD
+              input.form-control(name='mpd[host]', type="text", placeholder="mympdurl.com", value="") 
+              input.form-control(name='mpd[port]', type="text", placeholder="6600", value="")
+              input.form-control(name='mpd[password]', type="password", placeholder="mpd password", value="")
+            .form-group  
+              label(for="")  STREAM
+              input.form-control(name='streamurl', type="text", placeholder="http://url.to.stream/from", value="")
+            .form-group              
+              button.btn.btn-block.btn-ok#enter(type='submit')
+                |  S T A R T
 
     if config.appEnv === 'production'
       script(src='/dist/vendor.min.js', type='text/javascript')
@@ -35,6 +33,6 @@ html(lang='en')
     // script for custom form posting
     script(type="text/javascript").
       
-      $("#enter").on("click", function(){
+      $("#enter").on("click", function() {
         $('#login').submit();
       });

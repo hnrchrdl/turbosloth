@@ -44,36 +44,45 @@
         resolve: {
           location: function($rootScope) { 
             $rootScope.location = 'playlists';
+          },
+          params: function($rootScope) {
+            $rootScope.$broadcast('browse:playlists');
           }
         }
       })
-      .when('/playlist/:playlist', {
+      .when('/playlists/:playlist', {
         resolve: {
           location: function($rootScope) { 
-            $rootScope.location = 'playlist';
+            $rootScope.location = 'playlists';
           },
           params: function($rootScope) {
-            $rootScope.$broadcast('browse:playlist');
+            $rootScope.$broadcast('browse:playlists');
           }
         }
       })
       .when('/browse', {
         resolve: {
           location: function($rootScope) { 
+            console.log('browse');
             $rootScope.location = 'browse';
+          },
+          params: function($rootScope) {
+            $rootScope.$broadcast('browse:browse');
           }
         }
       })
-      .when('/browse:folder', {
+      .when('/browse/:folder', {
         resolve: {
-          location: function($rootScope) { 
-            $rootScope.location = 'browsefolder';
+          location: function($rootScope) {
+            console.log('browsefolder');
+            $rootScope.location = 'browse';
           },
           params: function($rootScope) {
-            $rootScope.$broadcast('browse:folder');
+            $rootScope.$broadcast('browse:browse');
           }
         }
-      });
+      })
+      .otherwise('/queue');
 
 
   }
@@ -114,6 +123,7 @@
     });
 
     socket.on('change', function(system) {
+      console.log('change in system: ', system);
       switch(system) {
 
         case 'player':
@@ -133,7 +143,7 @@
       
         case 'stored_playlist':
           console.log('a stored playlist changed. broadcasting to rootScope...');
-          $rootScope.$broadcast('change:storedPlaylist');
+          $rootScope.$broadcast('change:stored_playlist');
           break;
       }
 

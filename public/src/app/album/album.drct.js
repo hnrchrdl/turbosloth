@@ -24,6 +24,9 @@
 
       scope.$watch('[artistname, albumname]', function(data) {
 
+        scope.album = null;
+        scope.loading = true;
+
         var artistname = data[0];
         var albumname = data[1];
 
@@ -34,9 +37,11 @@
           .then(function(album) {
             console.log('album: ', album);
             scope.album = album;
+            scope.loading = false;
           }, function(reason) {
             console.log(reason);
             scope.album = null;
+            scope.loading = false;
           });
         }
       });
