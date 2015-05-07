@@ -2,7 +2,7 @@
 webinterface for mpd
 
 
-![Alt text](https://www.dropbox.com/s/ufsbdwprelkd4yf/turbosloth2.png?dl=0 "Screenshot")
+![Alt text](https://lh5.googleusercontent.com/2s3beh_oLAhY2OCSGDiHhkeFomVXgGXvpc5jvkOC9T3uqid_Ra_UzV09oNc9dkwrgoW4fgJttLcLl30=w1293-h561 "Screenshot")
 
 
 Installation
