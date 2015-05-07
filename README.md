@@ -2,7 +2,7 @@
 webinterface for mpd
 
 
-![Alt text](https://lh5.googleusercontent.com/2s3beh_oLAhY2OCSGDiHhkeFomVXgGXvpc5jvkOC9T3uqid_Ra_UzV09oNc9dkwrgoW4fgJttLcLl30=w1293-h561 "Screenshot")
+![Alt text](https://lh3.googleusercontent.com/N2hO0lfkqpd6zx7t8J2ntFNtJHy0iqQBU-MXA8GWpzJAWyI4hhPdezIFRppBbxUjgUL6WzutwlQ6tTE=w1293-h561 "Screenshot")
 
 
 Installation
